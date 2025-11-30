@@ -9,7 +9,7 @@ Don't worry—getting one is free, requires **no credit card**, and takes less t
 
 ### ⚡ Quick Start Guide
 
-![Get API Key GIF](![Image](https://github.com/user-attachments/assets/70791b03-341d-4449-af07-1d181768f01c))
+![Get API Key GIF](https://github.com/user-attachments/assets/70791b03-341d-4449-af07-1d181768f01c)
 
 **Steps:**
 1.  Go to **[Google AI Studio](https://aistudio.google.com/)**.
