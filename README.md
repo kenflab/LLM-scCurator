@@ -22,10 +22,16 @@ Standard workflows often feed LLMs with noisy features—such as TCR clonotypes,
 ## 📦 Installation
 
 ```bash
-git clone [https://github.com/yourusername/LLM-scCurator.git](https://github.com/yourusername/LLM-scCurator.git)
+# 1. Clone the repository
+git clone [https://github.com/kenflab/LLM-scCurator.git](https://github.com/kenflab/LLM-scCurator.git)
+
+# 2. Navigate to the directory
 cd LLM-scCurator
+
+# 3. Install the package (and dependencies)
 pip install .
 ```
+
 ## ⚡ Quick Start
 
 ### Python (Standard Usage)
