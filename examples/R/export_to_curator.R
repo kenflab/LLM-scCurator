@@ -78,7 +78,6 @@ export_for_llm_curator <- function(seurat_obj, save_path, cluster_col = "seurat_
   n_genes <- nrow(counts_matrix)
   
   if (n_genes < 5000) {
-    # ターゲットパネル（Xenium等）の可能性を考慮したメッセージに変更
     warning(paste0("⚠Note: Only ", n_genes, " genes found.\n",
                    "   - If this is whole-transcriptome scRNA-seq: You might be exporting only Variable Features. ",
                    "We recommend exporting the FULL transcriptome for optimal noise detection.\n",
