@@ -92,11 +92,33 @@ sc.pl.umap(adata, color=['major_type', 'fine_type'])
 
 
 ### For R / Seurat Users
-We provide a helper script to export your Seurat object seamlessly.
+You can use LLM-scCurator in two ways:
+
+#### Option 1: Run directly in R (via reticulate)
+You can install and import the package directly within your R session.
+
+```R
+# install.packages("reticulate")
+library(reticulate)
+
+# 1. Install LLM-scCurator (one-time setup)
+py_install("llm-sc-curator", pip = TRUE)
+
+# 2. Import and use
+lsc <- import("llm_sc_curator")
+curator <- lsc$LLMscCurator(api_key = "YOUR_KEY")
+
+# (Assuming you have converted your Seurat obj to AnnData or h5ad)
+# result <- curator$run_hierarchical_discovery(adata)
+```
+
+#### Option 2: Export to Python (Recommended for large pipelines)
+We provide a helper script to export your Seurat object seamlessly to .h5ad for processing in Python.
 ```R
 source("examples/R/export_script.R")
 export_for_llm_curator(seurat_obj, "my_data.h5ad")
 ```
+
 
 ### 📓 Colab / Notebooks
 
@@ -115,4 +137,4 @@ See each provider’s documentation for how to obtain an API key and for current
 1.  Go to **[Google AI Studio](https://aistudio.google.com/)**.
 2.  Log in with your Google Account.
 3.  Click **"Get API key"** (top-left) $\rightarrow$ **"Create API key"**.
-4.  Copy the key and use it in your code.
+4.  Copy the key and use it in your cod
