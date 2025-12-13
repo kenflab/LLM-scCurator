@@ -1,0 +1,37 @@
+cff-version: 1.2.0
+message: "If you use LLM-scCurator in your research, please cite it."
+title: "LLM-scCurator: Dynamic feature distillation for robust zero-shot LLM annotation"
+type: software
+version: 0.1.0
+authors:
+  - family-names: "Furudate"
+    given-names: "Ken"
+repository-code: "https://github.com/kenflab/LLM-scCurator"
+url: "https://github.com/kenflab/LLM-scCurator"
+license: "MIT"
+keywords:
+  - "single-cell"
+  - "spatial transcriptomics"
+  - "cell-type annotation"
+  - "large language models"
+  - "Scanpy"
+  - "Seurat"
+  - "zero-shot"
+  - "bioinformatics"
+abstract: >
+  LLM-scCurator is a Python framework that standardizes noise-aware marker
+  distillation (clonotype/housekeeping/stress suppression with rescue and lineage
+  leakage filters) before prompting a large language model, enabling robust
+  hierarchical (coarse-to-fine) zero-shot annotation for single-cell and spatial
+  transcriptomic data.
+preferred-citation:
+  type: software
+  title: "LLM-scCurator: Dynamic feature distillation for robust zero-shot LLM annotation"
+  authors:
+    - family-names: "Furudate"
+      given-names: "Ken"
+  year: 2025
+  version: 0.1.0
+  url: "https://github.com/kenflab/LLM-scCurator"
+  repository-code: "https://github.com/kenflab/LLM-scCurator"
+  # doi: "10.5281/zenodo.XXXXXXX"  # add after Zenodo release is minted
