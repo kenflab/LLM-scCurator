@@ -1,0 +1,61 @@
+# paper/config/label_maps/pancancer_cd8_gt_map.yaml
+version: 1
+dataset_id: pancancer_cd8
+input_key: meta.cluster
+
+matching:
+  mode: substring_ci   # case-insensitive substring
+  first_match_wins: true
+
+labels:
+  - CD8_Naive
+  - CD8_Effector
+  - CD8_EffectorMemory
+  - CD8_Exhausted
+  - CD8_ISG
+  - CD8_MAIT
+  - CD8_Cycling
+  - CD8_NK_Killer
+  - CD8_Other
+
+rules:
+  # 1) Distinct functional states
+  - label: CD8_MAIT
+    include: ["mait"]
+
+  - label: CD8_ISG
+    include_any: ["isg", "interferon", "ifit1"]
+
+  - label: CD8_Cycling
+    include_any: ["proliferating", "cycle", "cycling", "mki67", "top2a"]
+
+  # 2) NK-like killer pool (exclude explicit T cell wording)
+  - label: CD8_NK_Killer
+    include: ["nk"]
+    exclude_any: ["t cell", "t-cell"]
+
+  # 3) Exhausted pool
+  - label: CD8_Exhausted
+    include_any: ["tex", "exhausted", "pdcd1", "pd-1"]
+
+  # 4) TRM / resident memory → treated as EffectorMemory in GT
+  - label: CD8_EffectorMemory
+    include_any: ["trm", "resident", "znf683", "itgae", "cd69"]
+
+  # 5) Naive pool
+  - label: CD8_Naive
+    include_any: ["tn.", "naive"]
+
+  # 6) Temra / CX3CR1-high killers → Effector
+  - label: CD8_Effector
+    include_any: ["temra", "cx3cr1", "klrg1"]
+
+  # 7) Tem / Tm / memory / GZMK pools → EffectorMemory
+  - label: CD8_EffectorMemory
+    include_any: ["tem.", "tm.", "memory", "gzmk", "aqp3", "ltb"]
+
+  # 8) Tk / killer T clusters (Zheng's Tk)
+  - label: CD8_Effector
+    include_any: ["tk", "killer"]
+
+default_label: CD8_Other
