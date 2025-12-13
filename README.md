@@ -6,6 +6,10 @@ LLM-scCurator 🧬🤖
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
+![Docker](https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=white)
+![Jupyter](https://img.shields.io/badge/Jupyter-F37626?logo=jupyter&logoColor=white)
+![R](https://img.shields.io/badge/R-276DC3?logo=r&logoColor=white)
+
 
 ## 🚀 Overview
 **LLM-scCurator**  standardizes *noise-aware marker distillation* (clonotype/housekeeping/stress suppression + rescue + lineage leakage filters)
@@ -68,8 +72,7 @@ Notes:
 
 
 ## ⚡ Quick Start
-
-### Python (Standard Usage)
+### 🐍 Python (Standard Usage)
 ```python
 import scanpy as sc
 from llm_sc_curator import LLMscCurator
@@ -87,6 +90,7 @@ adata = curator.run_hierarchical_discovery(adata)
 sc.pl.umap(adata, color=['major_type', 'fine_type'])
 ```
 
+
 ### For R / Seurat Users
 We provide a helper script to export your Seurat object seamlessly.
 ```R
@@ -94,6 +98,7 @@ source("examples/R/export_script.R")
 export_for_llm_curator(seurat_obj, "my_data.h5ad")
 ```
 
+### 📓 Colab / Notebooks
 
 ## 🔑 Backends (API keys) Setup
 
