@@ -1,32 +1,34 @@
+# LLM-scCurator/setup.py
 from setuptools import setup, find_packages
 
 setup(
-    name="llm-sc-curator",
+    name="llm_sc_curator",
     version="0.1.0",
     packages=find_packages(),
     install_requires=[
-        "scanpy",
-        "pandas",
-        "numpy",
-        "scipy",
-        "igraph", 
-        "louvain",
-        "google-generativeai",
-        "matplotlib",
-        "seaborn",
-        "adjustText"
+        "scanpy>=1.11.5",
+        "pandas>=2.3.3",
+        "numpy>=2.0.2",
+        "scipy>=1.16.3",
+        "python-igraph>=1.0.0",
+        "leidenalg>=0.11.0",
     ],
-    author="Ken Furudate,
-    author_email="KFurudate@mdanderson.org",
-    description="A noise-aware feature selection framework for robust LLM-based single-cell annotation.",
-    long_description=open("README.md").read(),
-    long_description_content_type="text/markdown",
-    url="https://github.com/yourusername/LLM-scCurator",
-    classifiers=[
-        "Programming Language :: Python :: 3",
-        "License :: OSI Approved :: MIT License",
-        "Operating System :: OS Independent",
-        "Topic :: Scientific/Engineering :: Bio-Informatics",
-    ],
-    python_requires='>=3.9',
+    extras_require={
+        # LLM backend integrations (optional)
+        "openai": [
+            "openai>=1.0.0",
+        ],
+        "gemini": [
+            "google-generativeai>=0.8.5",
+        ],
+        # Convenience group: everything
+        "all": [
+            "openai>=1.0.0",
+            "google-generativeai>=0.8.5",
+        ],
+    },
+    python_requires=">=3.10",
+    author="Ken Furudate",
+    description="Dynamic feature distillation framework for robust zero-shot LLM annotation.",
+    url="https://github.com/kenflab/LLM-scCurator",
 )
