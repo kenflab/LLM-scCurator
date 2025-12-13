@@ -1,0 +1,39 @@
+# paper/config/label_maps/brca_stromal_gt_map.yaml
+version: 1
+dataset_id: brca_stromal
+input_key: meta.cluster   # (あなたの前処理で celltype_minor → meta.cluster に統一している想定)
+
+matching:
+  mode: substring_ci
+  first_match_wins: true
+
+labels:
+  - Endothelial
+  - Fibro_iCAF
+  - Fibro_myCAF
+  - Fibro_PVL
+  - Fibro_Cycling
+  - Fibro_Other
+
+rules:
+  # Endothelial
+  - label: Endothelial
+    include_any: ["endothelial"]
+
+  # PVL (must come before Cycling to map "Cycling PVL" as PVL)
+  - label: Fibro_PVL
+    include_any: ["pvl", "perivascular", "pericyte", "smooth muscle"]
+
+  # iCAF / MSC-like CAFs
+  - label: Fibro_iCAF
+    include_any: ["icaf", "msc"]
+
+  # myCAF-like
+  - label: Fibro_myCAF
+    include_any: ["mycaf", "myofibroblast"]
+
+  # Cycling fibroblasts (non-PVL)
+  - label: Fibro_Cycling
+    include_any: ["cycling", "proliferating", "mki67", "top2a"]
+
+default_label: Fibro_Other
