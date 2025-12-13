@@ -137,4 +137,4 @@ See each provider’s documentation for how to obtain an API key and for current
 1.  Go to **[Google AI Studio](https://aistudio.google.com/)**.
 2.  Log in with your Google Account.
 3.  Click **"Get API key"** (top-left) $\rightarrow$ **"Create API key"**.
-4.  Copy the key and use it in your cod
+4.  Copy the key and use it in your code.
