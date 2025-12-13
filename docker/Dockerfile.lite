@@ -16,7 +16,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 ENV MAMBA_ROOT_PREFIX=/opt/conda
 RUN curl -L https://micro.mamba.pm/api/micromamba/linux-64/latest \
   | tar -xvj bin/micromamba \
-  && mv bin/micromamba /usr/local/bin/mic [+]
+  && mv bin/micromamba /usr/local/bin/micromamba
 
 # Create Python env (align with Colab-ish modern stack)
 RUN micromamba create -y -n py -c conda-forge \
