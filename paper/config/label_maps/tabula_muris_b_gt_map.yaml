@@ -1,0 +1,32 @@
+# paper/config/label_maps/tabula_muris_b_gt_map.yaml
+version: 1
+dataset_id: tabula_muris_b
+input_key: cell_ontology_class
+
+matching:
+  mode: substring_ci
+  first_match_wins: true
+
+labels:
+  - Mature_B
+  - Erythrocyte_like
+  - Mast_like
+  - pDC_Myeloid_like
+  - B_Other
+
+rules:
+  # Contaminants first
+  - label: Erythrocyte_like
+    include_any: ["erythrocyte", "erythroid", "erythroblast", "rbc", "red blood", "hemoglobin", "hbb", "hba"]
+
+  - label: Mast_like
+    include_any: ["mast", "basophil", "cpa3", "kit", "fcer1a"]
+
+  - label: pDC_Myeloid_like
+    include_any: ["pdc", "plasmacytoid", "dendritic", "siglech", "bst2", "irf8", "myeloid", "monocyte", "macrophage"]
+
+  # B lineage
+  - label: Mature_B
+    include_any: ["b cell", "b-cell", "b lymphocyte", "follicular", "ms4a1", "cd79a", "cd79b", "mature b"]
+
+default_label: B_Other
