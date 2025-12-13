@@ -1,4 +1,4 @@
-# paper/config/label_maps/pancancer_cd8_gt_map.yaml
+# paper/config/label_maps/cd8_gt_map.yaml
 version: 1
 dataset_id: pancancer_cd8
 input_key: meta.cluster
