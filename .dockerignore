@@ -1,0 +1,31 @@
+# Git files
+.git
+.gitignore
+
+# Python/Environment
+__pycache__
+*.pyc
+.ipynb_checkpoints
+.venv
+env/
+venv/
+*.egg-info/
+
+# R/Studio
+.Rproj.user
+.Rhistory
+.RData
+
+# Large Data & Output
+data/
+output/
+*.h5ad
+*.csv
+*.rds
+*.pdf
+*.png
+
+# Docker internals
+docker/
+docker-compose.yml
+Dockerfile*
