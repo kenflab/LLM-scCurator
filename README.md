@@ -2,16 +2,15 @@
 
 LLM-scCurator 🧬🤖
 
-**Dynamic feature masking shields large language models from biological confounders for robust zero-shot annotation.**
+**Dynamic feature masking to improve robustness of zero-shot cell-type annotation with LLMs.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
 
 ## 🚀 Overview
+**LLM-scCurator**  standardizes *noise-aware marker distillation* (clonotype/housekeeping/stress suppression + rescue + lineage leakage filters)
+before prompting an LLM, and supports hierarchical (coarse-to-fine) annotation for scRNA-seq and spatial data.
 
-**LLM-scCurator** is a Python framework designed to solve the "Garbage In, Hallucination Out" problem in LLM-based single-cell annotation. 
-
-Standard workflows often feed LLMs with noisy features—such as TCR clonotypes, mitochondrial genes, and cell-cycle markers—leading to semantic misinterpretation. LLM-scCurator employs a **Dynamic Feature Masking** algorithm based on the Gini coefficient to statistically identify and filter these biological confounders, enabling expert-level zero-shot annotation.
 
 ### Key Features
 - **🛡️ Noise-Aware Filtering:** Automatically removes lineage-specific noise (TCR/Ig) and state-dependent noise (ribosomal/mitochondrial).
@@ -59,10 +58,11 @@ source("examples/R/export_script.R")
 export_for_llm_curator(seurat_obj, "my_data.h5ad")
 ```
 
-## 🔑 API Key Setup (30 Seconds)
+## 🔑 Backends (API keys) Setup
 
-To use **LLM-scCurator**, you need a Gemini API key. 
-Don't worry—getting one is free, requires **no credit card**, and takes less than a minute via **Google AI Studio**.
+Set your provider API key as an environment variable:
+- GEMINI_API_KEY for Google Gemini
+- OPENAI_API_KEY for OpenAI API
 
 ![Get API Key GIF](https://github.com/user-attachments/assets/70791b03-341d-4449-af07-1d181768f01c)
 
