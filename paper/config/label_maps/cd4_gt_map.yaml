@@ -1,0 +1,58 @@
+# paper/config/label_maps/cd4_gt_map.yaml
+version: 1
+dataset_id: pancancer_cd4
+input_key: meta.cluster
+
+matching:
+  mode: substring_ci
+  first_match_wins: true
+
+labels:
+  - CD4_Tn.Naive
+  - CD4_Tm.EffMem
+  - CD4_Tem.EffMem
+  - CD4_Temra.EffMem
+  - CD4_Treg
+  - CD4_Tfh
+  - CD4_Th17
+  - CD4_ISG
+  - CD4_Cycling
+  - CD4_Exhausted
+  - CD4_Other
+
+rules:
+  # 1) Regulatory / helper subsets
+  - label: CD4_Treg
+    include_any: ["treg", "foxp3", "regulatory"]
+
+  - label: CD4_Tfh
+    include_any: ["tfh", "follicular", "cxcl13", "cxcr5"]
+
+  - label: CD4_Th17
+    include_any: ["th17", "il17", "il-17", "rorc", "il23r"]
+
+  # 2) ISG & cycling
+  - label: CD4_ISG
+    include_any: ["isg", "interferon", "ifit1"]
+
+  - label: CD4_Cycling
+    include_any: ["cycling", "proliferating", "mki67", "top2a"]
+
+  # 3) Exhausted (rare but safe)
+  - label: CD4_Exhausted
+    include_any: ["tex", "exhausted", "pdcd1", "pd-1"]
+
+  # 4) Naive / memory pools
+  - label: CD4_Tn.Naive
+    include_any: ["tn.", "naive"]
+
+  - label: CD4_Temra.EffMem
+    include: ["temra"]
+
+  - label: CD4_Tem.EffMem
+    include: ["tem."]
+
+  - label: CD4_Tm.EffMem
+    include: ["tm."]
+
+default_label: CD4_Other
