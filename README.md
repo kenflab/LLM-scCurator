@@ -18,6 +18,7 @@ before prompting an LLM, and supports hierarchical (coarse-to-fine) annotation f
 - **🔬 Hierarchical Discovery:** One-line function to dissect complex tissues into major lineages and fine-grained subtypes.
 - **🌍 Spatial Ready:** Validated on scRNA-seq (10x) and spatial transcriptomics (Xenium, Visium).
 
+
 ## 📦 Installation
 
 ```bash
@@ -30,6 +31,41 @@ cd LLM-scCurator
 # 3. Install the package (and dependencies)
 pip install .
 ```
+
+## 🐳 Docker (Reproducible environment)
+
+We provide two images:
+- **lite**: Python + R + Jupyter (sufficient for running LLM-scCurator and most paper figure generation)
+- **full**: lite + additional/heavier dependencies for extended analyses (spatial + extra R ecosystem)
+
+### Quick start (lite)
+```bash
+# from the repo root
+docker compose -f docker/docker-compose.yml build lite
+docker compose -f docker/docker-compose.yml up lite
+```
+
+Open Jupyter:
+[http://localhost:8888](http://localhost:8888)
+
+The repository is mounted into the container at /work.
+
+### Optional: full image
+```bash
+docker compose -f docker/docker-compose.yml build full
+docker compose -f docker/docker-compose.yml up full
+```
+
+### API keys (Docker)
+Set environment variables in your shell before docker compose up:
+```bash
+export GEMINI_API_KEY="..."
+export OPENAI_API_KEY="..."
+```
+Notes:
+> * Never commit API keys to the repository. Use environment variables or a local .env file (not tracked).
+> * LLM providers’ availability, pricing, and data handling policies may vary; please follow each provider’s terms and your institutional requirements.
+
 
 ## ⚡ Quick Start
 
@@ -58,11 +94,15 @@ source("examples/R/export_script.R")
 export_for_llm_curator(seurat_obj, "my_data.h5ad")
 ```
 
+
 ## 🔑 Backends (API keys) Setup
 
 Set your provider API key as an environment variable:
-- GEMINI_API_KEY for Google Gemini
-- OPENAI_API_KEY for OpenAI API
+Set your provider API key as an environment variable:
+- `GEMINI_API_KEY` for Google Gemini
+- `OPENAI_API_KEY` for OpenAI API
+
+See each provider’s documentation for how to obtain an API key and for current usage policies.
 
 ![Get API Key GIF](https://github.com/user-attachments/assets/70791b03-341d-4449-af07-1d181768f01c)
 
@@ -71,6 +111,3 @@ Set your provider API key as an environment variable:
 2.  Log in with your Google Account.
 3.  Click **"Get API key"** (top-left) $\rightarrow$ **"Create API key"**.
 4.  Copy the key and use it in your code.
-
-> * Privacy & Cost Note: > **Free of Charge:** The "Free Tier" is sufficient for testing and small-scale analysis. No payment information is required.
-> * Data Privacy: For clinical datasets requiring strict privacy (HIPAA/GDPR compliance) or zero-training policies, we recommend upgrading to the **Vertex AI** endpoint on Google Cloud Platform.
