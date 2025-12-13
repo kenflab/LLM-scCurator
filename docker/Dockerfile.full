@@ -1,0 +1,23 @@
+# syntax=docker/dockerfile:1
+FROM llm-sc-curator:lite
+
+ARG DEBIAN_FRONTEND=noninteractive
+
+# extra system libs for sf / spatial / etc.
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libgeos-dev libproj-dev libgdal-dev libudunits2-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Bioconductor / spatial ecosystem (your heavier list)
+RUN R -q -e 'install.packages("remotes", repos="https://cloud.r-project.org"); \
+    install.packages(c("sf","arrow"), repos="https://cloud.r-project.org")'
+
+RUN R -q -e 'BiocManager::install(c("SpatialExperiment","SpatialExperimentIO"), \
+                                  ask=FALSE, update=FALSE)'
+
+# Optional: wrappers / Azimuth (pin commit later for reproducibility)
+RUN R -q -e 'remotes::install_github("satijalab/seurat-wrappers")'
+RUN R -q -e 'remotes::install_github("satijalab/azimuth", ref="master")'
+
+# Optional: BayesSpace etc (uncomment if you really need it in the image)
+# RUN R -q -e 'BiocManager::install("BayesSpace", ask=FALSE, update=FALSE)'
