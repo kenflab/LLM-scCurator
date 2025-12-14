@@ -1,6 +1,6 @@
 # LLM-scCurator
 
-LLM-scCurator 🧬🤖
+**LLM-scCurator** 🧬🤖
 
 **Dynamic feature masking to improve robustness of zero-shot cell-type annotation with LLMs.**
 
@@ -13,7 +13,7 @@ LLM-scCurator 🧬🤖
 ---
 
 ## 🚀 Overview
-**LLM-scCurator**  standardizes *noise-aware marker distillation* (clonotype/housekeeping/stress suppression + rescue + lineage leakage filters)
+**LLM-scCurator** standardizes *noise-aware marker distillation* (clonotype/housekeeping/stress suppression + rescue + lineage leakage filters)
 before prompting an LLM, and supports hierarchical (coarse-to-fine) annotation for scRNA-seq and spatial data.
 
 
@@ -28,7 +28,7 @@ before prompting an LLM, and supports hierarchical (coarse-to-fine) annotation f
 
 ```bash
 # 1. Clone the repository
-git clone [https://github.com/kenflab/LLM-scCurator.git](https://github.com/kenflab/LLM-scCurator.git)
+git clone https://github.com/kenflab/LLM-scCurator.git
 
 # 2. Navigate to the directory
 cd LLM-scCurator
@@ -41,7 +41,7 @@ Notes:
 ---
 ## 🐳 Docker (official environment)
 
-This repository provides an official Docker environment (including Python, R, and Jupyter), sufficient to run LLM-scCurator and most paper figure generation.
+This repository provides an official Docker environment (including Python, R, and Jupyter), sufficient to run **LLM-scCurator** and most paper figure generation.
 
 ```bash
 # from the repo root
@@ -54,7 +54,7 @@ Open Jupyter:
 Workspace mount: /work
 
 ---
-## Apptainer / Singularity (HPC)
+## 🖥️ Apptainer / Singularity (HPC)
 Build a .sif from the Docker image:
 ```bash
 docker compose -f docker/docker-compose.yml build
@@ -68,6 +68,11 @@ apptainer exec --cleanenv \
   llm-sc-curator.sif \
   bash -lc 'jupyter lab --ip=0.0.0.0 --port=8888 --no-browser --NotebookApp.token="" --NotebookApp.password=""'
 ```
+---
+## 🔒 Privacy
+**LLM-scCurator** runs preprocessing and feature distillation locally. If you enable external LLM APIs, it typically sends only compact, cluster-level summaries (e.g., ranked marker gene symbols and brief tissue context), not raw expression matrices or cell-level metadata.
+
+Please review your institution’s data policy and the LLM provider’s terms before sending any information to external APIs.
 
 ---
 ## ⚡ Quick Start
@@ -90,7 +95,7 @@ curator = LLMscCurator(api_key=GEMINI_API_KEY)
 # Load your data
 adata = sc.read_h5ad("my_data.h5ad")
 
-# 🚀 Run fully automated hierarchical annotation
+# Run fully automated hierarchical annotation
 adata = curator.run_hierarchical_discovery(adata)
 
 # Visualize
@@ -98,8 +103,8 @@ sc.pl.umap(adata, color=['major_type', 'fine_type'])
 ```
 
 
-### For R / Seurat Users
-You can use LLM-scCurator in two ways:
+### 📊 For R / Seurat Users
+You can use **LLM-scCurator** in two ways:
 
 - #### Option A (recommended): Export to .h5ad → run in Python
   We provide a helper script to export your Seurat object seamlessly to .h5ad for processing in Python.
@@ -128,7 +133,11 @@ curator <- lsc$LLMscCurator(api_key = "YOUR_KEY")
 ```
 
 ---
+## 📄 Manuscript Reproduction 
 
+For the manuscript-facing, deterministic pipeline (benchmarks/figures/Source Data), see `paper/README.md`.
+
+---
 ### 📓 Colab / Notebooks
 
 ---
