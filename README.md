@@ -37,7 +37,7 @@ cd LLM-scCurator
 pip install .
 ```
 Notes:
-> *　If you already have a Scanpy/Seurat pipeline environment, you can install into that environment.
+> If you already have a Scanpy/Seurat pipeline environment, you can install into that environment.
 ---
 ## 🐳 Docker (official environment)
 
