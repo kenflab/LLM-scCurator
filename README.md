@@ -10,6 +10,7 @@ LLM-scCurator 🧬🤖
 ![Jupyter](https://img.shields.io/badge/Jupyter-F37626?logo=jupyter&logoColor=white)
 ![R](https://img.shields.io/badge/R-276DC3?logo=r&logoColor=white)
 
+---
 
 ## 🚀 Overview
 **LLM-scCurator**  standardizes *noise-aware marker distillation* (clonotype/housekeeping/stress suppression + rescue + lineage leakage filters)
@@ -22,7 +23,7 @@ before prompting an LLM, and supports hierarchical (coarse-to-fine) annotation f
 - **🔬 Hierarchical Discovery:** One-line function to dissect complex tissues into major lineages and fine-grained subtypes.
 - **🌍 Spatial Ready:** Validated on scRNA-seq (10x) and spatial transcriptomics (Xenium, Visium).
 
-
+---
 ## 📦 Installation
 
 ```bash
@@ -35,50 +36,56 @@ cd LLM-scCurator
 # 3. Install the package (and dependencies)
 pip install .
 ```
+Notes:
+> *　If you already have a Scanpy/Seurat pipeline environment, you can install into that environment.
+---
+## 🐳 Docker (official environment)
 
-## 🐳 Docker (Reproducible environment)
+This repository provides an official Docker environment (including Python, R, and Jupyter), sufficient to run LLM-scCurator and most paper figure generation.
 
-We provide two images:
-- **lite**: Python + R + Jupyter (sufficient for running LLM-scCurator and most paper figure generation)
-- **full**: lite + additional/heavier dependencies for extended analyses (spatial + extra R ecosystem)
-
-### Quick start (lite)
 ```bash
 # from the repo root
-docker compose -f docker/docker-compose.yml build lite
-docker compose -f docker/docker-compose.yml up lite
+docker compose -f docker/docker-compose.yml build
+docker compose -f docker/docker-compose.yml up
 ```
 
 Open Jupyter:
 [http://localhost:8888](http://localhost:8888)
+Workspace mount: /work
 
-The repository is mounted into the container at /work.
-
-### Optional: full image
+---
+## Apptainer / Singularity (HPC)
+Build a .sif from the Docker image:
 ```bash
-docker compose -f docker/docker-compose.yml build full
-docker compose -f docker/docker-compose.yml up full
+docker compose -f docker/docker-compose.yml build
+apptainer build llm-sc-curator.sif docker-daemon://llm-sc-curator:official
 ```
 
-### API keys (Docker)
-Set environment variables in your shell before docker compose up:
+Run Jupyter:
 ```bash
-export GEMINI_API_KEY="..."
-export OPENAI_API_KEY="..."
+apptainer exec --cleanenv \
+  --bind "$PWD":/work \
+  llm-sc-curator.sif \
+  bash -lc 'jupyter lab --ip=0.0.0.0 --port=8888 --no-browser --NotebookApp.token="" --NotebookApp.password=""'
 ```
-Notes:
-> * Never commit API keys to the repository. Use environment variables or a local .env file (not tracked).
-> * LLM providers’ availability, pricing, and data handling policies may vary; please follow each provider’s terms and your institutional requirements.
 
-
+---
 ## ⚡ Quick Start
-### 🐍 Python (Standard Usage)
+### 🐍 For Python / Scanpy Users
+1) Set your API key (simplest: paste in the notebook)
+```python
+GEMINI_API_KEY = "PASTE_YOUR_KEY_HERE"
+# OPENAI_API_KEY = "PASTE_YOUR_KEY_HERE"  # optional
+
+```
+
+2) Run LLM-scCurator
 ```python
 import scanpy as sc
 from llm_sc_curator import LLMscCurator
 
 # Initialize with your API Key (Google AI Studio)
-curator = LLMscCurator(api_key="YOUR_GEMINI_API_KEY")
+curator = LLMscCurator(api_key=GEMINI_API_KEY)
 
 # Load your data
 adata = sc.read_h5ad("my_data.h5ad")
@@ -94,8 +101,16 @@ sc.pl.umap(adata, color=['major_type', 'fine_type'])
 ### For R / Seurat Users
 You can use LLM-scCurator in two ways:
 
-#### Option 1: Run directly in R (via reticulate)
-You can install and import the package directly within your R session.
+- #### Option A (recommended): Export to .h5ad → run in Python
+  We provide a helper script to export your Seurat object seamlessly to .h5ad for processing in Python.
+```R
+source("examples/R/export_script.R")
+export_for_llm_curator(seurat_obj, "my_data.h5ad")
+```
+
+
+- #### Option B: Use from R via reticulate (advanced)
+  Use reticulate to call the Python package installed in your environment.
 
 ```R
 # install.packages("reticulate")
@@ -112,16 +127,11 @@ curator <- lsc$LLMscCurator(api_key = "YOUR_KEY")
 # result <- curator$run_hierarchical_discovery(adata)
 ```
 
-#### Option 2: Export to Python (Recommended for large pipelines)
-We provide a helper script to export your Seurat object seamlessly to .h5ad for processing in Python.
-```R
-source("examples/R/export_script.R")
-export_for_llm_curator(seurat_obj, "my_data.h5ad")
-```
-
+---
 
 ### 📓 Colab / Notebooks
 
+---
 ## 🔑 Backends (API keys) Setup
 
 Set your provider API key as an environment variable:
