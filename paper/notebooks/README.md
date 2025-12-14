@@ -1,6 +1,6 @@
 # notebooks/
 
-This folder contains optional, read-only notebooks used during development (e.g., Colab runs and logs).
+This folder contains optional, read-only notebooks used during development (e.g., runs and logs).
 
 Notebooks are **not** the primary reproduction path.
 The canonical, reproducible workflow lives in `paper/scripts/` and is driven by `paper/config/`.
