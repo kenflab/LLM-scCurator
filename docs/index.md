@@ -1,4 +1,7 @@
 # LLM-scCurator
+<p align="center">
+  <img src="assets/LLM-scCurator_logo.png" width="720" alt="LLM-scCurator">
+</p>
 
 LLM-scCurator is a Python framework for **noise-aware marker distillation** that improves the robustness of **zero-shot cell-type annotation with LLMs** for single-cell and spatial transcriptomics.
 
