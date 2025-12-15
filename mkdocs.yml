@@ -1,6 +1,11 @@
 site_name: LLM-scCurator
 theme:
   name: material
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - content.code.copy
+
 
 nav:
   - Home: index.md
@@ -17,6 +22,8 @@ plugins:
           paths: ["."]
           options:
             show_source: false
+            show_root_heading: true
+            docstring_style: numpy
 
 markdown_extensions:
   - admonition
