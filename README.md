@@ -133,9 +133,13 @@ curator <- lsc$LLMscCurator(api_key = "YOUR_KEY")
 ```
 
 ---
-## 📄 Manuscript Reproduction 
+## 📄 Manuscript reproduction (Nature Methods)
+For the manuscript-facing, deterministic reproduction of benchmarks, figures, and Source Data, use the versioned pipeline under `paper/`.
+See `paper/README.md` for the canonical instructions.
 
-For the manuscript-facing, deterministic pipeline (benchmarks/figures/Source Data), see `paper/README.md`.
+Notes:
+ > * The manuscript figures are generated from `paper/source_data/` (Source Data). Re-running LLM/API or external reference annotators is optional and not required for figure reproduction.
+ > * For inspection, we include example LLM/API run logs in `paper/notebooks/` (read-only).
 
 ---
 ### 📓 Colab / Notebooks
