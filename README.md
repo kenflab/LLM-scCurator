@@ -73,9 +73,10 @@ apptainer exec --cleanenv \
 ```
 ---
 ## 🔒 Privacy
-**LLM-scCurator** runs preprocessing and feature distillation locally. If you enable external LLM APIs, it typically sends only compact, cluster-level summaries (e.g., ranked marker gene symbols and brief tissue context), not raw expression matrices or cell-level metadata.
-
-Please review your institution’s data policy and the LLM provider’s terms before sending any information to external APIs.
+We respect the sensitivity of clinical and biological data. **LLM-scCurator** is architected to ensure that raw expression matrices and cell-level metadata never leave your local environment.
+- Local execution: All heavy lifting—preprocessing, confounding gene removal, and feature ranking—occurs locally on your machine.
+- Minimal transmission: When interfacing with external LLM APIs, the system transmits only anonymized, cluster-level marker lists (e.g., top 50 ranked gene symbols) and basic tissue context.
+- User control: You retain control over any additional background information (e.g., disease state, treatment conditions, and platform) provided via custom prompts. Please review your institution’s data policy and the LLM provider’s terms before sending any information to external LLM APIs.
 
 ---
 ## ⚡ Quick Start
@@ -148,7 +149,7 @@ Notes:
 ### 📓 Colab / Notebooks
 
 ---
-## 🔑 Backends (API keys) Setup
+## 🔑 Backends (LLM API keys) Setup
 
 Set your provider API key as an environment variable:
 Set your provider API key as an environment variable:
