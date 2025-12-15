@@ -1,26 +1,13 @@
 services:
-  lite:
+  llm-sc-curator:
     build:
       context: ..
-      dockerfile: docker/Dockerfile.lite
-    image: llm-sc-curator:lite
+      dockerfile: docker/Dockerfile
+    image: llm-sc-curator:official
     ports:
       - "8888:8888"
     volumes:
-      - ../:/work
+      - ..:/work
     environment:
-      - GEMINI_API_KEY
-      - OPENAI_API_KEY
-
-  full:
-    build:
-      context: ..
-      dockerfile: docker/Dockerfile.full
-    image: llm-sc-curator:full
-    ports:
-      - "8889:8888"
-    volumes:
-      - ../:/work
-    environment:
-      - GEMINI_API_KEY
-      - OPENAI_API_KEY
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
