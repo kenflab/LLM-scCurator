@@ -1,0 +1,26 @@
+site_name: LLM-scCurator
+theme:
+  name: material
+
+nav:
+  - Home: index.md
+  - Getting started: getting-started.md
+  - User guide: user-guide.md
+  - Concepts: concepts.md
+  - API reference: api.md
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          paths: ["."]
+          options:
+            show_source: false
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - toc:
+      permalink: true
