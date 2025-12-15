@@ -1,9 +1,14 @@
 # API reference
 
-This page documents the **public API only**.
-
-::: llm_sc_curator
+## LLMscCurator
+::: llm_sc_curator.core.LLMscCurator
     options:
       members:
-        - LLMscCurator
-      show_source: false
+        - __init__
+        - set_global_context
+        - set_global_context_spatial
+        - curate_features
+        - annotate
+        - run_hierarchical_discovery
+      inherited_members: false
+      show_if_no_docstring: false
