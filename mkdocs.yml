@@ -1,7 +1,7 @@
 site_name: LLM-scCurator
 theme:
   name: material
-  logo: assets/logo.svg
+  logo: assets/LLM-scCurator_logo.png
   features:
     - navigation.instant
     - navigation.tracking
