@@ -7,7 +7,7 @@ nav:
   - Getting started: getting-started.md
   - User guide: user-guide.md
   - Concepts: concepts.md
-  - API reference: api.md
+  - API reference: api-reference.md
 
 plugins:
   - search
