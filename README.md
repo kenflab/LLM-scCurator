@@ -136,7 +136,7 @@ curator <- lsc$LLMscCurator(api_key = "YOUR_KEY")
 ```
 
 ---
-## 📄 Manuscript reproduction (Nature Methods)
+## 📄 Manuscript reproduction
 For the manuscript-facing, deterministic reproduction of benchmarks, figures, and Source Data, use the versioned pipeline under `paper/`.
 See [`paper/README.md`](https://github.com/kenflab/LLM-scCurator/tree/main/paper#readme) for the canonical instructions.
 
