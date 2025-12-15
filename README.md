@@ -1,8 +1,11 @@
 # LLM-scCurator
 
-**LLM-scCurator** 🧬🤖
-
-**Dynamic feature masking to improve robustness of zero-shot cell-type annotation with LLMs.**
+<p align="left">
+  <img src="docs/assets/LLM-scCurator_logo.png" width="90" alt="LLM-scCurator" style="vertical-align: middle; margin-right: 10px;">
+  <span style="font-size: 28px; font-weight: 700; vertical-align: middle;">
+    Dynamic feature masking to improve robustness of zero-shot cell-type annotation with LLMs.
+  </span>
+</p>
 
 [![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
