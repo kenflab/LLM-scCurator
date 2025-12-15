@@ -138,8 +138,8 @@ For the manuscript-facing, deterministic reproduction of benchmarks, figures, an
 See [`paper/README.md`](https://github.com/kenflab/LLM-scCurator/tree/main/paper#readme) for the canonical instructions.
 
 Notes:
- > * The manuscript figures are generated from `paper/source_data/` (Source Data). Re-running LLM/API or external reference annotators is optional and not required for figure reproduction.
- > * For inspection, we include example LLM/API run logs in `paper/notebooks/` (read-only).
+ > * The manuscript figures are generated from [`paper/source_data/`](https://github.com/kenflab/LLM-scCurator/tree/main/paper/source_data). Re-running LLM/API or external reference annotators is optional and not required for figure reproduction.
+ > * For inspection, we include example LLM/API run logs in [`paper/notebooks/`](https://github.com/kenflab/LLM-scCurator/tree/main/paper/notebooks) (read-only).
 
 ---
 ### 📓 Colab / Notebooks
