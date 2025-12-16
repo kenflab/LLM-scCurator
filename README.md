@@ -152,7 +152,6 @@ Notes:
 ## 🔑 Backends (LLM API keys) Setup
 
 Set your provider API key as an environment variable:
-Set your provider API key as an environment variable:
 - `GEMINI_API_KEY` for Google Gemini
 - `OPENAI_API_KEY` for OpenAI API
 
