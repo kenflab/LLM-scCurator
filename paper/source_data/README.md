@@ -19,7 +19,6 @@ We provide **one Excel file per relevant figure**, placed in this directory:
 - The linked figure (e.g., “This file corresponds to Fig. 2.”)
 - A panel-to-sheet mapping (e.g., Fig. 2a → `Fig2a_data`)
 - Column definitions, units, sample/cluster identifiers (if any), and **n**
-- Statistical test details (test name, sidedness, multiple-testing correction if applicable)
 
 Data sheets contain the underlying values used for plotting, and optional `*_stats` sheets contain the corresponding test results.
 
