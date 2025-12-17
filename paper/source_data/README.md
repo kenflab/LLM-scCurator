@@ -1,4 +1,4 @@
-# Source Data
+# Source Data/
 
 This directory contains the **source data files** supporting the figures in the LLM-scCurator manuscript.
 
