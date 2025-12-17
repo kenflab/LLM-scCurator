@@ -11,8 +11,8 @@ We provide **one Excel file per relevant figure**, placed in this directory:
 - `SourceData_Fig1.xlsx`
 - `SourceData_Fig2.xlsx`
 - `SourceData_EDFig1.xlsx` (Extended Data)
-- `SourceData_EDFig2.xlsx`
-- (and so on, as applicable)
+- `SourceData_EDFig2.xlsx` (Extended Data)
+- `SourceData_EDFig3.xlsx` (Extended Data)
 
 **Inside each workbook**
 - The first sheet is always named `README` and includes:
