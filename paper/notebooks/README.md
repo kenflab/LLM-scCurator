@@ -1,8 +1,9 @@
 # notebooks/
 
-This folder contains read-only provenance notebooks used during  manuscript preparation (runs, logs, and figure assembly notes).
+Read-only provenance notebooks captured during manuscript preparation (runs, logs, and figure assembly notes).
 
-Notebooks are **optional** and are provided for inspection/provenance.
-- Canonical numeric Source Data lives in `paper/source_data/`.
-- Selected scripts in `paper/scripts/` can render/verify a subset of panels from precomputed Source Data.
-- Large outputs (e.g., `.h5ad`, images, caches) should not be committed here.
+These notebooks are optional and provided for transparency.
+Panel verification is supported by the exported Source Data in `../source_data/`, indexed by `../FIGURE_MAP.csv`.
+Some notebooks may depend on large public inputs and computing.
+
+Note on LLM calls: we fix local random seeds for deterministic preprocessing; however, LLM API outputs may still vary across runs even with temperature=0.
