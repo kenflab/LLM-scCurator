@@ -4,27 +4,34 @@
 """
 paper/scripts/make_figures.py
 
-Canonical figure generation script (manuscript-facing).
+Optional manuscript-facing figure renderer.
 
-Inputs (versioned Source Data):
-  - paper/source_data/benchmark_tables/*_SCORED.csv
+This script is intentionally notebook-free and does NOT require raw `.h5ad`.
+It renders a small subset of panels directly from the versioned Source Data.
 
-Outputs (versioned Source Data + figures):
-  - paper/source_data/figure_data/Fig2a.csv
-  - paper/figures/Fig2a.pdf (+ png)
-  - (optional) ED confusion matrices from *_SCORED.csv
+Inputs (versioned Source Data; default locations):
+  - Fig. 2a:           paper/source_data/figure_data/Fig2/Fig2a-d_data.csv
+                       (or paper/source_data/figure_data/Fig2a.csv, if present)
+  - ED Fig. 2 (a–c):   paper/source_data/figure_data/EDFig2/EDFig2a_data.csv
+                       paper/source_data/figure_data/EDFig2/EDFig2b_data.csv
+                       paper/source_data/figure_data/EDFig2/EDFig2c_data.csv
+                       (per-cluster scored tables; confusion matrices are computed at plot time)
 
-This script is intentionally notebook-free and does NOT require raw .h5ad.
+Outputs (rendered figures; not versioned by default):
+  - paper/figures/*.pdf (+ png)
+
+Notes
+- Most review/verification can be done directly from paper/source_data/, indexed by paper/FIGURE_MAP.csv.
+- This renderer is provided as a convenience for reviewers/users who want ready-to-view PDFs.
 """
 
 from __future__ import annotations
 
-import os
 import sys
 import argparse
 import logging
 from pathlib import Path
-from typing import Dict, List, Optional, Sequence, Tuple
+from typing import Any, Dict, List, Optional, Sequence, Tuple
 
 import numpy as np
 import pandas as pd
@@ -38,6 +45,7 @@ LOG = logging.getLogger("paper.make_figures")
 # Style
 # -------------------------
 def set_nature_rcparams() -> None:
+    """A minimal, publication-friendly Matplotlib style."""
     mpl.rcParams["pdf.fonttype"] = 42
     mpl.rcParams["ps.fonttype"] = 42
     mpl.rcParams["font.family"] = "sans-serif"
@@ -55,55 +63,7 @@ def safe_mkdir(p: Path) -> None:
 
 
 # -------------------------
-# Discover benchmark tables
-# -------------------------
-def discover_scored_tables(bench_dir: Path) -> Dict[str, Path]:
-    """
-    Expect filenames like:
-      cd8_benchmark_results_integrated_SCORED.csv
-      cd4_benchmark_results_integrated_SCORED.csv
-      msc_benchmark_results_integrated_SCORED.csv
-      mouse_b_benchmark_results_integrated_SCORED.csv
-    Returns:
-      tag -> path
-    """
-    out: Dict[str, Path] = {}
-    for p in sorted(bench_dir.glob("*_benchmark_results_integrated_SCORED.csv")):
-        name = p.name
-        tag = name.replace("_benchmark_results_integrated_SCORED.csv", "")
-        out[tag] = p
-    return out
-
-
-# -------------------------
-# Robust CI (bootstrap)
-# -------------------------
-def mean_ci_bootstrap(
-    x: pd.Series,
-    n_boot: int = 10000,
-    alpha: float = 0.05,
-    seed: int = 42,
-) -> Tuple[float, float, float, int]:
-    v = x.dropna().astype(float).values
-    n = int(v.size)
-    if n == 0:
-        return float("nan"), float("nan"), float("nan"), 0
-    rng = np.random.default_rng(seed)
-    mean = float(v.mean())
-    if n == 1:
-        return mean, mean, mean, 1
-
-    boots = rng.choice(v, size=(n_boot, n), replace=True).mean(axis=1)
-    low = float(np.quantile(boots, alpha / 2))
-    high = float(np.quantile(boots, 1 - alpha / 2))
-    # clamp to [0,1]
-    low = max(0.0, low)
-    high = min(1.0, high)
-    return mean, low, high, n
-
-
-# -------------------------
-# Fig2a (bars across datasets)
+# Fig 2a (bars across datasets)
 # -------------------------
 PIPELINE_ORDER_FIG2A = ["Standard", "Curated", "CellTypist", "SingleR", "Azimuth"]
 
@@ -127,50 +87,103 @@ DATASET_ORDER_DEFAULT = ["cd8", "cd4", "msc", "mouse_b"]
 DATASET_TITLES = {"cd8": "CD8", "cd4": "CD4", "msc": "MSC", "mouse_b": "MOUSE_B"}
 
 
-def build_fig2a_table(scored_paths: Dict[str, Path], seed: int = 42) -> pd.DataFrame:
-    rows = []
-    for tag, path in scored_paths.items():
-        df = pd.read_csv(path)
-        for pipeline in PIPELINE_ORDER_FIG2A:
-            col = f"Score_{pipeline}"
-            if col not in df.columns:
-                continue
-            mean, low, high, n = mean_ci_bootstrap(df[col], seed=seed)
-            rows.append({
-                "Dataset": DATASET_TITLES.get(tag, tag),
-                "Dataset_Tag": tag,
-                "Pipeline": pipeline,
-                "N": n,
-                "Mean": mean,
-                "CI_Low": low,
-                "CI_High": high,
-                "Mean_pct": mean * 100.0,
-                "CI_Low_pct": low * 100.0,
-                "CI_High_pct": high * 100.0,
-            })
-    out = pd.DataFrame(rows)
-    return out
+def _normalize_fig2a_like(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Normalize a Fig2a table to the columns expected by `plot_fig2a_bars`.
+
+    Expected columns (case-sensitive):
+      - Dataset_Tag (e.g., cd8)
+      - Pipeline    (e.g., Standard)
+      - Mean_pct, CI_Low_pct, CI_High_pct
+
+    We keep this permissive to accommodate small format drifts.
+    """
+    x = df.copy()
+
+    # optional: panel filtering
+    for c in ["Panel", "panel", "FIG", "Figure"]:
+        if c in x.columns:
+            # accept Fig2a or Fig2a-d naming
+            mask = x[c].astype(str).str.contains("Fig2a", case=False, regex=False)
+            if mask.any():
+                x = x.loc[mask].copy()
+            break
+
+    # map possible dataset tag columns
+    if "Dataset_Tag" not in x.columns:
+        for c in ["dataset_tag", "dataset", "DatasetTag"]:
+            if c in x.columns:
+                x["Dataset_Tag"] = x[c].astype(str)
+                break
+
+    # map possible dataset display column
+    if "Dataset" not in x.columns and "Dataset_Tag" in x.columns:
+        x["Dataset"] = x["Dataset_Tag"].map(DATASET_TITLES).fillna(x["Dataset_Tag"])
+
+    # pipeline col
+    if "Pipeline" not in x.columns:
+        for c in ["pipeline", "Method", "method"]:
+            if c in x.columns:
+                x["Pipeline"] = x[c].astype(str)
+                break
+
+    # percentages
+    if "Mean_pct" not in x.columns and "Mean" in x.columns:
+        x["Mean_pct"] = x["Mean"].astype(float) * 100.0
+    if "CI_Low_pct" not in x.columns and "CI_Low" in x.columns:
+        x["CI_Low_pct"] = x["CI_Low"].astype(float) * 100.0
+    if "CI_High_pct" not in x.columns and "CI_High" in x.columns:
+        x["CI_High_pct"] = x["CI_High"].astype(float) * 100.0
+
+    needed = {"Dataset_Tag", "Pipeline", "Mean_pct", "CI_Low_pct", "CI_High_pct"}
+    missing = [c for c in sorted(needed) if c not in x.columns]
+    if missing:
+        raise ValueError(f"Fig2a input table missing columns: {missing}. Columns present: {list(x.columns)}")
+
+    return x
+
+
+def load_fig2a_table(fig_data_dir: Path) -> pd.DataFrame:
+    """Load Fig2a summary data from versioned Source Data."""
+    # Preferred: a dedicated Fig2a table (if present)
+    cand1 = fig_data_dir / "Fig2a.csv"
+    if cand1.exists():
+        LOG.info("Loading Fig2a table: %s", cand1)
+        return _normalize_fig2a_like(pd.read_csv(cand1))
+
+    # Common layout in this repo: Fig2/Fig2a-d_data.csv
+    cand2 = fig_data_dir / "Fig2" / "Fig2a-d_data.csv"
+    if cand2.exists():
+        LOG.info("Loading Fig2a-d table: %s", cand2)
+        return _normalize_fig2a_like(pd.read_csv(cand2))
+
+    raise FileNotFoundError(
+        "Could not find Fig2a Source Data. Tried: " + ", ".join([str(cand1), str(cand2)])
+    )
 
 
 def plot_fig2a_bars(summary_df: pd.DataFrame, out_pdf: Path, out_png: Path, dataset_order: Sequence[str]) -> None:
-    # 1x4 layout (shared y)
     fig, axes = plt.subplots(1, len(dataset_order), figsize=(16, 5), dpi=300, sharey=True)
     if len(dataset_order) == 1:
         axes = [axes]
 
     for ax, tag in zip(axes, dataset_order):
-        sub = summary_df[summary_df["Dataset_Tag"] == tag].copy()
+        sub = summary_df[summary_df["Dataset_Tag"].astype(str) == tag].copy()
         if sub.empty:
             ax.axis("off")
             continue
 
         # keep pipeline order but only present ones
         present = [p for p in PIPELINE_ORDER_FIG2A if p in set(sub["Pipeline"])]
+
         sub = sub.set_index("Pipeline").loc[present].reset_index()
 
         x = np.arange(len(sub))
-        means = sub["Mean_pct"].values
-        yerr = np.vstack([means - sub["CI_Low_pct"].values, sub["CI_High_pct"].values - means])
+        means = sub["Mean_pct"].astype(float).values
+        yerr = np.vstack([
+            means - sub["CI_Low_pct"].astype(float).values,
+            sub["CI_High_pct"].astype(float).values - means
+        ])
 
         colors = [PIPELINE_COLORS[p] for p in sub["Pipeline"]]
         ax.bar(x, means, yerr=yerr, capsize=4, color=colors, edgecolor="black", linewidth=1.0)
@@ -191,7 +204,7 @@ def plot_fig2a_bars(summary_df: pd.DataFrame, out_pdf: Path, out_png: Path, data
 
 
 # -------------------------
-# Optional: ED confusion matrices (from *_SCORED.csv)
+# ED Fig 2 confusion matrices (computed from per-cluster scored tables)
 # -------------------------
 def _ensure_repo_imports(repo_root: Path) -> None:
     sys.path.insert(0, str(repo_root.resolve()))
@@ -199,7 +212,7 @@ def _ensure_repo_imports(repo_root: Path) -> None:
 
 def choose_prediction_column(df: pd.DataFrame, pipeline: str) -> str:
     # expected: Standard_Answer / Curated_Answer / CellTypist_Answer etc.
-    cand = [f"{pipeline}_Answer", f"{pipeline}_Subtype_Clean"]
+    cand = [f"{pipeline}_Answer", f"{pipeline}_Subtype_Clean", f"{pipeline}_CellType"]
     for c in cand:
         if c in df.columns:
             return c
@@ -209,7 +222,7 @@ def choose_prediction_column(df: pd.DataFrame, pipeline: str) -> str:
 def compute_confusion_mean_score(
     df: pd.DataFrame,
     pipeline: str,
-    cfg,
+    cfg: Any,
     state_order: List[str],
 ) -> Dict[str, Any]:
     """
@@ -225,9 +238,12 @@ def compute_confusion_mean_score(
     if "UsedInConfusion" in df.columns:
         df_used = df[df["UsedInConfusion"] == True].copy()  # noqa: E712
     else:
-        df_used = df[df["GT_State"].astype(str) != str(cfg.default_state)].copy()
+        # fallback: exclude default state if available
+        default_state = getattr(cfg, "default_state", "Other")
+        df_used = df[df["GT_State"].astype(str) != str(default_state)].copy()
 
     from benchmarks.hierarchical_scoring import _parse_state_generic  # requires repo imports
+
     labels = state_order[:]
     label_to_idx = {lab: i for i, lab in enumerate(labels)}
 
@@ -268,12 +284,13 @@ def compute_confusion_mean_score(
         "n_correct": n_correct,
         "n": n,
         "hier_mean": hier_mean,
+        "counts": cm_count,
     }
 
 
 def plot_confusion_panels(
     df: pd.DataFrame,
-    cfg,
+    cfg: Any,
     state_order: List[str],
     dataset_title: str,
     out_pdf: Path,
@@ -292,6 +309,7 @@ def plot_confusion_panels(
         res = results[p]
         labels = res["labels"]
         cm = res["cm"]
+        counts = res["counts"]
 
         ax.imshow(cm, vmin=0.0, vmax=1.0, cmap=cmaps[p])
         ax.set_xticks(np.arange(len(labels)))
@@ -301,6 +319,7 @@ def plot_confusion_panels(
 
         for i in range(cm.shape[0]):
             for j in range(cm.shape[1]):
+                # show mean score; N is implicit in counts
                 ax.text(j, i, f"{cm[i, j]:.2f}", ha="center", va="center", fontsize=10)
 
         title = (
@@ -325,12 +344,21 @@ def plot_confusion_panels(
     LOG.info("Wrote: %s", out_pdf)
 
 
+def load_edfig2_tables(fig_data_dir: Path) -> Dict[str, Path]:
+    ed_dir = fig_data_dir / "EDFig2"
+    out = {
+        "cd8": ed_dir / "EDFig2a_data.csv",
+        "cd4": ed_dir / "EDFig2b_data.csv",
+        "msc": ed_dir / "EDFig2c_data.csv",
+    }
+    return {k: v for k, v in out.items() if v.exists()}
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--bench-dir", default="paper/source_data/benchmark_tables", type=str)
     ap.add_argument("--figure-data-dir", default="paper/source_data/figure_data", type=str)
     ap.add_argument("--figdir", default="paper/figures", type=str)
-    ap.add_argument("--dataset-order", default="cd8,cd4,msc,mouse_b", type=str)
+    ap.add_argument("--dataset-order", default=",".join(DATASET_ORDER_DEFAULT), type=str)
     ap.add_argument("--seed", default=42, type=int)
     ap.add_argument("--make-fig2a", action="store_true")
     ap.add_argument("--make-confusions", action="store_true")
@@ -340,31 +368,19 @@ def main() -> None:
     logging.basicConfig(level=logging.INFO, format="%(levelname)s:%(name)s:%(message)s")
     set_nature_rcparams()
 
-    bench_dir = Path(args.bench_dir).resolve()
     fig_data_dir = Path(args.figure_data_dir).resolve()
     figdir = Path(args.figdir).resolve()
-    safe_mkdir(fig_data_dir)
     safe_mkdir(figdir)
-
-    scored = discover_scored_tables(bench_dir)
-    if not scored:
-        raise RuntimeError(f"No *_SCORED.csv found in: {bench_dir}")
 
     dataset_order = [x.strip() for x in args.dataset_order.split(",") if x.strip()]
 
-    # Fig2a
     if args.make_fig2a:
-        summary = build_fig2a_table(scored, seed=args.seed)
-
-        out_csv = fig_data_dir / "Fig2a.csv"
-        summary.to_csv(out_csv, index=False)
-        LOG.info("Wrote: %s", out_csv)
+        summary = load_fig2a_table(fig_data_dir)
 
         out_pdf = figdir / "Fig2a.pdf"
         out_png = figdir / "Fig2a.png"
         plot_fig2a_bars(summary, out_pdf=out_pdf, out_png=out_png, dataset_order=dataset_order)
 
-    # Optional confusions
     if args.make_confusions:
         _ensure_repo_imports(Path(args.repo_root))
 
@@ -372,25 +388,29 @@ def main() -> None:
         from benchmarks.cd8_config import CD8_HIER_CFG
         from benchmarks.cd4_config import CD4_HIER_CFG
         from benchmarks.caf_config import CAF_HIER_CFG
-        from benchmarks.mouse_b_config import MOUSE_B_CFG
+        # mouse_b confusions are not part of ED Fig 2 in this repo; keep config for completeness
+        from benchmarks.mouse_b_config import MOUSE_B_CFG  # noqa: F401
 
         conf_cfg = {
             "cd8": ("CD8 T cell", CD8_HIER_CFG, ["Naive", "EffMem", "Exhausted", "Resident", "MAIT", "ISG", "Cycling", "Other"]),
             "cd4": ("CD4 T cell", CD4_HIER_CFG, ["Naive", "EffMem", "Exhausted", "Treg", "Tfh", "Th17", "ISG", "Cycling", "Other"]),
-            "msc": ("MSC", CAF_HIER_CFG, ["iCAF", "myCAF", "PVL", "Cycling", "Endothelial", "Other"]),
-            "mouse_b": ("Mouse B-lineage (TMS)", MOUSE_B_CFG, ["Mature_B", "Erythrocyte_like", "Mast_like", "pDC_Myeloid_like", "Other"]),
+            "msc": ("MSC/CAF", CAF_HIER_CFG, ["iCAF", "myCAF", "PVL", "Cycling", "Endothelial", "Other"]),
         }
 
+        ed_tables = load_edfig2_tables(fig_data_dir)
+        if not ed_tables:
+            raise RuntimeError(f"No EDFig2*_data.csv found under: {fig_data_dir / 'EDFig2'}")
+
         for tag in dataset_order:
-            if tag not in scored:
-                continue
-            if tag not in conf_cfg:
+            if tag not in ed_tables or tag not in conf_cfg:
                 continue
             title, cfg, order = conf_cfg[tag]
-            df = pd.read_csv(scored[tag])
+            df = pd.read_csv(ed_tables[tag])
 
-            out_pdf = figdir / f"ED_{DATASET_TITLES.get(tag, tag)}_confusion.pdf"
-            out_png = figdir / f"ED_{DATASET_TITLES.get(tag, tag)}_confusion.png"
+            # name outputs by panel
+            panel = {"cd8": "EDFig2a", "cd4": "EDFig2b", "msc": "EDFig2c"}[tag]
+            out_pdf = figdir / f"{panel}_confusion.pdf"
+            out_png = figdir / f"{panel}_confusion.png"
             plot_confusion_panels(df, cfg=cfg, state_order=order, dataset_title=title, out_pdf=out_pdf, out_png=out_png)
 
     if not args.make_fig2a and not args.make_confusions:

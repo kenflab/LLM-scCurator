@@ -4,18 +4,21 @@
 """
 paper/scripts/run_benchmarks.py
 
-Optional (development / re-run) script to regenerate LLM-based outputs:
-  - Standard (Top DE genes)
-  - Curated  (LLM-scCurator feature distillation)
+Optional (advanced) script to regenerate benchmark intermediates from large public inputs.
 
-IMPORTANT:
-- Paper reproduction should NOT depend on re-running LLMs or external references.
-- The canonical figure pipeline is:
-    source_data/benchmark_tables/*_SCORED.csv
-      -> source_data/figure_data/*.csv
-      -> paper/figures/*.pdf
+What it does
+- Runs the Standard baseline and LLM-scCurator on per-dataset inputs defined in a YAML config.
+- Writes per-cluster outputs to `paper/results/` for inspection/debugging.
 
-This script writes "integrated-like" tables so downstream tooling can stay consistent.
+What it does NOT do
+- It is not required to verify the manuscript figures.
+  The canonical numeric values used for plotting are already exported under `paper/source_data/`
+  and indexed by `paper/FIGURE_MAP.csv`.
+
+Notes on determinism
+- Local preprocessing can be made deterministic by fixing random seeds.
+- LLM API outputs may still vary across runs even with temperature=0; treat regenerated runs as
+  best used for auditing and sensitivity checks, not as the manuscript ground truth.
 """
 
 from __future__ import annotations
