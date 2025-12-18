@@ -6,7 +6,7 @@ This directory contains the minimal, manuscript-facing assets to reproduce the b
 - [`README.md`](README.md): this guide
 - [`FIGURE_MAP.csv`](FIGURE_MAP.csv): panel → Source Data file (and notebook provenance)
 - [`config/`](config): dataset pointers, parameters, and deterministic label maps
-- [`scripts/`](scripts): entrypoints to reproduce benchmark outputs and figures
+- [`scripts/`](scripts): selected entrypoints to regenerate intermediate benchmark tables and a subset of figures
 - [`notebooks/`](notebooks): optional, read-only development notebooks (not the canonical pipeline)
 - [`source_data/subsampled_ids/`](source_data/subsampled_ids): the fixed cell sets used in the manuscript (Source Data)
 - [`source_data/figure_data/`](source_data/figure_data): numeric data underlying each figure panel (Source Data)
