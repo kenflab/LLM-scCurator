@@ -13,7 +13,7 @@ indexed by [`../FIGURE_MAP.csv`](../FIGURE_MAP.csv). Re-running scripts is optio
   Applies a YAML label map (substring, case-insensitive) to a text field or a CSV column. <br>
 
 - [export_subsampled_ids.py](export_subsampled_ids.py) <br> 
-  Exports the fixed cell/spot identifier lists used in the manuscript ([`../source_data/subsampled_ids/`](`../source_data/subsampled_ids)). <br>
+  Exports the fixed cell/spot identifier lists used in the manuscript ([`../source_data/subsampled_ids/`](../source_data/subsampled_ids)). <br>
 
 - [run_benchmarks.py](run_benchmarks.py) (optional; advanced) <br> 
   Optional re-run entrypoint that may regenerate benchmark intermediates from large public inputs. <br>
@@ -22,7 +22,7 @@ indexed by [`../FIGURE_MAP.csv`](../FIGURE_MAP.csv). Re-running scripts is optio
 
 - [make_figures.py](make_figures.py) (optional) <br> 
   A lightweight renderer for a subset of panels from precomputed Source Data (see [`../source_data/figure_data/`](../source_data/figure_data)). <br> 
-  If it does not run in your environment, you can still verify all numeric values directly from [`../source_data/`](`../source_data). <br> 
+  If it does not run in your environment, you can still verify all numeric values directly from [`../source_data/`](../source_data). <br> 
 
   Example:
   ```bash
