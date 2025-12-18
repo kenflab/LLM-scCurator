@@ -3,7 +3,7 @@
 This directory contains the minimal, manuscript-facing assets to reproduce the benchmarks, figures, and Source Data.
 
 ## What is versioned here
-- `README.md`: this guide
+- [`README.md`](README.md): this guide
 - [`FIGURE_MAP.csv`](FIGURE_MAP.csv): panel → Source Data file (and notebook provenance)
 - [`config/`](config): dataset pointers, parameters, and deterministic label maps
 - [`scripts/`](scripts): entrypoints to reproduce benchmark outputs and figures
