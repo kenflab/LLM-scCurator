@@ -17,7 +17,7 @@ indexed by [`../FIGURE_MAP.csv`](../FIGURE_MAP.csv). Re-running scripts is optio
 
 - [run_benchmarks.py](run_benchmarks.py) (optional; advanced) <br> 
   Optional re-run entrypoint that may regenerate benchmark intermediates from large public inputs. <br>
-  This typically requires downloading datasets listed in [`../config/datasets.tsv`](../config/datasets.tsv) and setting API keys (if applicable). <br>
+  This typically requires downloading datasets listed in [`../config/datasets.tsv`](../config/datasets.tsv) and setting [Backends (LLM API keys)](https://github.com/kenflab/LLM-scCurator/tree/main?tab=readme-ov-file#-backends-llm-api-keys-setup) (if applicable). <br>
   Outputs are not required for Source Data inspection. <br> 
 
 - [make_figures.py](make_figures.py) (optional) <br> 
