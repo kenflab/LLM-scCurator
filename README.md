@@ -138,12 +138,12 @@ curator <- lsc$LLMscCurator(api_key = "YOUR_KEY")
 
 ---
 ## 📄 Manuscript reproduction
-For the manuscript-facing, deterministic reproduction of benchmarks, figures, and Source Data, use the versioned pipeline under `paper/`.
-See [`paper/README.md`](https://github.com/kenflab/LLM-scCurator/tree/main/paper#readme) for the canonical instructions.
+For manuscript-facing verification (benchmarks, figures, and Source Data), use the versioned assets under [`paper`](https://github.com/kenflab/LLM-scCurator/tree/main/paper). See [`paper/README.md`](https://github.com/kenflab/LLM-scCurator/tree/main/paper/readme) for the primary instructions.
 
 Notes:
- > * The manuscript figures are generated from [`paper/source_data/`](https://github.com/kenflab/LLM-scCurator/tree/main/paper/source_data). Re-running LLM/API or external reference annotators is optional and not required for figure reproduction.
- > * For inspection, we include example LLM/API run logs in [`paper/notebooks/`](https://github.com/kenflab/LLM-scCurator/tree/main/paper/notebooks) (read-only).
+ > * Figures are supported by exported Source Data in [`paper/source_data/`](https://github.com/kenflab/LLM-scCurator/tree/main/paper/source_data) (see [`paper/FIGURE_MAP.csv`](https://github.com/kenflab/LLM-scCurator/tree/main/paper/FIGURE_MAP.csv)  for panel → file mapping).
+ > * Re-running LLM/API calls or external reference annotators is optional; LLM API outputs may vary across runs even with temperature=0.
+ > * For transparency, we include read-only provenance notebooks with example run logs in [`paper/notebooks/`](https://github.com/kenflab/LLM-scCurator/tree/main/paper/notebooks)
 
 ---
 ### 📓 Colab / Notebooks
