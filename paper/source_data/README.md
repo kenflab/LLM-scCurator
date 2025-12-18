@@ -29,7 +29,7 @@ This repository also includes helper outputs used during figure generation:
 - [`subsampled_ids/`](subsampled_ids) — fixed cell/spot subsets used for deterministic benchmarks and plots. 
 - [`figure_data/`](figure_data) — panel-level CSV inputs used for plotting and traceability (including a small number of panel-specific scored tables).
 
-Extended Data Fig. 2 note
+Extended Data Fig. 2 note:
 - [`figure_data/EDFig2/EDFig2a_data.csv`](figure_data/EDFig2/EDFig2a_data.csv), [`figure_data/EDFig2/EDFig2b_data.csv`](figure_data/EDFig2/EDFig2b_data.csv), and [`figure_data/EDFig2/EDFig2c_data.csv`](figure_data/EDFig2/EDFig2c_data.csv) are per-cluster scored tables used to compute confusion matrices.
 - Confusion-matrix values are computed by aggregating these scored tables at plot time (no pre-aggregated confusion CSV is stored).
 
