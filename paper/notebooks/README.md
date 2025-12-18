@@ -1,10 +1,8 @@
 # notebooks/
 
-This folder contains optional, read-only notebooks used during development (e.g., runs and logs).
+This folder contains read-only provenance notebooks used during  manuscript preparation (runs, logs, and figure assembly notes).
 
-Notebooks are **not** the primary reproduction path.
-The canonical, reproducible workflow lives in `paper/scripts/` and is driven by `paper/config/`.
-
-- Use notebooks for inspection and provenance (human-readable logs).
-- Do not rely on notebooks for figure generation in the final pipeline.
+Notebooks are **optional** and are provided for inspection/provenance.
+- Canonical numeric Source Data lives in `paper/source_data/`.
+- Selected scripts in `paper/scripts/` can render/verify a subset of panels from precomputed Source Data.
 - Large outputs (e.g., `.h5ad`, images, caches) should not be committed here.
