@@ -31,7 +31,7 @@ If you want to re-run scripts locally, follow the main README for setup:
 
 - [make_figures.py](make_figures.py) (optional) <br> 
   A lightweight renderer for a subset of panels from precomputed Source Data (see [`../source_data/figure_data/`](../source_data/figure_data)). <br>
-  If it does not run in your environment, you can still verify all numeric values directly from [`../source_data/`](../source_data)(see [`../../FIGURE_MAP.csv`](../../FIGURE_MAP.csv)).. <br>
+  If it does not run in your environment, you can still verify all numeric values directly from [`../source_data/`](../source_data)(see [`../../FIGURE_MAP.csv`](../../FIGURE_MAP.csv)) <br>
 
   Example:
   ```bash
