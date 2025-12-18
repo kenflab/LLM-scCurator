@@ -35,3 +35,8 @@ If supported in your setup:
 ```
 python paper/scripts/make_figures.py --make-fig2a --make-confusions
 ```
+
+- ### example_subsampled_ids_with_gt.py (example)
+End-to-end example that exports subsampled IDs and adds deterministic Ground_Truth labels using YAML maps.
+- Script: [example_subsampled_ids_with_gt.py](example_subsampled_ids_with_gt.py)
+- Notebook log (provenance): [example_subsampled_ids_with_gt.ipynb](example_subsampled_ids_with_gt.ipynb)
