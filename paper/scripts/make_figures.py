@@ -18,7 +18,7 @@ Inputs (versioned Source Data; default locations):
                        (per-cluster scored tables; confusion matrices are computed at plot time)
 
 Outputs (rendered figures; not versioned by default):
-  - paper/figures/*.pdf (+ png)
+  - paper/scripts/figures/*.pdf (+ png)
 
 Notes
 - Most review/verification can be done directly from paper/source_data/, indexed by paper/FIGURE_MAP.csv.
@@ -83,8 +83,8 @@ PIPELINE_COLORS = {
     "Azimuth":    "#FFB74D",
 }
 
-DATASET_ORDER_DEFAULT = ["cd8", "cd4", "msc", "mouse_b"]
-DATASET_TITLES = {"cd8": "CD8", "cd4": "CD4", "msc": "MSC", "mouse_b": "MOUSE_B"}
+DATASET_ORDER_DEFAULT = ["CD8", "CD4", "MSC", "MOUSE_B"]
+DATASET_TITLES = {"CD8": "CD8", "CD4": "CD4", "MSC": "MSC", "MOUSE_B": "MOUSE_B"}
 
 
 def _normalize_fig2a_like(df: pd.DataFrame) -> pd.DataFrame:
@@ -92,7 +92,7 @@ def _normalize_fig2a_like(df: pd.DataFrame) -> pd.DataFrame:
     Normalize a Fig2a table to the columns expected by `plot_fig2a_bars`.
 
     Expected columns (case-sensitive):
-      - Dataset_Tag (e.g., cd8)
+      - Dataset (e.g., CD8)
       - Pipeline    (e.g., Standard)
       - Mean_pct, CI_Low_pct, CI_High_pct
 
@@ -110,15 +110,15 @@ def _normalize_fig2a_like(df: pd.DataFrame) -> pd.DataFrame:
             break
 
     # map possible dataset tag columns
-    if "Dataset_Tag" not in x.columns:
-        for c in ["dataset_tag", "dataset", "DatasetTag"]:
+    if "Dataset" not in x.columns:
+        for c in ["Dataset", "dataset", "DatasetTag"]:
             if c in x.columns:
-                x["Dataset_Tag"] = x[c].astype(str)
+                x["Dataset"] = x[c].astype(str)
                 break
 
     # map possible dataset display column
-    if "Dataset" not in x.columns and "Dataset_Tag" in x.columns:
-        x["Dataset"] = x["Dataset_Tag"].map(DATASET_TITLES).fillna(x["Dataset_Tag"])
+    if "Dataset" not in x.columns and "Dataset" in x.columns:
+        x["Dataset"] = x["Dataset"].map(DATASET_TITLES).fillna(x["Dataset"])
 
     # pipeline col
     if "Pipeline" not in x.columns:
@@ -135,7 +135,7 @@ def _normalize_fig2a_like(df: pd.DataFrame) -> pd.DataFrame:
     if "CI_High_pct" not in x.columns and "CI_High" in x.columns:
         x["CI_High_pct"] = x["CI_High"].astype(float) * 100.0
 
-    needed = {"Dataset_Tag", "Pipeline", "Mean_pct", "CI_Low_pct", "CI_High_pct"}
+    needed = {"Dataset", "Pipeline", "Mean_pct", "CI_Low_pct", "CI_High_pct"}
     missing = [c for c in sorted(needed) if c not in x.columns]
     if missing:
         raise ValueError(f"Fig2a input table missing columns: {missing}. Columns present: {list(x.columns)}")
@@ -168,7 +168,7 @@ def plot_fig2a_bars(summary_df: pd.DataFrame, out_pdf: Path, out_png: Path, data
         axes = [axes]
 
     for ax, tag in zip(axes, dataset_order):
-        sub = summary_df[summary_df["Dataset_Tag"].astype(str) == tag].copy()
+        sub = summary_df[summary_df["Dataset"].astype(str) == tag].copy()
         if sub.empty:
             ax.axis("off")
             continue
@@ -347,9 +347,9 @@ def plot_confusion_panels(
 def load_edfig2_tables(fig_data_dir: Path) -> Dict[str, Path]:
     ed_dir = fig_data_dir / "EDFig2"
     out = {
-        "cd8": ed_dir / "EDFig2a_data.csv",
-        "cd4": ed_dir / "EDFig2b_data.csv",
-        "msc": ed_dir / "EDFig2c_data.csv",
+        "CD8": ed_dir / "EDFig2a_data.csv",
+        "CD4": ed_dir / "EDFig2b_data.csv",
+        "MSC": ed_dir / "EDFig2c_data.csv",
     }
     return {k: v for k, v in out.items() if v.exists()}
 
@@ -357,7 +357,7 @@ def load_edfig2_tables(fig_data_dir: Path) -> Dict[str, Path]:
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--figure-data-dir", default="paper/source_data/figure_data", type=str)
-    ap.add_argument("--figdir", default="paper/figures", type=str)
+    ap.add_argument("--figdir", default="paper/scripts/figures", type=str)
     ap.add_argument("--dataset-order", default=",".join(DATASET_ORDER_DEFAULT), type=str)
     ap.add_argument("--seed", default=42, type=int)
     ap.add_argument("--make-fig2a", action="store_true")
@@ -377,8 +377,8 @@ def main() -> None:
     if args.make_fig2a:
         summary = load_fig2a_table(fig_data_dir)
 
-        out_pdf = figdir / "Fig2a.pdf"
-        out_png = figdir / "Fig2a.png"
+        out_pdf = figdir / "Fig2a_d.pdf"
+        out_png = figdir / "Fig2a_d.png"
         plot_fig2a_bars(summary, out_pdf=out_pdf, out_png=out_png, dataset_order=dataset_order)
 
     if args.make_confusions:
@@ -388,13 +388,13 @@ def main() -> None:
         from benchmarks.cd8_config import CD8_HIER_CFG
         from benchmarks.cd4_config import CD4_HIER_CFG
         from benchmarks.caf_config import CAF_HIER_CFG
-        # mouse_b confusions are not part of ED Fig 2 in this repo; keep config for completeness
+        # MOUSE_B confusions are not part of ED Fig 2 in this repo; keep config for completeness
         from benchmarks.mouse_b_config import MOUSE_B_CFG  # noqa: F401
 
         conf_cfg = {
-            "cd8": ("CD8 T cell", CD8_HIER_CFG, ["Naive", "EffMem", "Exhausted", "Resident", "MAIT", "ISG", "Cycling", "Other"]),
-            "cd4": ("CD4 T cell", CD4_HIER_CFG, ["Naive", "EffMem", "Exhausted", "Treg", "Tfh", "Th17", "ISG", "Cycling", "Other"]),
-            "msc": ("MSC/CAF", CAF_HIER_CFG, ["iCAF", "myCAF", "PVL", "Cycling", "Endothelial", "Other"]),
+            "CD8": ("CD8 T cell", CD8_HIER_CFG, ["Naive", "EffMem", "Exhausted", "Resident", "MAIT", "ISG", "Cycling", "Other"]),
+            "CD4": ("CD4 T cell", CD4_HIER_CFG, ["Naive", "EffMem", "Exhausted", "Treg", "Tfh", "Th17", "ISG", "Cycling", "Other"]),
+            "MSC": ("MSC/CAF", CAF_HIER_CFG, ["iCAF", "myCAF", "PVL", "Cycling", "Endothelial", "Other"]),
         }
 
         ed_tables = load_edfig2_tables(fig_data_dir)
@@ -408,7 +408,7 @@ def main() -> None:
             df = pd.read_csv(ed_tables[tag])
 
             # name outputs by panel
-            panel = {"cd8": "EDFig2a", "cd4": "EDFig2b", "msc": "EDFig2c"}[tag]
+            panel = {"CD8": "EDFig2a", "CD4": "EDFig2b", "MSC": "EDFig2c"}[tag]
             out_pdf = figdir / f"{panel}_confusion.pdf"
             out_png = figdir / f"{panel}_confusion.png"
             plot_confusion_panels(df, cfg=cfg, state_order=order, dataset_title=title, out_pdf=out_pdf, out_png=out_png)
