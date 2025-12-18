@@ -28,48 +28,69 @@
 ---
 ## 📦 Installation
 
-```bash
-# 1. Clone the repository
-git clone https://github.com/kenflab/LLM-scCurator.git
-
-# 2. Navigate to the directory
-cd LLM-scCurator
-
-# 3. Install the package (and dependencies)
-pip install .
-```
+  ```bash
+  # 1. Clone the repository
+  git clone https://github.com/kenflab/LLM-scCurator.git
+  
+  # 2. Navigate to the directory
+  cd LLM-scCurator
+  
+  # 3. Install the package (and dependencies)
+  pip install .
+  ```
 Notes:
 > If you already have a Scanpy/Seurat pipeline environment, you can install into that environment.
 ---
 ## 🐳 Docker (official environment)
+We provide an official Docker environment (Python + R + Jupyter), sufficient to run LLM-scCurator and most paper figure generation.
 
-This repository provides an official Docker environment (including Python, R, and Jupyter), sufficient to run **LLM-scCurator** and most paper figure generation.
+- #### Option A: Prebuilt image (recommended)
+  Use the published image from GitHub Container Registry (GHCR).
 
-```bash
-# from the repo root
-docker compose -f docker/docker-compose.yml build
-docker compose -f docker/docker-compose.yml up
-```
+  ```bash
+  # from the repo root (optional, for notebooks / file access)
+  docker pull ghcr.io/kenflab/llm-sc-curator:official
 
-Open Jupyter:
-[http://localhost:8888](http://localhost:8888)
-Workspace mount: /work
+  docker run --rm -it \
+    -p 8888:8888 \
+    -v "$PWD":/work \
+    -e GEMINI_API_KEY \
+    -e OPENAI_API_KEY \
+    ghcr.io/kenflab/llm-sc-curator:official
+  ```
+  Open Jupyter:
+  [http://localhost:8888](http://localhost:8888) <br>  
+  (Use the token printed in the container logs.)
+  <br>  
+  Notes:
+  > For manuscript reproducibility, we also provide versioned tags (e.g., :v0.1.0). Prefer a version tag when matching a paper release.
+
+
+- #### Option B: Build locally (development)
+  ```bash
+  # from the repo root
+  docker compose -f docker/docker-compose.yml build
+  docker compose -f docker/docker-compose.yml up
+  ```
+  Open Jupyter:
+  [http://localhost:8888](http://localhost:8888)  <br>  
+  Workspace mount: /work
 
 ---
 ## 🖥️ Apptainer / Singularity (HPC)
 Build a .sif from the Docker image:
-```bash
-docker compose -f docker/docker-compose.yml build
-apptainer build llm-sc-curator.sif docker-daemon://llm-sc-curator:official
-```
+  ```bash
+  docker compose -f docker/docker-compose.yml build
+  apptainer build llm-sc-curator.sif docker-daemon://llm-sc-curator:official
+  ```
 
 Run Jupyter:
-```bash
-apptainer exec --cleanenv \
-  --bind "$PWD":/work \
-  llm-sc-curator.sif \
-  bash -lc 'jupyter lab --ip=0.0.0.0 --port=8888 --no-browser --NotebookApp.token="" --NotebookApp.password=""'
-```
+  ```bash
+  apptainer exec --cleanenv \
+    --bind "$PWD":/work \
+    llm-sc-curator.sif \
+    bash -lc 'jupyter lab --ip=0.0.0.0 --port=8888 --no-browser --NotebookApp.token="" --NotebookApp.password=""'
+  ```
 ---
 ## 🔒 Privacy
 We respect the sensitivity of clinical and biological data. **LLM-scCurator** is architected to ensure that raw expression matrices and cell-level metadata never leave your local environment.
@@ -81,29 +102,28 @@ We respect the sensitivity of clinical and biological data. **LLM-scCurator** is
 ## ⚡ Quick Start
 ### 🐍 For Python / Scanpy Users
 1) Set your API key (simplest: paste in the notebook)
-```python
-GEMINI_API_KEY = "PASTE_YOUR_KEY_HERE"
-# OPENAI_API_KEY = "PASTE_YOUR_KEY_HERE"  # optional
-
-```
+  ```python
+  GEMINI_API_KEY = "PASTE_YOUR_KEY_HERE"
+  # OPENAI_API_KEY = "PASTE_YOUR_KEY_HERE"  # optional
+  ```
 
 2) Run LLM-scCurator
-```python
-import scanpy as sc
-from llm_sc_curator import LLMscCurator
-
-# Initialize with your API Key (Google AI Studio)
-curator = LLMscCurator(api_key=GEMINI_API_KEY)
-
-# Load your data
-adata = sc.read_h5ad("my_data.h5ad")
-
-# Run fully automated hierarchical annotation
-adata = curator.run_hierarchical_discovery(adata)
-
-# Visualize
-sc.pl.umap(adata, color=['major_type', 'fine_type'])
-```
+  ```python
+  import scanpy as sc
+  from llm_sc_curator import LLMscCurator
+  
+  # Initialize with your API Key (Google AI Studio)
+  curator = LLMscCurator(api_key=GEMINI_API_KEY)
+  
+  # Load your data
+  adata = sc.read_h5ad("my_data.h5ad")
+  
+  # Run fully automated hierarchical annotation
+  adata = curator.run_hierarchical_discovery(adata)
+  
+  # Visualize
+  sc.pl.umap(adata, color=['major_type', 'fine_type'])
+  ```
 
 
 ### 📊 For R / Seurat Users
@@ -111,29 +131,29 @@ You can use **LLM-scCurator** in two ways:
 
 - #### Option A (recommended): Export to .h5ad → run in Python
   We provide a helper script to export your Seurat object seamlessly to .h5ad for processing in Python.
-```R
-source("examples/R/export_script.R")
-export_for_llm_curator(seurat_obj, "my_data.h5ad")
-```
+  ```R  
+  source("examples/R/export_script.R")
+  export_for_llm_curator(seurat_obj, "my_data.h5ad")
+  ```
 
 
 - #### Option B: Use from R via reticulate (advanced)
   Use reticulate to call the Python package installed in your environment.
 
-```R
-# install.packages("reticulate")
-library(reticulate)
+  ```R
+  # install.packages("reticulate")
+  library(reticulate)
 
-# 1. Install LLM-scCurator (one-time setup)
-py_install("llm-sc-curator", pip = TRUE)
+  # 1. Install LLM-scCurator (one-time setup)  
+  py_install("llm-sc-curator", pip = TRUE)
 
-# 2. Import and use
-lsc <- import("llm_sc_curator")
-curator <- lsc$LLMscCurator(api_key = "YOUR_KEY")
-
-# (Assuming you have converted your Seurat obj to AnnData or h5ad)
-# result <- curator$run_hierarchical_discovery(adata)
-```
+  # 2. Import and use
+  lsc <- import("llm_sc_curator")
+  curator <- lsc$LLMscCurator(api_key = "YOUR_KEY")
+  
+  # (Assuming you have converted your Seurat obj to AnnData or h5ad)
+  # result <- curator$run_hierarchical_discovery(adata)
+  ```
 
 ---
 ## 📄 Manuscript reproduction
