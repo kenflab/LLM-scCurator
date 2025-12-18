@@ -138,7 +138,7 @@ curator <- lsc$LLMscCurator(api_key = "YOUR_KEY")
 
 ---
 ## 📄 Manuscript reproduction
-For manuscript-facing verification (benchmarks, figures, and Source Data), use the versioned assets under [`paper`](https://github.com/kenflab/LLM-scCurator/tree/main/paper). See [`paper/README.md`](https://github.com/kenflab/LLM-scCurator/tree/main/paper/readme) for the primary instructions.
+For manuscript-facing verification (benchmarks, figures, and Source Data), use the versioned assets under [`paper/`](https://github.com/kenflab/LLM-scCurator/tree/main/paper). See [`paper/README.md`](https://github.com/kenflab/LLM-scCurator/tree/main/paper/readme) for the primary instructions.
 
 Notes:
  > * Figures are supported by exported Source Data in [`paper/source_data/`](https://github.com/kenflab/LLM-scCurator/tree/main/paper/source_data) (see [`paper/FIGURE_MAP.csv`](https://github.com/kenflab/LLM-scCurator/tree/main/paper/FIGURE_MAP.csv)  for panel → file mapping).
