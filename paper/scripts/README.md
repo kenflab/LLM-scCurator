@@ -9,10 +9,11 @@ indexed by [`../FIGURE_MAP.csv`](../FIGURE_MAP.csv). Re-running scripts is optio
 
 ## Environment (optional)
 
-If you want to re-run scripts locally, please follow the main README for setup:
-- **Installation / Docker**: [`README.md`](../../README.md#-installation)
-- **Docker (official environment)**: [`README.md`](../../README.md#-docker-official-environment)
+If you want to re-run scripts locally, follow the main README for setup:
+- **Install (pip)**: [`README.md`](../../README.md#-installation)
+- **Docker (prebuilt image or local build)**: [`README.md`](../../README.md#-docker-official-environment)
 - **Backends (LLM API keys)** (if applicable): [`README.md`](../../README.md#-backends-llm-api-keys-setup)
+
 
 ## Scripts
 
