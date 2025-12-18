@@ -4,7 +4,7 @@ This directory contains the minimal, manuscript-facing assets to reproduce the b
 
 ## What is versioned here
 - `README.md`: this guide
-- [`FIGURE_MAP.csv`](≈): panel → Source Data file (and notebook provenance)
+- [`FIGURE_MAP.csv`](FIGURE_MAP.csv): panel → Source Data file (and notebook provenance)
 - [`config/`](config): dataset pointers, parameters, and deterministic label maps
 - [`scripts/`](scripts): entrypoints to reproduce benchmark outputs and figures
 - [`notebooks/`](notebooks): optional, read-only development notebooks (not the canonical pipeline)
@@ -19,7 +19,7 @@ Raw expression matrices (e.g., `.h5ad`) are not distributed in this repository. 
 
 ## How to reproduce
 - Inspect the exact numeric values used for plotting in [`source_data/figure_data/`](source_data/figure_data) (and the per-figure Excel workbooks in [`source_data/`](source_data), if provided).
-- Use [`FIGURE_MAP.csv`](ç) to locate the Source Data file (and the notebook section) for any panel.
+- Use [`FIGURE_MAP.csv`](FIGURE_MAP.csv) to locate the Source Data file (and the notebook section) for any panel.
 
 ### Optional: render supported panels
 Some panels can be rendered from precomputed Source Data via:
