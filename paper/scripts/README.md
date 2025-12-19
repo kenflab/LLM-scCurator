@@ -42,6 +42,15 @@ If you want to re-run scripts locally, follow the main README for setup:
   python paper/scripts/make_figures.py --make-fig2a --make-confusions
   ```
   <br>
+  [make_figures.py](make_figures.py) outputs (written to scripts/figures/):
+  - Fig2a_d.pdf
+  - Fig2a_d.png
+  - EDFig2a_confusion.pdf
+  - EDFig2a_confusion.png
+  - EDFig2b_confusion.pdf
+  - EDFig2b_confusion.png
+  - EDFig2c_confusion.pdf
+  - EDFig2c_confusion.png
 
 - [example_subsampled_ids_with_gt.py](example_subsampled_ids_with_gt.py) (example) <br> 
   End-to-end example that uses [`export_subsampled_ids.py`](export_subsampled_ids.py) and [`apply_label_map.py`](apply_label_map.py) <br> 
