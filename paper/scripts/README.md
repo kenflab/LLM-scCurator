@@ -38,7 +38,7 @@ If you want to re-run scripts locally, follow the main README for setup:
   - Script: [`run_benchmarks.py`](run_benchmarks.py)
   - Notebook log (provenance): [`run_benchmarks.ipynb`](run_benchmarks.ipynb)
   
-  Example:
+  Example (If supported in your setup):
   ```bash
   export GEMINI_API_KEY="YOUR_KEY_HERE"
 
