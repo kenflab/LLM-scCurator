@@ -1,0 +1,56 @@
+datasets:
+  - tag: cd8
+    adata_path: ../../runs/20251201.v1/cd8_benchmark_data.h5ad
+    cluster_col: meta.cluster
+    gt_map_path: label_maps/cd8_gt_map.yaml
+    n_genes: 50
+    model_name: models/gemini-2.5-pro
+    exclude_gt_labels: ["CD8_Other"]
+    hvg_kwargs:
+      n_top_genes: 2000
+      subset: false
+      batch_key: Cancer_Type
+      flavor: seurat_v3
+      layer: counts
+
+  - tag: cd4
+    adata_path: ../../runs/20251201.v1/cd4_benchmark_data.h5ad
+    cluster_col: meta.cluster
+    gt_map_path: label_maps/cd4_gt_map.yaml
+    n_genes: 50
+    model_name: models/gemini-2.5-pro
+    exclude_gt_labels: ["CD4_Other"]
+    hvg_kwargs:
+      n_top_genes: 2000
+      subset: false
+      batch_key: Cancer_Type
+      flavor: seurat_v3
+      layer: counts
+
+  - tag: msc
+    adata_path: ../../runs/20251201.v1/brca_msc_benchmark_data.h5ad
+    cluster_col: meta.cluster
+    gt_map_path: label_maps/brca_msc_gt_map.yaml
+    n_genes: 50
+    model_name: models/gemini-2.5-pro
+    exclude_gt_labels: ["Fibro_Other"]
+    hvg_kwargs:
+      n_top_genes: 2000
+      subset: false
+      batch_key: null
+      flavor: seurat
+      layer: counts
+
+  - tag: mouse_b
+    adata_path: ../../runs/20251201.v1/mouse_b_benchmark_data.h5ad
+    cluster_col: meta.cluster
+    gt_map_path: label_maps/tabula_muris_b_gt_map.yaml
+    n_genes: 50
+    model_name: models/gemini-2.5-pro
+    exclude_gt_labels: ["B_Other"]
+    hvg_kwargs:
+      n_top_genes: 2000
+      subset: false
+      batch_key: null
+      flavor: seurat
+      layer: counts
