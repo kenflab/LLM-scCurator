@@ -41,9 +41,7 @@ If you want to re-run scripts locally, follow the main README for setup:
   ```
   python paper/scripts/make_figures.py --make-fig2a --make-confusions
   ```
-  <br>
-  
-  [`make_figures.py`](make_figures.py) outputs (written to scripts/figures/):
+  Outputs (written to scripts/figures/):
   - Fig2a_d.pdf
   - Fig2a_d.png
   - EDFig2a_confusion.pdf
