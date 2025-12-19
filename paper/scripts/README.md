@@ -27,7 +27,9 @@ If you want to re-run scripts locally, follow the main README for setup:
   Optional re-run entrypoint that may regenerate benchmark intermediates from large public inputs. <br>
   This typically requires downloading datasets listed in [`../config/datasets.tsv`](../config/datasets.tsv) and setting
   [Backends (LLM API keys)](../../README.md#-backends-llm-api-keys-setup) (if applicable). <br>
-  Outputs are not required for Source Data inspection. <br>　
+  Outputs are not required for Source Data inspection. <br>
+  - Script: [`run_benchmarks.py`](run_benchmarks.py)
+  - Notebook log (provenance): [`run_run_benchmarks.ipynb`](run_run_benchmarks.ipynb)
   
   Example:
   ```bash
@@ -36,15 +38,15 @@ If you want to re-run scripts locally, follow the main README for setup:
   python paper/scripts/run_benchmarks.py \
     --config paper/config/benchmarks.yaml \
     --repo-root /work \
-    --out-results scripts/figures \
-    --cache-dir  scripts/figures/cache/llm_calls \
+    --out-results paper/scripts/results \
+    --cache-dir  paper/scripts/figures/cache/llm_calls \
     --datasets cd8 \
     --seed 42
   ```
   Outputs (written to scripts/figures/):
   - cd8_benchmark_results_integrated.csv
   - cd8_benchmark_run_metadata.json
-  
+   
 - [`make_figures.py`](make_figures.py) (optional) <br> 
   A lightweight renderer for a subset of panels from precomputed Source Data (see [`../source_data/figure_data/`](../source_data/figure_data)). <br>
   If it does not run in your environment, you can still verify all numeric values directly from [`../source_data/`](../source_data)(see [`../FIGURE_MAP.csv`](../FIGURE_MAP.csv)) <br>
