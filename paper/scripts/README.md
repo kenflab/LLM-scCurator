@@ -23,6 +23,13 @@ If you want to re-run scripts locally, follow the main README for setup:
 - [`export_subsampled_ids.py`](export_subsampled_ids.py) <br> 
   Exports the fixed cell/spot identifier lists used in the manuscript ([`../source_data/subsampled_ids/`](../source_data/subsampled_ids)). <br>
 
+- [`example_subsampled_ids_with_gt.py`](example_subsampled_ids_with_gt.py) (example) <br> 
+  End-to-end example that uses [`export_subsampled_ids.py`](export_subsampled_ids.py) and [`apply_label_map.py`](apply_label_map.py) <br> 
+  to export subsampled IDs and add deterministic `Ground_Truth` labels using YAML maps in [`../config/label_maps/`](../config/label_maps/). <br> 
+
+  - Script: [`example_subsampled_ids_with_gt.py`](example_subsampled_ids_with_gt.py) 
+  - Notebook log (provenance): [`example_subsampled_ids_with_gt.ipynb`](example_subsampled_ids_with_gt.ipynb) <br> 
+
 - [`run_benchmarks.py`](run_benchmarks.py) (optional; advanced) <br> 
   Optional re-run entrypoint that may regenerate benchmark intermediates from large public inputs. <br>
   This typically requires downloading datasets listed in [`../config/datasets.tsv`](../config/datasets.tsv) and setting
@@ -68,10 +75,3 @@ If you want to re-run scripts locally, follow the main README for setup:
   - EDFig2b_confusion.png
   - EDFig2c_confusion.pdf
   - EDFig2c_confusion.png
-
-- [`example_subsampled_ids_with_gt.py`](example_subsampled_ids_with_gt.py) (example) <br> 
-  End-to-end example that uses [`export_subsampled_ids.py`](export_subsampled_ids.py) and [`apply_label_map.py`](apply_label_map.py) <br> 
-  to export subsampled IDs and add deterministic `Ground_Truth` labels using YAML maps in [`../config/label_maps/`](../config/label_maps/). <br> 
-
-  - Script: [`example_subsampled_ids_with_gt.py`](example_subsampled_ids_with_gt.py) 
-  - Notebook log (provenance): [`example_subsampled_ids_with_gt.ipynb`](example_subsampled_ids_with_gt.ipynb)
