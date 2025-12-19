@@ -29,7 +29,7 @@ If you want to re-run scripts locally, follow the main README for setup:
   [Backends (LLM API keys)](../../README.md#-backends-llm-api-keys-setup) (if applicable). <br>
   Outputs are not required for Source Data inspection. <br>
   - Script: [`run_benchmarks.py`](run_benchmarks.py)
-  - Notebook log (provenance): [`run_run_benchmarks.ipynb`](run_run_benchmarks.ipynb)
+  - Notebook log (provenance): [`run_benchmarks.ipynb`](run_benchmarks.ipynb)
   
   Example:
   ```bash
