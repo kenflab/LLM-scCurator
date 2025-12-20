@@ -1,39 +1,39 @@
 Figure,Panel,SourceDataFile,Kind,ProvenanceNotebook,ProvenanceNote,Notes
-Fig1,Fig1,source_data/SourceData_Fig1.xlsx,source_data_excel,notebooks/04_Compare_top_N_genes.ipynb,journal-facing workbook,
-Fig1,Fig1b,source_data/figure_data/Fig1/Fig1b_data.csv,panel_data,notebooks/04_Compare_top_N_genes.ipynb,,
-Fig1,Fig1c,source_data/figure_data/Fig1/Fig1c_data.csv,panel_data,notebooks/04_Compare_top_N_genes.ipynb,,
-Fig2,Fig2,source_data/SourceData_Fig2.xlsx,source_data_excel,notebooks/03_evaluate_benchmarks.ipynb,journal-facing workbook,
-Fig2,Fig2a-d,source_data/figure_data/Fig2/Fig2a-d_data.csv,panel_data,notebooks/03_evaluate_benchmarks.ipynb,benchmark evaluation,
-Fig2,Fig2e,source_data/figure_data/Fig2/Fig2e_data.csv,panel_data,notebooks/05_Simulation.ipynb,simulation panel,
-Fig2,Fig2e,source_data/figure_data/Fig2/Fig2e_raw.csv,raw_intermediate,notebooks/05_Simulation.ipynb,raw/intermediate export,
-Fig2,Fig2f,source_data/figure_data/Fig2/Fig2f_data.csv,panel_data,notebooks/03_evaluate_benchmarks.ipynb,benchmark evaluation,
-Fig2,Fig2g,source_data/figure_data/Fig2/Fig2g_data.csv,panel_data,notebooks/03_evaluate_benchmarks.ipynb,benchmark evaluation,
-Fig2,Fig2h,source_data/figure_data/Fig2/Fig2h_data.csv,panel_data,notebooks/03_evaluate_benchmarks.ipynb,benchmark evaluation,
-EDFig1,EDFig1,source_data/SourceData_EDFig1.xlsx,source_data_excel,notebooks/01_cd8_gt_qc.ipynb,journal-facing workbook,
-EDFig1,EDFig1a,source_data/figure_data/EDFig1/EDFig1a_CD8.c01.Tn.MAL.csv,panel_data,notebooks/01_cd8_gt_qc.ipynb,CD8 GT/QC + plotting,
-EDFig1,EDFig1a,source_data/figure_data/EDFig1/EDFig1a_CD8.c06.Tem.GZMK.csv,panel_data,notebooks/01_cd8_gt_qc.ipynb,CD8 GT/QC + plotting,
-EDFig1,EDFig1a,source_data/figure_data/EDFig1/EDFig1a_CD8.c07.Temra.CX3CR1.csv,panel_data,notebooks/01_cd8_gt_qc.ipynb,CD8 GT/QC + plotting,
-EDFig1,EDFig1a,source_data/figure_data/EDFig1/EDFig1a_CD8.c12.Tex.CXCL13.csv,panel_data,notebooks/01_cd8_gt_qc.ipynb,CD8 GT/QC + plotting,
-EDFig1,EDFig1a,source_data/figure_data/EDFig1/EDFig1a_CD8.c15.ISG.IFIT1.csv,panel_data,notebooks/01_cd8_gt_qc.ipynb,CD8 GT/QC + plotting,
-EDFig1,EDFig1a,source_data/figure_data/EDFig1/EDFig1a_CD8.c16.MAIT.SLC4A10.csv,panel_data,notebooks/01_cd8_gt_qc.ipynb,CD8 GT/QC + plotting,
-EDFig1,EDFig1b,source_data/figure_data/EDFig1/EDFig1b_data.csv,panel_data,notebooks/01_cd8_gt_qc.ipynb,CD8 GT/QC + plotting,
-EDFig1,EDFig1c,source_data/figure_data/EDFig1/EDFig1c_data.csv,panel_data,notebooks/01_cd8_gt_qc.ipynb,CD8 GT/QC + plotting,
-EDFig1,EDFig1d,source_data/figure_data/EDFig1/EDFig1d_data.csv,panel_data,notebooks/01_cd8_gt_qc.ipynb,CD8 GT/QC + plotting,
-EDFig1,EDFig1e,source_data/figure_data/EDFig1/EDFig1e_data.csv,panel_data,notebooks/01_cd8_gt_qc.ipynb,CD8 GT/QC + plotting,
-EDFig1,EDFig1f,source_data/figure_data/EDFig1/EDFig1f_dot_color.csv,dotplot_color,notebooks/01_cd8_gt_qc.ipynb,dotplot matrix,
-EDFig1,EDFig1f,source_data/figure_data/EDFig1/EDFig1f_dot_size.csv,dotplot_size,notebooks/01_cd8_gt_qc.ipynb,dotplot matrix,
-EDFig1,EDFig1g,source_data/figure_data/EDFig1/EDFig1g_dot_color.csv,dotplot_color,notebooks/01_cd8_gt_qc.ipynb,dotplot matrix,
-EDFig1,EDFig1g,source_data/figure_data/EDFig1/EDFig1g_dot_size.csv,dotplot_size,notebooks/01_cd8_gt_qc.ipynb,dotplot matrix,
-EDFig1,EDFig1h,source_data/figure_data/EDFig1/EDFig1h_dot_color.csv,dotplot_color,notebooks/01_cd8_gt_qc.ipynb,dotplot matrix,
-EDFig1,EDFig1h,source_data/figure_data/EDFig1/EDFig1h_dot_size.csv,dotplot_size,notebooks/01_cd8_gt_qc.ipynb,dotplot matrix,
-EDFig1,EDFig1i,source_data/figure_data/EDFig1/EDFig1i_dot_color.csv,dotplot_color,notebooks/01_cd8_gt_qc.ipynb,dotplot matrix,
-EDFig1,EDFig1i,source_data/figure_data/EDFig1/EDFig1i_dot_size.csv,dotplot_size,notebooks/01_cd8_gt_qc.ipynb,dotplot matrix,
-EDFig2,EDFig2,source_data/figure_data/EDFig2/EDFig2_summary.csv,summary_table,notebooks/03_evaluate_benchmarks.ipynb,summary metrics (titles),
-EDFig2,EDFig2,source_data/SourceData_EDFig2.xlsx,source_data_excel,notebooks/03_evaluate_benchmarks.ipynb,journal-facing workbook,
-EDFig2,EDFig2a,source_data/figure_data/EDFig2/EDFig2a_data.csv,scored_table,notebooks/03_evaluate_benchmarks.ipynb,per-cluster scored table; aggregated at plot time,
-EDFig2,EDFig2b,source_data/figure_data/EDFig2/EDFig2b_data.csv,scored_table,notebooks/03_evaluate_benchmarks.ipynb,per-cluster scored table; aggregated at plot time,
-EDFig2,EDFig2c,source_data/figure_data/EDFig2/EDFig2c_data.csv,scored_table,notebooks/03_evaluate_benchmarks.ipynb,per-cluster scored table; aggregated at plot time,
-EDFig3,EDFig3,source_data/SourceData_EDFig3.xlsx,source_data_excel,notebooks/06_OSCC_Visium.ipynb,journal-facing workbook,
-EDFig3,EDFig3a,source_data/figure_data/EDFig3/EDFig3a_b_data.csv,panel_data,notebooks/06_OSCC_Visium.ipynb,Visium spatial panel,
-EDFig3,EDFig3c,source_data/figure_data/EDFig3/EDFig3c_data.csv,panel_data,notebooks/06_OSCC_Visium.ipynb,Visium spatial panel,
-EDFig3,EDFig3d,source_data/figure_data/EDFig3/EDFig3d_data.csv,panel_data,notebooks/07_Colon_Xenium.ipynb,Xenium spatial panel,
+Fig1,Fig1,source_data/SourceData_Fig1.xlsx,source_data_excel,notebooks/,journal-facing workbook,
+Fig1,Fig1a,None,panel_data,None,"Created in Biorender. Furudate, K. (2025)",
+Fig1,Fig1b,source_data/figure_data/Fig1/Fig1b_data.csv,panel_data,notebooks/04_landscape.ipynb,uses outputs from notebooks/00Ð01,CD8 GT/QC + plotting
+Fig1,Fig1c,source_data/figure_data/Fig1/Fig1c_data.csv,panel_data,notebooks/04_landscape.ipynb,uses outputs from notebooks/00Ð01,CD8 GT/QC + plotting
+Fig2,Fig2,source_data/SourceData_Fig2.xlsx,source_data_excel,notebooks/,journal-facing workbook,
+Fig2,Fig2a-d,source_data/figure_data/Fig2/Fig2a-d_data.csv,panel_data,notebooks/03_evaluate_benchmarks.ipynb,uses outputs from notebooks/00Ð02,benchmark evaluation
+Fig2,Fig2e,source_data/figure_data/Fig2/Fig2e_data.csv,panel_data,notebooks//04_landscape.ipynb,simulation panel,raw/intermediate export; plot computed from source_data/figure_data/Fig2/Fig2e_raw.csv
+Fig2,Fig2f,source_data/figure_data/Fig2/Fig2f_data.csv,panel_data,notebooks/05_compare_top_N_genes.ipynb,benchmark evaluation,CD8 GT/QC + plotting
+Fig2,Fig2g,source_data/figure_data/Fig2/Fig2g_data.csv,panel_data,notebooks/06_Simulation.ipynb,benchmark evaluation,simulation
+Fig2,Fig2h,source_data/figure_data/Fig2/Fig2h_data.csv,panel_data,notebooks/07_Colon_Xenium.ipynb,benchmark evaluation,spatial plot
+EDFig1,EDFig1,source_data/SourceData_EDFig1.xlsx,source_data_excel,,journal-facing workbook,
+EDFig1,EDFig1a,source_data/figure_data/EDFig1/EDFig1a_CD8.c01.Tn.MAL.csv,panel_data,notebooks/04_landscape.ipynb,uses outputs from notebooks/00Ð01,CD8 GT/QC + plotting
+EDFig1,EDFig1a,source_data/figure_data/EDFig1/EDFig1a_CD8.c06.Tem.GZMK.csv,panel_data,notebooks/04_landscape.ipynb,uses outputs from notebooks/00Ð01,CD8 GT/QC + plotting
+EDFig1,EDFig1a,source_data/figure_data/EDFig1/EDFig1a_CD8.c07.Temra.CX3CR1.csv,panel_data,notebooks/04_landscape.ipynb,uses outputs from notebooks/00Ð01,CD8 GT/QC + plotting
+EDFig1,EDFig1a,source_data/figure_data/EDFig1/EDFig1a_CD8.c12.Tex.CXCL13.csv,panel_data,notebooks/04_landscape.ipynb,uses outputs from notebooks/00Ð01,CD8 GT/QC + plotting
+EDFig1,EDFig1a,source_data/figure_data/EDFig1/EDFig1a_CD8.c15.ISG.IFIT1.csv,panel_data,notebooks/04_landscape.ipynb,uses outputs from notebooks/00Ð01,CD8 GT/QC + plotting
+EDFig1,EDFig1a,source_data/figure_data/EDFig1/EDFig1a_CD8.c16.MAIT.SLC4A10.csv,panel_data,notebooks/04_landscape.ipynb,uses outputs from notebooks/00Ð01,CD8 GT/QC + plotting
+EDFig1,EDFig1b,source_data/figure_data/EDFig1/EDFig1b_data.csv,panel_data,notebooks/01_cd8_gt_qc.ipynb,uses outputs from notebooks/00_export_subsample_cd8.ipynb,CD8 GT/QC + UMAP
+EDFig1,EDFig1c,source_data/figure_data/EDFig1/EDFig1c_data.csv,panel_data,notebooks/01_cd4_gt_qc.ipynb,uses outputs from notebooks/00_export_subsample_cd4.ipynb,CD4 GT/QC +  UMAP
+EDFig1,EDFig1d,source_data/figure_data/EDFig1/EDFig1d_data.csv,panel_data,notebooks/01_brca_msc_gt_qc.ipynb,uses outputs from notebooks/00_export_subsample_brca_msc.ipynb,BRCA MSC GT/QC + UMAP
+EDFig1,EDFig1e,source_data/figure_data/EDFig1/EDFig1e_data.csv,panel_data,notebooks/01_mouse_b_gt_qc.ipynb,uses outputs from notebooks/00_export_subsample_mouse_b.ipynb,MOUSE  GT/QC +  UMAP
+EDFig1,EDFig1f,source_data/figure_data/EDFig1/EDFig1f_dot_color.csv,dotplot_color,notebooks/01_cd8_gt_qc.ipynb,uses outputs from notebooks/00_export_subsample_cd8.ipynb,CD8 GT/QC + dotplot matrix
+EDFig1,EDFig1f,source_data/figure_data/EDFig1/EDFig1f_dot_size.csv,dotplot_size,notebooks/01_cd8_gt_qc.ipynb,uses outputs from notebooks/00_export_subsample_cd4.ipynb,CD8 GT/QC + dotplot matrix
+EDFig1,EDFig1g,source_data/figure_data/EDFig1/EDFig1g_dot_color.csv,dotplot_color,notebooks/01_cd4_gt_qc.ipynb,uses outputs from notebooks/00_export_subsample_cd4.ipynb,CD4 GT/QC +  dotplot matrix
+EDFig1,EDFig1g,source_data/figure_data/EDFig1/EDFig1g_dot_size.csv,dotplot_size,notebooks/01_cd4_gt_qc.ipynb,uses outputs from notebooks/00_export_subsample_cd4.ipynb,CD4 GT/QC +  dotplot matrix
+EDFig1,EDFig1h,source_data/figure_data/EDFig1/EDFig1h_dot_color.csv,dotplot_color,notebooks/01_brca_msc_gt_qc.ipynb,uses outputs from notebooks/00_export_subsample_brca_msc.ipynb,BRCA MSC GT/QC + dotplot matrix
+EDFig1,EDFig1h,source_data/figure_data/EDFig1/EDFig1h_dot_size.csv,dotplot_size,notebooks/01_brca_msc_gt_qc.ipynb,uses outputs from notebooks/00_export_subsample_brca_msc.ipynb,BRCA MSC GT/QC + dotplot matrix
+EDFig1,EDFig1i,source_data/figure_data/EDFig1/EDFig1i_dot_color.csv,dotplot_color,notebooks/01_mouse_b_gt_qc.ipynb,uses outputs from notebooks/00_export_subsample_mouse_b.ipynb,MOUSE  GT/QC +  dotplot matrix
+EDFig1,EDFig1i,source_data/figure_data/EDFig1/EDFig1i_dot_size.csv,dotplot_size,notebooks/01_mouse_b_gt_qc.ipynb,uses outputs from notebooks/00_export_subsample_mouse_b.ipynb,MOUSE  GT/QC +  dotplot matrix
+EDFig2,EDFig2,source_data/SourceData_EDFig2.xlsx,source_data_excel,notebooks/,journal-facing workbook,
+EDFig2,EDFig2a-c,source_data/figure_data/EDFig2/EDFig2_summary.csv,summary_table,notebooks/03_evaluate_benchmarks.ipynb,uses outputs from notebooks/00Ð02,summary metrics (titles)
+EDFig2,EDFig2a,source_data/figure_data/EDFig2/EDFig2a_data.csv,scored_table,notebooks/03_evaluate_benchmarks.ipynb,uses outputs from notebooks/00Ð02,CD8 per-cluster scored table; aggregated at plot time
+EDFig2,EDFig2b,source_data/figure_data/EDFig2/EDFig2b_data.csv,scored_table,notebooks/03_evaluate_benchmarks.ipynb,uses outputs from notebooks/00Ð02,CD4 per-cluster scored table; aggregated at plot time
+EDFig2,EDFig2c,source_data/figure_data/EDFig2/EDFig2c_data.csv,scored_table,notebooks/03_evaluate_benchmarks.ipynb,uses outputs from notebooks/00Ð02,BRCA MSC per-cluster scored table; aggregated at plot time
+EDFig3,EDFig3,source_data/SourceData_EDFig3.xlsx,source_data_excel,notebooks/08_OSCC_Visium.ipynb,journal-facing workbook,
+EDFig3,EDFig3a,source_data/figure_data/EDFig3/EDFig3a_b_data.csv,panel_data,notebooks/08_OSCC_Visium.ipynb,Visium spatial panel,spatial plot
+EDFig3,EDFig3c,source_data/figure_data/EDFig3/EDFig3c_data.csv,panel_data,notebooks/08_OSCC_Visium.ipynb,Visium spatial panel,heatmap matrix
+EDFig3,EDFig3d,source_data/figure_data/EDFig3/EDFig3d_data.csv,panel_data,notebooks/07_Colon_Xenium.ipynb,Xenium spatial panel,heatmap matrix
