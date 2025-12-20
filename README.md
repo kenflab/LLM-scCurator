@@ -167,7 +167,7 @@ Notes:
 ---
 ### 📓 Colab / Notebooks
 
-- [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/kenflab/LLM-scCurator/blob/main/examples/colab/colab_quickstart.ipynb) <br>
+- [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://github.com/kenflab/LLM-scCurator/blob/main/examples/colab/colab_quickstart.ipynb) <br>
   ☝️ Runs end-to-end on a public Scanpy dataset (**no API key required** by default).
 
 - 🔑 Optional (LLM backends): add your API key in Colab (**Secrets recommended**) or set it as an environment variable in a code cell.
