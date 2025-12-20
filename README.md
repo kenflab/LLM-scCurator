@@ -168,7 +168,7 @@ Notes:
 ### 📓 Colab notebook
   - [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/kenflab/LLM-scCurator/blob/master/examples/colab/colab_quickstart.ipynb) <br>
     ☝️ Runs end-to-end on a public Scanpy dataset (**no API key required** by default).
-     - 🔑 [Optional](): If an API key is provided (replace  `GEMINI_API_KEY = "YOUR_KEY_HERE"`), the notebook can also run LLM-scCurator automatic hierarchical cell annotation.
+     - 🔑 [Optional](https://github.com/kenflab/LLM-scCurator/blob/main/README.md#-backends-llm-api-keys-setup): If an API key is provided (replace  `GEMINI_API_KEY = "YOUR_KEY_HERE"`), the notebook can also run LLM-scCurator automatic hierarchical cell annotation.
 
 ---
 ## 🔑 Backends (LLM API keys) Setup
