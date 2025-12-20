@@ -46,4 +46,3 @@ Note on LLM calls: we fix local random seeds for deterministic preprocessing; ho
 
 ### 08 — OSCC Visium (spatial validation)
 - [`08_OSCC_Visium.ipynb`](08_OSCC_Visium.ipynb)
-- 
