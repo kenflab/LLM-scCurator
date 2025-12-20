@@ -32,14 +32,18 @@ Note on LLM calls: we fix local random seeds for deterministic preprocessing; ho
 ### 03 — Evaluate benchmarks / scoring exports
 - [`03_evaluate_benchmarks.ipynb`](03_evaluate_benchmarks.ipynb)
 
-### 04 — Compare top-N genes (figure assembly helper)
-- [`04_Compare_top_N_genes.ipynb`](04_Compare_top_N_genes.ipynb)
+### 04 — Landscape (figure assembly helper)
+- [`04_landscape.ipynb`](04_landscape.ipynb)
 
-### 05 — Simulation
-- [`05_Simulation.ipynb`](05_Simulation.ipynb)
+### 05 — Compare top-N genes (figure assembly helper)
+- [`05_compare_top_N_genes.ipynb`](05_compare_top_N_genes.ipynb)
 
-### 06 — OSCC Visium (spatial validation)
-- [`06_OSCC_Visium.ipynb`](06_OSCC_Visium.ipynb)
+### 06 — Simulation
+- [`06_Simulation.ipynb`](06_simulation.ipynb)
 
 ### 07 — Colon Xenium (spatial validation)
 - [`07_Colon_Xenium.ipynb`](07_Colon_Xenium.ipynb)
+
+### 08 — OSCC Visium (spatial validation)
+- [`08_OSCC_Visium.ipynb`](08_OSCC_Visium.ipynb)
+- 
