@@ -165,12 +165,10 @@ Notes:
  > * For transparency, we include read-only provenance notebooks with example run logs in [`paper/notebooks/`](https://github.com/kenflab/LLM-scCurator/tree/main/paper/notebooks)
 
 ---
-### 📓 Colab / Notebooks
-
+### 📓 Colab notebook
   - [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/kenflab/LLM-scCurator/blob/master/examples/colab/colab_quickstart.ipynb) <br>
     ☝️ Runs end-to-end on a public Scanpy dataset (**no API key required** by default).
-  - 🔑 Optional (LLM backends): add your API key in Colab (**Secrets recommended**) or set it as an environment variable in a code cell.
-  - 📖 More details: Docs → **Backends & API keys**.
+     - 🔑 [Optional](): If an API key is provided (replace  `GEMINI_API_KEY = "YOUR_KEY_HERE"`), the notebook can also run LLM-scCurator automatic hierarchical cell annotation.
 
 ---
 ## 🔑 Backends (LLM API keys) Setup
