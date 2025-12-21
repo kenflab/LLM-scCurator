@@ -129,7 +129,7 @@ We respect the sensitivity of clinical and biological data. **LLM-scCurator** is
 ### 📊 For R / Seurat Users
 You can use **LLM-scCurator** in two ways:
 
-- **Option A (recommended): Export → run in Python**
+- **Option A (recommended): Export → run in Python** 
   We provide a helper script [`examples/R/export_to_curator.R`](examples/R/export_to_curator.R) to export your Seurat object seamlessly for processing in Python.
   ```R  
   source("examples/R/export_to_curator.R")
@@ -138,46 +138,29 @@ You can use **LLM-scCurator** in two ways:
     --outdir out_seurat \
     --cluster_col seurat_clusters
   ```
+  Output:
+  - `counts.mtx` (raw counts; recommended)
+  - `features.tsv` (gene list)
+  - `obs.csv` (cell metadata; includes seurat_clusters)
+  - `umap.csv` (optional, if available)
+  
   Notes:
-   > * The folder will contain (at minimum): counts.mtx, features.tsv, obs.csv (and umap.csv if available).
+   > * The folder will contain: counts.mtx, features.tsv, obs.csv (and umap.csv if available).
    > * Then continue in the Python/Colab tutorial to run LLM-scCurator and write cluster_curated_map.csv,
    > * which can be re-imported into Seurat for plotting.
 
 
-- #### Option B: Use from R via reticulate (advanced)
-  If you prefer to stay in R, you can invoke the Python package via reticulate.
+- #### Option B: Run from R via reticulate (advanced)
+  If you prefer to stay in R, you can invoke the Python package via reticulate (Python-in-R).
   This is more sensitive to Python environment configuration, so we recommend Option A for most users.
+  - Use the **[official Docker](README.md#-docker-official-environment) (Python + R + Jupyter)** and follow the step-by-step tutorial notebook: 📓 [`examples/R/run_llm_sccurator_R_reticulate.ipynb`](examples/R/run_llm_sccurator_R_reticulate.ipynb)
 
-  ```R
-  # install.packages("reticulate")
-  library(reticulate)
-  
-  # Use a dedicated virtualenv (recommended)
-  venv <- "llmsc_venv"
-  if (!virtualenv_exists(venv)) virtualenv_create(venv)
-  use_virtualenv(venv, required = TRUE)
-  
-  # Install Python deps (one-time)
-  py_install(c("llm-sc-curator","scanpy","anndata","pandas","scipy","google-generativeai"), pip = TRUE)
-  
-  # Run (assuming you already have an AnnData object or .h5ad)
-  sc  <- import("scanpy")
-  lsc <- import("llm_sc_curator")
-  
-  adata <- sc$read_h5ad("my_data.h5ad")
-  
-  # LLM-scCurator expects log1p-normalized expression in adata.X
-  adata$layers[["counts"]] <- adata$X$copy()
-  sc$pp$normalize_total(adata, target_sum = 1e4)
-  sc$pp$log1p(adata)
-  
-  api_key <- Sys.getenv("GEMINI_API_KEY")
-  curator <- lsc$LLMscCurator(api_key = api_key, model_name = "models/gemini-2.0-flash")
-  curator$set_global_context(adata)
-  
-  adata2 <- curator$run_hierarchical_discovery(adata, batch_key = NULL)
-  adata2$write_h5ad("my_data_llm.h5ad")
-  ```
+  Notes:
+   > * **Option B** calls Python from R via `reticulate` (LLM-scCurator is a Python package).
+   > * The notebook includes:
+     > * “noise masking and Gini-informed distillation” step (no API key required)
+     > * 🔑 [Optional](README.md#-backends-llm-api-keys-setup) zero-shot cell-type annotation step (API key required).
+
 
 ---
 ## 📄 Manuscript reproduction
@@ -194,12 +177,12 @@ Notes:
 - **Scanpy / Python quickstart (recommended: [colab_quickstart.ipynb](examples/colab/colab_quickstart.ipynb))**
   - [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/kenflab/LLM-scCurator/blob/master/examples/colab/colab_quickstart.ipynb) <br>
     ☝️ Runs end-to-end on a public Scanpy dataset (**no API key required** by default).  
-    - 🔑 [Optional](https://github.com/kenflab/LLM-scCurator/blob/main/README.md#-backends-llm-api-keys-setup): If an API key is provided (replace `GEMINI_API_KEY = "YOUR_KEY_HERE"`), the notebook can also run **LLM-scCurator automatic hierarchical cell annotation**.
+    - 🔑 [Optional](README.md#-backends-llm-api-keys-setup): If an API key is provided (replace `GEMINI_API_KEY = "YOUR_KEY_HERE"`), the notebook can also run **LLM-scCurator automatic hierarchical cell annotation**.
 
 - **R / Seurat quickstart (export → Python LLM-scCurator → back to Seurat: [colab_quickstart_R.ipynb](examples/colab/colab_quickstart_R.ipynb))**
   - [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/kenflab/LLM-scCurator/blob/master/examples/colab/colab_quickstart_R.ipynb) <br>
     ☝️ Runs a minimal Seurat workflow in R, exports a Seurat object to an AnnData-ready folder, runs LLM-scCurator in Python, then re-imports labels into Seurat for visualization and marker sanity checks.  
-    - 🔑 [Optional](https://github.com/kenflab/LLM-scCurator/blob/main/README.md#-backends-llm-api-keys-setup): Requires an API key for LLM-scCurator annotation (same setup as above).
+    - 🔑 [Optional](README.md#-backends-llm-api-keys-setup): Requires an API key for LLM-scCurator annotation (same setup as above).
     - Recommended for Seurat users who want to keep Seurat clustering/UMAP but use LLM-scCurator for robust marker distillation and annotation.
 
 ---
