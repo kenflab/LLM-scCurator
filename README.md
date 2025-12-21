@@ -153,11 +153,10 @@ You can use **LLM-scCurator** in two ways:
 - #### Option B: Run from R via reticulate (advanced)
   If you prefer to stay in R, you can invoke the Python package via reticulate (Python-in-R).
   This is more sensitive to Python environment configuration, so we recommend Option A for most users.
-  - Use the **[official Docker](README.md#-docker-official-environment) (Python + R + Jupyter)** and follow the step-by-step tutorial notebook: 📓 [`examples/R/run_llm_sccurator_R_reticulate.ipynb`](examples/R/run_llm_sccurator_R_reticulate.ipynb)
-
- The notebook includes:
-   - Use LLM-scCurator for robust marker distillation (no API key required)
-   - 🔑 [Optional](README.md#-backends-llm-api-keys-setup): Requires an API key for LLM-scCurator annotation .
+  - Use the **[official Docker](README.md#-docker-official-environment) (Python + R + Jupyter)** and follow the step-by-step tutorial notebook: 📓 [`examples/R/run_llm_sccurator_R_reticulate.ipynb`](examples/R/run_llm_sccurator_R_reticulate.ipynb) <br> 
+    The notebook includes:
+      - Use LLM-scCurator for robust marker distillation (no API key required)
+      - 🔑 [Optional](README.md#-backends-llm-api-keys-setup): Requires an API key for LLM-scCurator annotation .
 
 
 ---
