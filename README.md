@@ -130,7 +130,7 @@ We respect the sensitivity of clinical and biological data. **LLM-scCurator** is
 You can use **LLM-scCurator** in two ways:
 
 - **Option A (recommended): Export → run in Python**
-  We provide a helper script (`examples/R/export_to_curator.R`)[examples/R/export_to_curator.R] to export your Seurat object seamlessly for processing in Python.
+  We provide a helper script [`examples/R/export_to_curator.R`](examples/R/export_to_curator.R) to export your Seurat object seamlessly for processing in Python.
   ```R  
   source("examples/R/export_to_curator.R")
   Rscript examples/R/export_to_curator.R \
