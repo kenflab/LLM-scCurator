@@ -133,26 +133,50 @@ You can use **LLM-scCurator** in two ways:
   We provide a helper script (`examples/R/export_to_curator.R`)[examples/R/export_to_curator.R] to export your Seurat object seamlessly for processing in Python.
   ```R  
   source("examples/R/export_to_curator.R")
-  export_for_llm_curator(seurat_obj, "my_data.h5ad", cluster_col = "seurat_clusters")
+  Rscript examples/R/export_to_curator.R \
+    --in_rds path/to/seurat_object.rds \
+    --outdir out_seurat \
+    --cluster_col seurat_clusters
   ```
+  Notes:
+   > * The folder will contain (at minimum): counts.mtx, features.tsv, obs.csv (and umap.csv if available).
+   > * Then continue in the Python/Colab tutorial to run LLM-scCurator and write cluster_curated_map.csv,
+   > * which can be re-imported into Seurat for plotting.
 
 
 - #### Option B: Use from R via reticulate (advanced)
-  Use reticulate to call the Python package installed in your environment.
+  If you prefer to stay in R, you can invoke the Python package via reticulate.
+  This is more sensitive to Python environment configuration, so we recommend Option A for most users.
 
   ```R
   # install.packages("reticulate")
   library(reticulate)
-
-  # 1. Install LLM-scCurator (one-time setup)  
-  py_install("llm-sc-curator", pip = TRUE)
-
-  # 2. Import and use
-  lsc <- import("llm_sc_curator")
-  curator <- lsc$LLMscCurator(api_key = "YOUR_KEY")
   
-  # (Assuming you have converted your Seurat obj to AnnData or h5ad)
-  # result <- curator$run_hierarchical_discovery(adata)
+  # Use a dedicated virtualenv (recommended)
+  venv <- "llmsc_venv"
+  if (!virtualenv_exists(venv)) virtualenv_create(venv)
+  use_virtualenv(venv, required = TRUE)
+  
+  # Install Python deps (one-time)
+  py_install(c("llm-sc-curator","scanpy","anndata","pandas","scipy","google-generativeai"), pip = TRUE)
+  
+  # Run (assuming you already have an AnnData object or .h5ad)
+  sc  <- import("scanpy")
+  lsc <- import("llm_sc_curator")
+  
+  adata <- sc$read_h5ad("my_data.h5ad")
+  
+  # LLM-scCurator expects log1p-normalized expression in adata.X
+  adata$layers[["counts"]] <- adata$X$copy()
+  sc$pp$normalize_total(adata, target_sum = 1e4)
+  sc$pp$log1p(adata)
+  
+  api_key <- Sys.getenv("GEMINI_API_KEY")
+  curator <- lsc$LLMscCurator(api_key = api_key, model_name = "models/gemini-2.0-flash")
+  curator$set_global_context(adata)
+  
+  adata2 <- curator$run_hierarchical_discovery(adata, batch_key = NULL)
+  adata2$write_h5ad("my_data_llm.h5ad")
   ```
 
 ---
@@ -160,9 +184,9 @@ You can use **LLM-scCurator** in two ways:
 For manuscript-facing verification (benchmarks, figures, and Source Data), use the versioned assets under [`paper/`](paper). See [`paper/README.md`](paper#readme) for the primary instructions.
 
 Notes:
- > * Figures are supported by exported Source Data in [`paper/source_data/`](https://github.com/kenflab/LLM-scCurator/tree/main/paper/source_data) (see [`paper/FIGURE_MAP.csv`](https://github.com/kenflab/LLM-scCurator/tree/main/paper/FIGURE_MAP.csv)  for panel → file mapping).
+ > * Figures are supported by exported Source Data in [`paper/source_data/`](paper/source_data) (see [`paper/FIGURE_MAP.csv`](paper/FIGURE_MAP.csv)  for panel → file mapping).
  > * Re-running LLM/API calls or external reference annotators is optional; LLM API outputs may vary across runs even with temperature=0.
- > * For transparency, we include read-only provenance notebooks with example run logs in [`paper/notebooks/`](https://github.com/kenflab/LLM-scCurator/tree/main/paper/notebooks)
+ > * For transparency, we include read-only provenance notebooks with example run logs in [`paper/notebooks/`](paper/notebooks)
 
 ---
 ### 📓 Colab notebooks
