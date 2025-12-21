@@ -1,111 +1,192 @@
-# Required libraries:
-# The 'anndata' package allows manipulation of AnnData objects within R via reticulate.
-# if (!require("anndata")) install.packages("anndata")
-# if (!require("Seurat")) install.packages("Seurat")
+# export_to_curator.R
+# Seurat -> AnnData-ready export (file-based handoff for LLM-scCurator)
+#
+# Outputs (outdir/):
+#   counts.mtx      genes x cells (MatrixMarket)
+#   features.tsv    gene names (1-col)
+#   barcodes.tsv    cell ids (1-col)
+#   obs.csv         Seurat meta.data + cell_id (+ cluster column)
+#   umap.csv        cell_id, UMAP1, UMAP2 (optional; if present and not disabled)
+#   sessionInfo.txt R session info
+#
+# Usage:
+#   Rscript /content/export_to_curator.R --in_rds obj.rds --outdir out_seurat --cluster_col seurat_clusters
+#
+suppressPackageStartupMessages({
+  library(Seurat)
+  library(Matrix)
+})
 
-library(Seurat)
-library(anndata)
-library(Matrix)
+stopf <- function(...) stop(sprintf(...), call. = FALSE)
 
-#' Export Seurat Object for LLM-scCurator Pipeline
-#'
-#' This function converts a processed Seurat object into an AnnData (.h5ad) file,
-#' compatible with the LLM-scCurator Python framework.
-#' It extracts raw count matrices and metadata, ensuring seamless integration
-#' between R-based preprocessing and Python-based LLM annotation.
-#'
-#' @param seurat_obj A Seurat object.
-#' @param save_path Output path for .h5ad file.
-#' @param cluster_col Metadata column for cluster labels.
-#'
-#' @return None. Saves an .h5ad file to the specified path.
-#' @export
-#'
-#' @examples
-#' \dontrun{
-#' export_for_llm_curator(seurat_obj, "my_data.h5ad", cluster_col = "seurat_clusters")
-#' }
-export_for_llm_curator <- function(seurat_obj, save_path, cluster_col = "seurat_clusters") {
-  
-  message(paste0("Preparing export for LLM-scCurator..."))
-  
-  # --- 1. Assay Selection Strategy (Prioritize Raw Data) ---
-  # Users often set 'SCT' or 'Integrated' as default, which may lack genes or raw counts.
-  # We enforce a search for 'RNA' or 'Spatial' first.
-  
-  available_assays <- Assays(seurat_obj)
-  target_assay <- NULL
-  
-  if ("RNA" %in% available_assays) {
-    target_assay <- "RNA"
-    message("   -> Found 'RNA' assay. Using this for raw counts (Recommended).")
-  } else if ("Spatial" %in% available_assays) {
-    target_assay <- "Spatial" # For Visium
-    message("   -> Found 'Spatial' assay. Using this for raw counts.")
-  } else {
-    target_assay <- DefaultAssay(seurat_obj)
-    message(paste0("   -> Warning: 'RNA' assay not found. Using default assay: '", target_assay, "'"))
-    message("      (Ensure this assay contains UNCORRECTED raw counts for all genes.)")
-  }
-  
-  # --- 2. Extract Raw Counts ---
-  counts_matrix <- NULL
-  
-  # Handle Seurat v5 vs v4 structure
-  # Try to get the 'counts' layer/slot from the target assay
-  obj_assay <- seurat_obj[[target_assay]]
-  
-  # Attempt 1: Seurat v5 style (Layers)
-  if (is(obj_assay, "Assay5")) {
-     if ("counts" %in% Layers(obj_assay)) {
-       counts_matrix <- LayerData(seurat_obj, assay = target_assay, layer = "counts")
-     }
-  } 
-  
-  # Attempt 2: Seurat v3/v4 style (Slots) -> Fallback if v5 method fails or returns nothing
-  if (is.null(counts_matrix)) {
-     try({
-       counts_matrix <- GetAssayData(seurat_obj, assay = target_assay, slot = "counts")
-     }, silent = TRUE)
-  }
-  
-  # Final check
-  if (is.null(counts_matrix) || nrow(counts_matrix) == 0) {
-    stop(paste0("Error: Could not find raw 'counts' in assay '", target_assay, "'. Please verify your object."))
-  }
-
-  # Check for gene count (Handling both scRNA-seq and Spatial Panels)
-  n_genes <- nrow(counts_matrix)
-  
-  if (n_genes < 5000) {
-    warning(paste0("⚠Note: Only ", n_genes, " genes found.\n",
-                   "   - If this is whole-transcriptome scRNA-seq: You might be exporting only Variable Features. ",
-                   "We recommend exporting the FULL transcriptome for optimal noise detection.\n",
-                   "   - If this is a targeted spatial panel (e.g., Xenium, CosMx): This is expected. You can proceed."))
-  }
-  
-  # --- 3. Transpose & Save ---
-  message(paste0("   -> Exporting ", nrow(counts_matrix), " genes x ", ncol(counts_matrix), " cells..."))
-  
-  counts_matrix <- Matrix::t(counts_matrix)
-  
-  # Metadata validation
-  if (!cluster_col %in% colnames(seurat_obj@meta.data)) {
-    stop(paste0("Error: Cluster column '", cluster_col, "' not found."))
-  }
-  
-  meta_data <- seurat_obj@meta.data
-  meta_data[[cluster_col]] <- as.factor(meta_data[[cluster_col]])
-  
-  ad <- AnnData(
-    X = counts_matrix,
-    obs = meta_data
+parse_args <- function() {
+  args <- commandArgs(trailingOnly = TRUE)
+  out <- list(
+    in_rds = NULL,
+    outdir = "out_seurat",
+    cluster_col = "seurat_clusters",
+    assay = NULL,          # NULL -> RNA > Spatial > DefaultAssay
+    save_umap = TRUE
   )
-  
-  tryCatch({
-    write_h5ad(ad, save_path)
-    message(paste0("Saved to: ", save_path))
-  }, error = function(e) {
-    stop(paste0("Write failed: ", e$message))
-  })
+
+  i <- 1
+  while (i <= length(args)) {
+    key <- args[[i]]
+    val <- if (i + 1 <= length(args)) args[[i + 1]] else NULL
+
+    if (key %in% c("-i", "--in_rds")) { out$in_rds <- val; i <- i + 2; next }
+    if (key %in% c("-o", "--outdir")) { out$outdir <- val; i <- i + 2; next }
+    if (key %in% c("-c", "--cluster_col")) { out$cluster_col <- val; i <- i + 2; next }
+    if (key %in% c("-a", "--assay")) { out$assay <- val; i <- i + 2; next }
+    if (key == "--no_umap") { out$save_umap <- FALSE; i <- i + 1; next }
+
+    if (key %in% c("-h", "--help")) {
+      cat("
+Export Seurat object to an AnnData-ready folder (LLM-scCurator)
+
+Usage:
+  Rscript /content/export_to_curator.R --in_rds <obj.rds> --outdir <dir> [options]
+
+Required:
+  --in_rds, -i      Path to Seurat .rds file
+
+Options:
+  --outdir, -o      Output directory (default: out_seurat)
+  --cluster_col, -c Metadata column name for clusters (default: seurat_clusters)
+  --assay, -a       Assay to export (default: auto: RNA > Spatial > DefaultAssay)
+  --no_umap         Do not export UMAP even if present
+
+Outputs (outdir/):
+  counts.mtx        genes x cells (MatrixMarket)
+  features.tsv      gene names (1-col)
+  barcodes.tsv      cell ids (1-col)
+  obs.csv           Seurat meta.data + cell_id
+  umap.csv          cell_id, UMAP1, UMAP2 (if present and not disabled)
+  sessionInfo.txt   R session info
+\n")
+      quit(status = 0)
+    }
+
+    stopf("Unknown argument: %s (use --help)", key)
+  }
+
+  if (is.null(out$in_rds) || is.na(out$in_rds) || out$in_rds == "") {
+    stopf("Missing --in_rds. Use --help.")
+  }
+  out
 }
+
+pick_assay <- function(obj, requested = NULL) {
+  assays <- Assays(obj)
+  if (!is.null(requested)) {
+    if (!(requested %in% assays)) stopf("Requested assay '%s' not found. Available: %s",
+                                        requested, paste(assays, collapse = ", "))
+    return(requested)
+  }
+  if ("RNA" %in% assays) return("RNA")
+  if ("Spatial" %in% assays) return("Spatial")
+  DefaultAssay(obj)
+}
+
+get_counts_any <- function(obj, assay) {
+  counts <- NULL
+  a <- obj[[assay]]
+
+  # Seurat v5: Assay5 + layer
+  if (inherits(a, "Assay5")) {
+    if ("counts" %in% Layers(a)) {
+      counts <- tryCatch(
+        LayerData(obj, assay = assay, layer = "counts"),
+        error = function(e) NULL
+      )
+    }
+  }
+
+  # Seurat v4 fallback: slot
+  if (is.null(counts)) {
+    counts <- tryCatch(
+      GetAssayData(obj, assay = assay, slot = "counts"),
+      error = function(e) NULL
+    )
+  }
+
+  if (is.null(counts) || nrow(counts) == 0 || ncol(counts) == 0) {
+    stopf("Could not retrieve counts from assay '%s'.", assay)
+  }
+  if (!inherits(counts, "dgCMatrix")) counts <- as(counts, "dgCMatrix")
+  counts
+}
+
+write_export <- function(seurat_obj, outdir, cluster_col, assay = NULL, save_umap = TRUE) {
+  dir.create(outdir, showWarnings = FALSE, recursive = TRUE)
+
+  message("Preparing export for LLM-scCurator (file-based handoff)...")
+
+  # 1) assay
+  chosen_assay <- pick_assay(seurat_obj, assay)
+  message(sprintf(" -> assay = %s", chosen_assay))
+
+  # 2) counts
+  counts <- get_counts_any(seurat_obj, chosen_assay)
+  message(sprintf(" -> counts: %d genes x %d cells", nrow(counts), ncol(counts)))
+
+  if (nrow(counts) < 5000) {
+    warning(sprintf(
+      "Only %d genes found. If this is WTA scRNA-seq, you may be exporting a reduced gene set.\nIf this is targeted (Xenium/CosMx), this may be expected.",
+      nrow(counts)
+    ), call. = FALSE)
+  }
+
+  # 3) meta
+  meta <- seurat_obj@meta.data
+  meta$cell_id <- rownames(meta)
+  if (!(cluster_col %in% colnames(meta))) {
+    stopf("Cluster column '%s' not found in meta.data.", cluster_col)
+  }
+  meta[[cluster_col]] <- as.character(meta[[cluster_col]])
+
+  # 4) UMAP
+  umap_df <- NULL
+  if (save_umap && ("umap" %in% Reductions(seurat_obj))) {
+    um <- Embeddings(seurat_obj, "umap")
+    umap_df <- data.frame(cell_id = rownames(um), UMAP1 = um[, 1], UMAP2 = um[, 2])
+    message(" -> UMAP found: exporting umap.csv")
+  } else {
+    message(" -> UMAP not exported (missing or disabled)")
+  }
+
+  # 5) write files
+  Matrix::writeMM(counts, file.path(outdir, "counts.mtx"))
+  write.table(rownames(counts), file.path(outdir, "features.tsv"),
+              quote = FALSE, sep = "\t", row.names = FALSE, col.names = FALSE)
+  write.table(colnames(counts), file.path(outdir, "barcodes.tsv"),
+              quote = FALSE, sep = "\t", row.names = FALSE, col.names = FALSE)
+  write.csv(meta, file.path(outdir, "obs.csv"), row.names = FALSE)
+
+  if (!is.null(umap_df)) write.csv(umap_df, file.path(outdir, "umap.csv"), row.names = FALSE)
+
+  writeLines(capture.output(sessionInfo()), file.path(outdir, "sessionInfo.txt"))
+
+  message(sprintf("✅ Export completed: %s", normalizePath(outdir)))
+  invisible(TRUE)
+}
+
+# ---- Main ----
+cfg <- parse_args()
+
+if (!file.exists(cfg$in_rds)) {
+  stopf("Input file not found: %s", cfg$in_rds)
+}
+
+obj <- readRDS(cfg$in_rds)
+if (!inherits(obj, "Seurat")) {
+  stopf("Input is not a Seurat object: %s", cfg$in_rds)
+}
+
+write_export(
+  seurat_obj = obj,
+  outdir = cfg$outdir,
+  cluster_col = cfg$cluster_col,
+  assay = cfg$assay,
+  save_umap = cfg$save_umap
+)
