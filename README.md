@@ -129,11 +129,11 @@ We respect the sensitivity of clinical and biological data. **LLM-scCurator** is
 ### 📊 For R / Seurat Users
 You can use **LLM-scCurator** in two ways:
 
-- #### Option A (recommended): Export to .h5ad → run in Python
-  We provide a helper script to export your Seurat object seamlessly to .h5ad for processing in Python.
+- **Option A (recommended): Export → run in Python**
+  We provide a helper script (`examples/R/export_to_curator.R`)[examples/R/export_to_curator.R] to export your Seurat object seamlessly for processing in Python.
   ```R  
-  source("examples/R/export_script.R")
-  export_for_llm_curator(seurat_obj, "my_data.h5ad")
+  source("examples/R/export_to_curator.R")
+  export_for_llm_curator(seurat_obj, "my_data.h5ad", cluster_col = "seurat_clusters")
   ```
 
 
@@ -157,7 +157,7 @@ You can use **LLM-scCurator** in two ways:
 
 ---
 ## 📄 Manuscript reproduction
-For manuscript-facing verification (benchmarks, figures, and Source Data), use the versioned assets under [`paper/`](https://github.com/kenflab/LLM-scCurator/tree/main/paper). See [`paper/README.md`](https://github.com/kenflab/LLM-scCurator/tree/main/paper#readme) for the primary instructions.
+For manuscript-facing verification (benchmarks, figures, and Source Data), use the versioned assets under [`paper/`](paper). See [`paper/README.md`](paper#readme) for the primary instructions.
 
 Notes:
  > * Figures are supported by exported Source Data in [`paper/source_data/`](https://github.com/kenflab/LLM-scCurator/tree/main/paper/source_data) (see [`paper/FIGURE_MAP.csv`](https://github.com/kenflab/LLM-scCurator/tree/main/paper/FIGURE_MAP.csv)  for panel → file mapping).
@@ -165,10 +165,18 @@ Notes:
  > * For transparency, we include read-only provenance notebooks with example run logs in [`paper/notebooks/`](https://github.com/kenflab/LLM-scCurator/tree/main/paper/notebooks)
 
 ---
-### 📓 Colab notebook
+### 📓 Colab notebooks
+
+- **Scanpy / Python quickstart (recommended)**
   - [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/kenflab/LLM-scCurator/blob/master/examples/colab/colab_quickstart.ipynb) <br>
-    ☝️ Runs end-to-end on a public Scanpy dataset (**no API key required** by default).
-     - 🔑 [Optional](https://github.com/kenflab/LLM-scCurator/blob/main/README.md#-backends-llm-api-keys-setup): If an API key is provided (replace  `GEMINI_API_KEY = "YOUR_KEY_HERE"`), the notebook can also run LLM-scCurator automatic hierarchical cell annotation.
+    ☝️ Runs end-to-end on a public Scanpy dataset (**no API key required** by default).  
+    - 🔑 [Optional](https://github.com/kenflab/LLM-scCurator/blob/main/README.md#-backends-llm-api-keys-setup): If an API key is provided (replace `GEMINI_API_KEY = "YOUR_KEY_HERE"`), the notebook can also run **LLM-scCurator automatic hierarchical cell annotation**.
+
+- **R / Seurat quickstart (export → Python LLM-scCurator → back to Seurat)**
+  - [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/kenflab/LLM-scCurator/blob/master/examples/colab/colab_quickstart_R.ipynb) <br>
+    ☝️ Runs a minimal Seurat workflow in R, exports a Seurat object to an AnnData-ready folder, runs LLM-scCurator in Python, then re-imports labels into Seurat for visualization and marker sanity checks.  
+    - 🔑 Requires an API key for LLM-scCurator annotation (same setup as above).
+    - Recommended for Seurat users who want to keep Seurat clustering/UMAP but use LLM-scCurator for robust marker distillation and annotation.
 
 ---
 ## 🔑 Backends (LLM API keys) Setup
