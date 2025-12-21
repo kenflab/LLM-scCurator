@@ -155,11 +155,9 @@ You can use **LLM-scCurator** in two ways:
   This is more sensitive to Python environment configuration, so we recommend Option A for most users.
   - Use the **[official Docker](README.md#-docker-official-environment) (Python + R + Jupyter)** and follow the step-by-step tutorial notebook: 📓 [`examples/R/run_llm_sccurator_R_reticulate.ipynb`](examples/R/run_llm_sccurator_R_reticulate.ipynb)
 
-  Notes:
-   > * **Option B** calls Python from R via `reticulate` (LLM-scCurator is a Python package).
-   > * The notebook includes:
-     > * “noise masking and Gini-informed distillation” step (no API key required)
-     > * 🔑 [Optional](README.md#-backends-llm-api-keys-setup) zero-shot cell-type annotation step (API key required).
+ The notebook includes:
+   - Use LLM-scCurator for robust marker distillation (no API key required)
+   - 🔑 [Optional](README.md#-backends-llm-api-keys-setup): Requires an API key for LLM-scCurator annotation .
 
 
 ---
