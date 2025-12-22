@@ -36,4 +36,6 @@ EDFig2,EDFig2c,source_data/figure_data/EDFig2/EDFig2c_data.csv,scored_table,note
 EDFig3,EDFig3,source_data/SourceData_EDFig3.xlsx,source_data_excel,notebooks/08_OSCC_Visium.ipynb,journal-facing workbook,
 EDFig3,EDFig3a,source_data/figure_data/EDFig3/EDFig3a_b_data.csv,panel_data,notebooks/08_OSCC_Visium.ipynb,Visium spatial panel,spatial plot
 EDFig3,EDFig3c,source_data/figure_data/EDFig3/EDFig3c_data.csv,panel_data,notebooks/08_OSCC_Visium.ipynb,Visium spatial panel,heatmap matrix
+EDFig3,EDFig3c,source_data/figure_data/EDFig3/EDFig3c_marker_effects.csv,effect_size_table,notebooks/09_marker_effects.ipynb,Visium one-vs-rest marker effect sizes,AUROC/log2FC/_det table supporting ED Fig. 3c callouts
 EDFig3,EDFig3d,source_data/figure_data/EDFig3/EDFig3d_data.csv,panel_data,notebooks/07_Colon_Xenium.ipynb,Xenium spatial panel,heatmap matrix
+EDFig3,EDFig3d,source_data/figure_data/EDFig3/EDFig3d_marker_effects.csv,effect_size_table,notebooks/09_marker_effects.ipynb,Xenium one-vs-rest marker effect sizes,AUROC/log2FC/_det table supporting ED Fig. 3d callouts
