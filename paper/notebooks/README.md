@@ -42,7 +42,10 @@ Note on LLM calls: we fix local random seeds for deterministic preprocessing; ho
 - [`06_Simulation.ipynb`](06_simulation.ipynb)
 
 ### 07 — Colon Xenium (spatial validation)
-- [`07_Colon_Xenium.ipynb`](07_Colon_Xenium.ipynb)
+- [`07_Colon_Xenium.ipynb`](07_Colon_Xenium.ipynb): generate Xenium spatial plots and pseudo-bulk heatmap matrices (Fig. 2h and ED Fig. 3d).
 
 ### 08 — OSCC Visium (spatial validation)
-- [`08_OSCC_Visium.ipynb`](08_OSCC_Visium.ipynb)
+- [`08_OSCC_Visium.ipynb`](08_OSCC_Visium.ipynb): generate Visium spatial plots and pseudo-bulk heatmap matrices (ED Fig. 3a–c).
+
+### 09 — Marker_effects (spatial validation)
+- [`09_marker_effects.ipynb`](09_marker_effects.ipynb): compute one-vs-rest marker effect sizes (AUROC, log2FC, Δdet) and export *_marker_effects.csv (Source Data for ED Fig. 3c–d).
