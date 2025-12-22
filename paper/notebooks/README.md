@@ -30,23 +30,23 @@ Note on LLM calls: we fix local random seeds for deterministic preprocessing; ho
 - Mouse B: [`02_run_mouse_b_benchmark.ipynb`](02_run_mouse_b_benchmark.ipynb)
 
 ### 03 — Evaluate benchmarks / scoring exports
-- [`03_evaluate_benchmarks.ipynb`](03_evaluate_benchmarks.ipynb): computes ontology-aware scores and summary tables used in Source Data and figure panels (Fig. 2a-d) 
+- [`03_evaluate_benchmarks.ipynb`](03_evaluate_benchmarks.ipynb): — computes ontology-aware scores and summary tables used in Source Data and figure panels (Fig. 2a-d) 
 
 ### 04 — Landscape (figure assembly helper)
-- [`04_landscape.ipynb`](04_landscape.ipynb): generates gene landscap (Fig1b, c, and EDFig. 1a)
+- [`04_landscape.ipynb`](04_landscape.ipynb): — generates gene landscap (Fig1b, c, and EDFig. 1a)
 
 ### 05 — Compare top-N genes (figure assembly helper)
-- [`05_compare_top_N_genes.ipynb`](05_compare_top_N_genes.ipynb): compares top-N input gene lists across methods and exports noise-category breakdowns for plotting (Fig. 2e, f)
+- [`05_compare_top_N_genes.ipynb`](05_compare_top_N_genes.ipynb): — compares top-N input gene lists across methods and exports noise-category breakdowns for plotting (Fig. 2e, f)
 
 ### 06 — Simulation
 - [`06_Simulation.ipynb`](06_simulation.ipynb): — runs marker noise injection to stress-test robustness and generate plot-ready summaries (Fig. 2g)
 
 
 ### 07 — Colon Xenium (spatial validation)
-- [`07_Colon_Xenium.ipynb`](07_Colon_Xenium.ipynb): generate Xenium spatial plots and pseudo-bulk heatmap matrices (Fig. 2h and ED Fig. 3d).
+- [`07_Colon_Xenium.ipynb`](07_Colon_Xenium.ipynb): — generate Xenium spatial plots and pseudo-bulk heatmap matrices (Fig. 2h and ED Fig. 3d).
 
 ### 08 — OSCC Visium (spatial validation)
-- [`08_OSCC_Visium.ipynb`](08_OSCC_Visium.ipynb): generate Visium spatial plots and pseudo-bulk heatmap matrices (ED Fig. 3a–c).
+- [`08_OSCC_Visium.ipynb`](08_OSCC_Visium.ipynb): — generate Visium spatial plots and pseudo-bulk heatmap matrices (ED Fig. 3a–c).
 
 ### 09 — Marker_effects (spatial validation)
-- [`09_marker_effects.ipynb`](09_marker_effects.ipynb): compute one-vs-rest marker effect sizes (AUROC, log2FC, Δdet) and export *_marker_effects.csv (Source Data for ED Fig. 3c–d).
+- [`09_marker_effects.ipynb`](09_marker_effects.ipynb): — compute one-vs-rest marker effect sizes (AUROC, log2FC, Δdet) and export *_marker_effects.csv (Source Data for ED Fig. 3c–d).
