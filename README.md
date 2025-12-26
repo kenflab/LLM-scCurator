@@ -68,6 +68,7 @@ We provide an official Docker environment (Python + R + Jupyter), sufficient to 
 
 - #### Option B: Build locally (development)
   ```bash
+  # Option B1: Build locally with Compose
   # from the repo root
   docker compose -f docker/docker-compose.yml build
   docker compose -f docker/docker-compose.yml up
@@ -75,6 +76,21 @@ We provide an official Docker environment (Python + R + Jupyter), sufficient to 
   Open Jupyter:
   [http://localhost:8888](http://localhost:8888)  <br>  
   Workspace mount: /work
+
+  
+  ```bash
+  # Option B2: Build locally without Compose (alternative)
+  # from the repo root
+  docker build -f docker/Dockerfile -t llm-sc-curator:official .
+  docker run --rm -it \
+    -p 8888:8888 \
+    -v "$PWD":/work \
+    -e GEMINI_API_KEY \
+    -e OPENAI_API_KEY \
+    llm-sc-curator:official
+  ```
+  Open Jupyter:
+  [http://localhost:8888](http://localhost:8888)  <br>  
 
 ---
 ## 🖥️ Apptainer / Singularity (HPC)
