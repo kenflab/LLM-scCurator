@@ -12,8 +12,9 @@ theme:
 nav:
   - Home: index.md
   - Getting started: getting-started.md
-  - User guide: user-guide.md
   - Concepts: concepts.md
+  - User guide: user-guide.md
+  - Tutorials: tutorials.md
   - API reference: api-reference.md
 
 plugins:
