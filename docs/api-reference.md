@@ -12,3 +12,4 @@
         - run_hierarchical_discovery
       inherited_members: false
       show_if_no_docstring: false
+      show_object_full_path: false
