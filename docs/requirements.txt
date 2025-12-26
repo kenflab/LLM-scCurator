@@ -2,3 +2,4 @@ mkdocs>=1.5
 mkdocs-material>=9
 mkdocstrings[python]>=0.25
 pymdown-extensions
+ruff
