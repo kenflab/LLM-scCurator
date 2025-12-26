@@ -15,12 +15,11 @@ from .backends import BaseLLMBackend, GeminiBackend, OpenAIBackend, LocalLLMBack
 # Setup Logging
 logger = logging.getLogger(__name__)
 
-# Canonical lineage markers for automatic context inference
-# Canonical lineage markers - Optimized for Context Inference & Rescue
-# Reviewer 2 Note:
-# - Includes Human (UPPER) and Mouse (Title/Lower) orthologs.
-# - Designed to capture broad lineages for context inference (Stage 0/Context),
-#   while confounders (TCR/Ig/Hb) are handled by dedicated noise modules.
+# Canonical lineage markers for automatic context inference and lineage-marker rescue.
+# Reviewer note:
+# - Includes human (UPPER) and mouse (Title/Lower) orthologs.
+# - Optimized for broad lineage inference (Stage 0 / context).
+# - Confounders (TCR/Ig/Hb) are handled by dedicated regex-based noise modules.
 
 LINEAGE_MARKERS = {
     "T cell": [
@@ -67,7 +66,7 @@ LINEAGE_MARKERS = {
         # DC-enriched markers (cDC context)
         "FCER1A", "CLEC9A", "CD1C", "FLT3",
         "Fcer1a", "Clec9a", "Cd1c", "Flt3",
-        # NOTE: S100A8/S100A9 are intentionally excluded to avoid　misclassifying stressed epithelium as myeloid.
+        # NOTE: S100A8/S100A9 are intentionally excluded to avoid misclassifying stressed epithelium as myeloid.
     ],
 
     "pDC": [
@@ -127,11 +126,31 @@ class LLMscCurator:
         """
         Initialize LLM-scCurator.
 
-        Args:
-            backend (BaseLLMBackend): An instance of a backend (GeminiBackend, OpenAIBackend, etc.).
-            api_key (str): (Legacy/Convenience) API key for default Gemini backend.
-            model_name (str): (Legacy/Convenience) Model name for default Gemini backend.
+        Parameters
+        ----------
+        api_key : str, optional
+            (Legacy / convenience) API key used to instantiate the default Gemini backend.
+            Prefer passing an explicit `backend` instance for full control.
+        model_name : str, optional
+            (Legacy / convenience) Model identifier for the default Gemini backend.
+            If not provided, a reasonable default is used.
+        backend : BaseLLMBackend, optional
+            Dependency-injected backend instance (e.g., `GeminiBackend`, `OpenAIBackend`).
+            Must implement a `generate(prompt: str, json_mode: bool) -> str` interface.
+        allow_internal_normalization : bool, default=False
+            If True, LLM-scCurator will internally normalize and log-transform inputs that
+            look like raw counts (UMI-like). Internal normalization is performed on a COPY
+            and recorded in `adata.uns['llm_sc_curator']` for provenance.
+        normalization_target_sum : float, default=1e4
+            Target total counts per cell used when `allow_internal_normalization=True`.
+
+        Notes
+        -----
+        - This initializer enforces a backend-agnostic design: users may plug in cloud
+          APIs or local models via the `BaseLLMBackend` interface.
+        - If neither `backend` nor `api_key` is provided, initialization fails fast.
         """
+
         # Dependency Injection Logic
         if backend is not None:
             if not isinstance(backend, BaseLLMBackend):
@@ -155,16 +174,34 @@ class LLMscCurator:
     # -------------------------------------------------------------------------
     def _check_normalization(self, adata):
         """
-        Ensure that the returned AnnData has log1p-normalized values in `.X`.
+        Validate that `adata.X` contains log1p-normalized expression.
 
-        Heuristic:
-          - If the dynamic range is small OR values are not integer-like,
-            we assume `.X` already contains log1p-normalized expression.
-          - If the matrix contains large (> raw_threshold) integer-like values,
-            we treat it as raw counts (UMI-like) and optionally normalize internally.
+        This helper performs a lightweight heuristic check to distinguish log1p-scale
+        expression from raw/integer-like counts. The method never modifies the input
+        AnnData in-place.
 
-        This function never modifies `adata` in-place. If internal normalization
-        is performed, it happens on a COPY that is returned.
+        Parameters
+        ----------
+        adata : AnnData
+            Input object whose `.X` is expected to be log1p-normalized.
+
+        Returns
+        -------
+        AnnData
+            If `.X` appears already log1p-normalized, returns `adata` unchanged.
+            If raw counts are detected and `allow_internal_normalization=True`,
+            returns a COPY that has been normalized (`normalize_total`) and log1p-transformed.
+
+        Raises
+        ------
+        ValueError
+            If raw counts are detected and `allow_internal_normalization=False`.
+
+        Notes
+        -----
+        When internal normalization is enabled, raw counts are preserved in
+        `layers['counts']` and log1p values are stored in `layers['logcounts']`,
+        along with provenance metadata in `uns['llm_sc_curator']`.
         """
 
         X = adata.X
@@ -278,44 +315,43 @@ class LLMscCurator:
         random_state: int = 42,
     ):
         """
-        Set the global dataset context for Gini / housekeeping detection and
-        cross-lineage specificity checks, with optional dynamic balanced subsampling.
+        Set the global dataset context used for specificity-aware feature distillation.
+
+        LLM-scCurator uses a global context to (i) estimate global Gini/sparsity trends,
+        (ii) detect ubiquitous housekeeping/stress programs, and (iii) support optional
+        cross-lineage leakage checks. When `balance_by` is provided, context statistics
+        are computed on a balanced subsample to prevent dominant groups from skewing
+        percentiles and thresholds.
 
         Parameters
         ----------
-        adata
-            AnnData object containing all cells. Can be raw counts or log1p-normalized;
-            normalization is checked via `_check_normalization`.
-        balance_by
-            Optional column name in `adata.obs` used to construct a balanced subsample.
-            Typical choices are a broad lineage label (e.g. "major_type") or a
-            sample/patient ID (e.g. "sample_id"). If None (default), all cells are
-            used without subsampling.
-        max_cells_per_group
-            If an integer, strictly caps the number of cells retained per group
-            defined by `balance_by`.
+        adata : AnnData
+            AnnData containing all cells. Can be raw counts or log1p-normalized;
+            normalization is validated via `_check_normalization`.
+        balance_by : str or None, default=None
+            Column in `adata.obs` defining groups for balanced subsampling (e.g., broad
+            lineage labels or sample/patient IDs). If None, all cells are used.
+        max_cells_per_group : int or {"auto"}, default="auto"
+            Target number of cells retained per group. If "auto", the per-group target
+            is set to the median group size with a floor at `min_cells_per_group`.
+        min_cells_per_group : int, default=50
+            Groups with fewer cells than this threshold are excluded from the balanced
+            subsample to avoid unstable global statistics.
+        random_state : int, default=42
+            Seed for subsampling.
 
-            If the string "auto" (default), the target size per group is dynamically
-            determined from the median group size in `balance_by`, with a hard floor
-            at `min_cells_per_group`. This adapts to dataset topology (rare vs.
-            abundant groups) while preventing pathologically small targets.
-        min_cells_per_group
-            Minimum number of cells required for a group to be included in the global
-            context. Groups with fewer cells than this threshold are skipped when
-            building the balanced subsample, to avoid unstable global statistics.
-        random_state
-            Seed for the NumPy random number generator used during subsampling.
+        Returns
+        -------
+        None
+            Initializes `self.masker` (a `FeatureDistiller`) and records configuration
+            in `self._global_context_config`.
 
         Notes
         -----
-        - This function never modifies `adata` in-place. All normalization and
-          subsampling happen on internal copies.
-        - When `balance_by` is provided, global statistics are computed on a
-          balanced subsample, which prevents very large groups from dominating the
-          Gini distribution and cross-lineage percentiles. This is intended to
-          improve robustness across heterogeneous atlases (e.g. pan-cancer T cell
-          datasets) and is suitable for rigorous benchmarking.
+        This method never modifies `adata` in-place. Any normalization or subsampling
+        occurs on internal copies.
         """
+
         # 1) Ensure we are working on log1p-normalized values (or raise)
         adata_log = self._check_normalization(adata)
         n_cells_input = int(adata_log.n_obs)
@@ -461,14 +497,35 @@ class LLMscCurator:
         mean_lower_abs: float = 0.1,
     ):
         """
-        HVG fails to capture low-to-moderate, lineage-restricted markers of rare populations;
-        we therefore add a global high-Gini rescue mechanism.
+        Select globally high-specificity genes for "high-Gini rescue".
 
-        Args:
-            gini_q (float): quantile for Gini (e.g., 0.9 = top 10%).
-            mean_upper_q (float): upper quantile for mean (e.g., 0.5 = below median).
-            mean_lower_abs (float): absolute lower bound on mean to avoid pure drop-out noise.
+        Highly variable genes (HVGs) can miss low-to-moderate, lineage-restricted markers
+        in rare populations. To reduce this failure mode, LLM-scCurator optionally rescues
+        genes that are globally high-Gini (specific) while avoiding globally high-mean
+        ubiquitous genes.
+
+        Parameters
+        ----------
+        gini_q : float, default=0.9
+            Quantile threshold for global Gini (e.g., 0.9 selects the top 10% by Gini).
+        mean_upper_q : float, default=0.5
+            Upper quantile threshold for global mean expression (e.g., 0.5 keeps genes
+            at or below the median global mean).
+        mean_lower_abs : float, default=0.1
+            Absolute lower bound on global mean expression to avoid rescuing pure drop-out noise.
+
+        Returns
+        -------
+        set[str]
+            Set of gene symbols passing the rescue criteria. Returns an empty set if the
+            global masker / gene statistics are unavailable.
+
+        Notes
+        -----
+        This function does not modify any AnnData in-place. Global statistics are computed
+        by `FeatureDistiller.calculate_gene_stats()` when needed.
         """
+        
         # 1) No masker → Disable high-Gini rescue itself
         if self.masker is None:
             logger.warning(
@@ -529,21 +586,65 @@ class LLMscCurator:
         min_delta_pct: float = 0.02,
     ):
         """
-        4-Stage Feature Distillation.
+        Perform 4-stage feature distillation for LLM prompting.
 
-        Args:
-            target_adata: AnnData object (can be a subset or full).
-            group_col: Column with cluster labels in target_adata.
-            target_group: The cluster ID to analyze.
-            reference: "rest" or a specific group label.
-            coarse_col: (Optional) Column in GLOBAL adata for cross-lineage check.
+        The goal is to produce a compact marker list that is enriched for lineage/state
+        identity signals while suppressing ubiquitous biological programs (e.g., stress,
+        housekeeping, cell cycle) and technical confounders. Candidate genes are drawn
+        from HVGs (optionally batch-aware) with additional "high-Gini rescue" to retain
+        lineage-restricted markers that may not be highly variable.
 
-            min_target_mean: Minimum mean expression (log1p) in the target cluster.
-            min_delta_mean: Minimum difference in mean (target - rest).
-            min_logfc: Minimum log fold-change (if available in DE table).
-            min_target_pct: Minimum detection fraction in target cluster.
-            min_delta_pct: Minimum difference in detection fraction (target - rest).
+        Parameters
+        ----------
+        target_adata : AnnData
+            AnnData object containing the target clusters (subset or full dataset).
+        group_col : str
+            Column in `target_adata.obs` containing cluster labels.
+        target_group : str or int
+            Cluster identifier to analyze.
+        reference : {"rest"} or str, default="rest"
+            Reference group used for differential expression. If "rest", the target
+            cluster is contrasted against all other cells.
+        n_top : int, default=50
+            Number of final markers to return.
+        use_statistics : bool, default=True
+            If True, apply biological noise detection modules (regex-based) to mask
+            confounder programs and rescue sentinel markers.
+        use_hvg : bool, default=True
+            If True, restrict candidates to HVGs plus rescue sets (high-Gini + lineage markers).
+        coarse_col : str or None, default=None
+            Optional column (in the global context) used for cross-lineage leakage checks.
+        whitelist : list[str] or None, default=None
+            Optional list of genes exempt from masking (augmented internally with proliferation
+            sentinels and lineage markers, excluding confounded TCR/Ig/Hb patterns).
+        batch_key : str or None, default=None
+            Optional key for batch-aware HVG selection.
+        n_candidates : int, default=500
+            Number of top-ranked DE candidates considered before masking/filtering.
+        min_target_mean : float, default=0.02
+            Minimum mean expression (log1p) in the target cluster.
+        min_delta_mean : float, default=0.02
+            Minimum mean difference (target - reference).
+        min_logfc : float, default=0.2
+            Minimum log fold-change threshold if available in the DE table.
+        min_target_pct : float, default=0.02
+            Minimum detection fraction in the target cluster.
+        min_delta_pct : float, default=0.02
+            Minimum detection fraction difference (target - reference).
+
+        Returns
+        -------
+        list[str]
+            Distilled marker genes (length up to `n_top`). If all candidates are masked,
+            the method falls back to unmasked DE rankings to avoid empty prompts.
+
+        Notes
+        -----
+        Input data are validated for log1p normalization via `_check_normalization`.
+        For rigorous benchmarking and lineage leakage checks, call `set_global_context()`
+        on a broad atlas before per-cluster distillation.
         """
+
         # 0. Ensure log1p-normalized data
         target_adata = self._check_normalization(target_adata)
 
@@ -816,14 +917,47 @@ class LLMscCurator:
         retry_sleep: float = 1.0,
     ):
         """
-        Query the injected LLM backend with a distilled marker gene list and optional context,
-        and return a dict with {cell_type, confidence, reasoning}.
+        Query the configured LLM backend with a distilled marker list and return a structured label.
 
-        Robust to transient backend failures:
-        - Retries up to `max_retries` times on any backend / JSON error.
-        - If all attempts fail, returns {"cell_type": "Error" or "ParseError", ...}
-          without raising, so that callers can decide how to handle failures.
+        The backend is called in JSON mode. Outputs are parsed into a stable dictionary
+        schema to support reproducible downstream evaluation and logging.
+
+        Parameters
+        ----------
+        gene_list : list[str]
+            Distilled marker genes for a single cluster.
+        cell_type : str, default=""
+            Optional parent lineage label to bias the prompt (e.g., coarse lineage).
+        context : dict or None, default=None
+            Optional additional context (tissue, condition, dataset notes).
+        use_auto_context : bool, default=True
+            If True and `cell_type` is not provided, use the last inferred lineage context
+            when available.
+        max_retries : int, default=3
+            Maximum number of attempts to obtain a valid JSON object.
+        retry_sleep : float, default=1.0
+            Sleep duration (seconds) between retry attempts.
+
+        Returns
+        -------
+        dict
+            A dictionary with keys:
+            - cell_type : str
+                Predicted lineage/state label.
+            - confidence : {"High", "Medium", "Low"}
+                Self-reported confidence bucket.
+            - reasoning : str
+                Brief, marker-based justification.
+
+            On failure, returns a soft error object with `cell_type` set to "Error" or
+            "ParseError" (rather than raising), so callers may decide how to handle it.
+
+        Notes
+        -----
+        This method is intentionally tolerant to transient backend failures and occasional
+        JSON formatting issues (e.g., fenced code blocks).
         """
+
         genes_str = ", ".join(gene_list)
 
         # -----------------------------
@@ -994,9 +1128,43 @@ class LLMscCurator:
         random_state: int = 42,
     ):
         """
-        Executes hierarchical annotation.
-        Efficiently handles HVGs by pre-calculating them once.
+        Run coarse-to-fine hierarchical annotation on an AnnData object.
+
+        The pipeline performs a coarse Leiden clustering to infer major lineages, then
+        reclusters within each coarse group to infer finer subtypes. Distilled marker
+        lists are generated per cluster and passed to the injected LLM backend for
+        structured JSON outputs.
+
+        Parameters
+        ----------
+        adata : AnnData
+            Input dataset. `.X` must be log1p-normalized (validated via `_check_normalization`).
+        coarse_res : float, default=0.2
+            Leiden resolution for the coarse (major lineage) clustering.
+        fine_res : float, default=0.5
+            Leiden resolution for the fine (subtype) clustering within each coarse group.
+        n_top : int, default=50
+            Marker list size passed to the LLM per cluster.
+        batch_key : str or None, default=None
+            Optional key for batch-aware HVG selection.
+        global_context : dict or None, default=None
+            Optional user-provided context to embed in the prompt (tissue/condition).
+        random_state : int, default=42
+            Random seed used for PCA/neighbors/Leiden and subsampling where applicable.
+
+        Returns
+        -------
+        AnnData
+            A COPY/view with added annotations:
+            - `adata.obs['major_type']` : coarse lineage labels
+            - `adata.obs['fine_type']` : fine subtype labels
+            Reasoning logs are stored in `adata.uns['llm_reasoning']`.
+
+        Notes
+        -----
+        HVGs are precomputed once when missing, to avoid redundant work across clusters.
         """
+
         logger.info(
             f"Starting Hierarchical Discovery "
             f"(Coarse: {coarse_res}, Fine: {fine_res}, n_top={n_top})..."

@@ -26,28 +26,49 @@ _COMPILED_PATTERNS = {
 class FeatureDistiller:
     def __init__(self, global_adata):
         """
-        Initialize with the GLOBAL dataset to establish background context.
-        Args:
-            global_adata: The full AnnData object containing all cells/lineages.
-                          Expected to be log-normalized (log1p).
+        Initialize a feature distiller using a GLOBAL reference atlas.
+
+        The global atlas provides background distributions required for:
+        (i) global Gini-based low-specificity detection, and
+        (ii) module-based masking using regex/gene lists.
+
+        Parameters
+        ----------
+        global_adata : AnnData
+            Global AnnData containing all cells/lineages used as background context.
+            `.X` is expected to be log1p-normalized expression.
+
+        Notes
+        -----
+        This class does not modify `global_adata` in-place. Computed statistics are
+        stored in `self.gene_stats` as a pandas DataFrame indexed by gene name.
         """
         self.adata = global_adata
         self.gene_stats = None
 
     def calculate_gene_stats(self):
         """
-        Calculates global Gini coefficient and mean expression for each gene.
+        Compute global gene statistics used by downstream masking steps.
+
+        This method computes, for each gene in the global atlas:
+        - mean expression (on `.X`)
+        - Gini coefficient (a global specificity proxy)
+
+        Returns
+        -------
+        pandas.DataFrame
+            DataFrame indexed by gene name with columns:
+            - "mean": global mean expression
+            - "gini": global Gini coefficient
 
         Notes
         -----
-        - For sparse matrices (typically CSR in Scanpy), column-wise slicing
-          (X[:, i]) inside a Python loop is inefficient.
-          We therefore convert once to CSC (column-oriented) and extract
-          columns from that representation.
-        - This function can still be computationally heavy on very large
-          atlases (e.g. > 2e5 cells × > 1e4 genes). In such cases, we
-          recommend setting a balanced global context via `set_global_context`
-          to limit the number of cells used for global statistics.
+        - For sparse matrices (common in Scanpy), column-wise slicing in Python loops
+          is slow. We convert to CSC once for efficient column access.
+        - On very large atlases (e.g., >2e5 cells × >1e4 genes), this step can be
+          computationally heavy. Consider constructing a balanced global context
+          upstream (e.g., via `set_global_context(..., balance_by=...)`) to limit
+          the number of cells used for global statistics.
         """
         X = self.adata.X
 
@@ -60,7 +81,17 @@ class FeatureDistiller:
         # --- 2. Gini helper function ---
         def gini(array_1d: np.ndarray) -> float:
             """
-            Calculate Gini coefficient of a 1D numpy array.
+            Compute the Gini coefficient for a 1D array.
+
+            Parameters
+            ----------
+            array_1d : numpy.ndarray
+                One-dimensional array of expression values.
+
+            Returns
+            -------
+            float
+                Gini coefficient (higher indicates greater inequality/specificity).
             """
             array = np.asarray(array_1d).ravel().astype(float)
 
@@ -125,21 +156,50 @@ class FeatureDistiller:
         rescue_modules=None,
     ):
         """
-        Stage 2: Detects noise genes using global statistics and regex patterns.
+        Stage 2: Detect globally low-specificity genes and module-defined noise programs.
+
+        Noise genes are flagged using two complementary mechanisms:
+        1) Global low-Gini housekeeping detection (data-driven).
+        2) Regex- and list-based biological modules (e.g., mitochondrial, stress, cell cycle).
 
         Global low-specificity genes are defined using either:
-        - an absolute Gini threshold (gini_threshold), if provided, or
-        - the lower gini_q quantile among genes with mean >= mean_floor,
-          optionally capped by `low_gini_cap` (e.g., 0.15).
+        - an absolute Gini threshold (`gini_threshold`), if provided, or
+        - the lower `gini_q` quantile among genes with mean >= `mean_floor`,
+          optionally capped by `low_gini_cap`.
 
-        Args:
-            gini_threshold: If not None, use this absolute Gini cutoff.
-            gini_q: Quantile for low-Gini band (e.g., 0.01). If None, quantile
-                    based cutoff is disabled.
-            mean_floor: Exclude genes with very low mean expression when
-                        estimating the Gini quantile.
-            low_gini_cap: Optional absolute upper bound on the cutoff; the
-                          effective cutoff is min(q-cutoff, low_gini_cap).
+        Parameters
+        ----------
+        gini_threshold : float or None, default=None
+            Absolute Gini cutoff for housekeeping detection. If provided, quantile-based
+            cutoff is not used.
+        gini_q : float, default=0.01
+            Quantile defining the low-Gini band among genes passing `mean_floor`.
+        mean_floor : float, default=0.05
+            Mean-expression floor used to exclude extremely lowly expressed genes when
+            estimating the quantile cutoff.
+        whitelist : list[str] or None, default=None
+            User-specified genes that should not be masked even if matched by a rule.
+        rescue_mean_floor : float, default=0.1
+            Minimum global mean required to keep a rescued sentinel gene for rescue-enabled
+            modules.
+        low_gini_cap : float or None, default=0.15
+            Optional upper bound for the quantile-derived cutoff. The effective cutoff is
+            `min(quantile_cutoff, low_gini_cap)`.
+        rescue_modules : tuple[str, ...] or None, default=None
+            Module names for which a top-expressed sentinel is rescued while masking the
+            remaining matched genes. If None, uses `RESCUE_MODULES_DEFAULT`.
+
+        Returns
+        -------
+        dict[str, str]
+            Mapping from gene symbol to a masking reason string (e.g., "Module_Mito",
+            "Low_Gini_Housekeeping(...)", "CrossLineage_Leak(...)", etc.).
+
+        Notes
+        -----
+        - This function ensures that "sentinel rescue" only occurs for modules explicitly
+          listed in `rescue_modules` (default: LINC and hemoglobin contamination).
+        - If `self.gene_stats` is missing, it is computed on demand via `calculate_gene_stats()`.
         """
         if self.gene_stats is None:
             self.calculate_gene_stats()
@@ -248,10 +308,44 @@ class FeatureDistiller:
         abs_threshold=0.1,
     ):
         """
-        Stage 3: Cross-Lineage Specificity Check (Data-Driven).
+        Stage 3: Cross-lineage specificity check using global lineage context.
 
-        Compares expression in the local target subset against global major lineages.
-        Uses percentile-based dynamic thresholding to identify leakage.
+        This step identifies candidate markers that appear disproportionately high in
+        non-target major lineages (i.e., potential leakage markers), using percentile-
+        based comparisons between:
+        - local target cluster expression (within `target_adata`), and
+        - global major lineage expression (within the global atlas `self.adata`).
+
+        Parameters
+        ----------
+        target_genes : list[str]
+            Candidate marker genes for the target cluster.
+        target_adata : AnnData
+            Local AnnData containing the target clustering.
+        target_group : str or int
+            Cluster identifier within `target_adata.obs[group_col]`.
+        group_col : str
+            Column name in `target_adata.obs` containing cluster labels.
+        coarse_col : str
+            Column name in the GLOBAL atlas `self.adata.obs` containing major lineage labels.
+            This column must also be present in the local subset for lineage assignment.
+        expr_percentile : int, default=90
+            Expression percentile used for robust per-gene comparison.
+        tail_percentile : int, default=95
+            Percentile applied to expression ratios to derive a dynamic leakage threshold.
+        abs_threshold : float, default=0.1
+            Absolute expression floor to avoid unstable ratios in near-zero regimes.
+
+        Returns
+        -------
+        dict[str, str]
+            Mapping from gene symbol to a leakage reason string if flagged as cross-lineage
+            high expression.
+
+        Notes
+        -----
+        If required metadata are missing (e.g., `coarse_col` not found), the method returns
+        an empty dict and logs a warning rather than raising, to keep batch runs robust.
         """
         # Safety checks
         if coarse_col not in self.adata.obs:

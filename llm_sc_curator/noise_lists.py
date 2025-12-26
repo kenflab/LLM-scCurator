@@ -1,3 +1,22 @@
+"""
+Noise module definitions for LLM-scCurator.
+
+This module centralizes regex patterns and curated gene lists that represent
+biological/technical programs which commonly dominate naive marker rankings and
+confuse LLM-based interpretation (e.g., ribosomal/mitochondrial, stress, cell cycle,
+TCR/Ig clonotypes, uninformative locus IDs).
+
+These definitions are used by the masking/distillation stage to:
+- suppress ubiquitous programs in prompt marker lists, and
+- optionally rescue sentinel markers (e.g., proliferation) to avoid over-filtering.
+
+Notes
+-----
+- Patterns are written to be Human/Mouse compatible when possible (case-aware).
+- This file is intentionally dependency-free and safe to import.
+- Edit conservatively: changes may affect benchmarking reproducibility.
+"""
+
 
 # Regex patterns for biological noise modules (Human & Mouse compatible)
 NOISE_PATTERNS = {
@@ -46,7 +65,20 @@ NOISE_PATTERNS = {
     'SexChromosome': r'^(XIST|UTY|DDX3Y|Xist|Uty|Ddx3y)',  # Removes XIST (Female) and Y-linked genes (Male)
 }
 
-# Full Cell Cycle Genes from Tirosh et al. (Science 2016) Table S5
+NOISE_PATTERNS.__doc__ = """
+Dictionary of regex patterns defining noise modules.
+
+Keys are human-readable module names. Values are regex strings used to match gene
+symbols. Modules include:
+- technical/mapping artifacts (e.g., Ensembl IDs, LOC, predicted genes),
+- clonotype features (TCR/Ig variable/constant regions),
+- ubiquitous biological programs (mitochondrial, ribosomal, heat shock, stress),
+- batch-associated confounders (HLA/MHC class I, sex-chromosome markers).
+
+Used by: FeatureDistiller.detect_biological_noise()
+"""
+
+# Full Cell Cycle Genes from Tirosh et al. (Science 2016)
 # Combined G1/S, G2/M, and Melanoma Core Cycling Genes
 # Defined in Human format (All Caps)
 _HUMAN_CC_GENES = {
@@ -60,7 +92,7 @@ _HUMAN_CC_GENES = {
     # G2/M
     "HMGB2","CDK1","NUSAP1","UBE2C","BIRC5","TPX2","TOP2A","NDC80","CKS2","NUF2",
     "CKS1B","MKI67","TMPO","CENPF","TACC3","FAM64A","SMC4","CCNB2","CKAP2L","CKAP2",
-    "AURKB","BUB1","KIF11","ANP32E","TUBB4B","GTSE1","KIF20B","HJURP","HJURP","CDCA3",
+    "AURKB","BUB1","KIF11","ANP32E","TUBB4B","GTSE1","KIF20B","HJURP","CDCA3",
     "HN1","CDC20","TTK","CDC25C","KIF2C","RANGAP1","NCAPD2","DLGAP5","CDCA2","CDCA8",
     "ECT2","KIF23","HMMR","AURKA","PSRC1","ANLN","LBR","CKAP5","CENPE","CTCF","NEK2",
     "G2E3","GAS2L3","CBX5","CENPA",
@@ -83,11 +115,38 @@ PROLIFERATION_SENTINELS = {
     "Mki67", "Cdk1", "Ccnb1", "Ccnb2", "Pcna", "Top2a", "Birc5",
 }
 
+PROLIFERATION_SENTINELS.__doc__ = """
+Sentinel proliferation markers that should be retained by default.
+
+These genes are often biologically informative (cycling states) and are therefore
+excluded from masking even though they belong to cell-cycle programs.
+
+Used by: masking/distillation stage (whitelist augmentation / rescue logic).
+"""
+
 # Automatically generate Mouse format (Title Case: Mki67, Pcna)
 # This makes the tool universal without manual listing.
 _CELL_CYCLE_ALL = _HUMAN_CC_GENES.union({g.capitalize() for g in _HUMAN_CC_GENES})
 CELL_CYCLE_GENES = _CELL_CYCLE_ALL.difference(PROLIFERATION_SENTINELS)
 
+CELL_CYCLE_GENES.__doc__ = """
+Curated cell-cycle gene set (Human + Mouse ortholog formatting) excluding sentinels.
+
+Derived from Tirosh et al. (Science 2016) and expanded with capitalization variants
+to support Human/Mouse datasets. Sentinel proliferation markers are removed to avoid
+masking meaningful cycling signals.
+"""
+
 NOISE_LISTS = {
     'CellCycle_State': CELL_CYCLE_GENES
 }
+
+NOISE_LISTS.__doc__ = """
+Curated non-regex noise gene sets.
+
+This dictionary complements `NOISE_PATTERNS` (regex modules) with explicit gene lists
+for programs where a fixed list is preferable (e.g., cell cycle state).
+Keys are module names; values are sets of gene symbols.
+
+Used by: FeatureDistiller.detect_biological_noise()
+"""
