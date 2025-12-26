@@ -1,0 +1,25 @@
+/* --- API reference readability tweaks (minimal) --- */
+
+/* reduce vertical bulk */
+.md-typeset h2 { margin-top: 1.2em; }
+.md-typeset h3 { margin-top: 1.0em; }
+
+/* mkdocstrings content gutter */
+.md-typeset .doc-contents {
+  padding-left: 0.75rem;
+  border-left: 2px solid var(--md-default-fg-color--lightest);
+}
+
+/* make signatures compact */
+.md-typeset .doc-signature,
+.md-typeset .doc-heading code {
+  font-size: 0.92em;
+  line-height: 1.35;
+}
+
+/* parameter tables: slightly smaller + avoid wrapping of code identifiers */
+.md-typeset table { font-size: 0.92em; }
+.md-typeset table code { white-space: nowrap; }
+
+/* code blocks padding: slightly tighter */
+.md-typeset pre > code { padding: 0.7em 0.9em; }
