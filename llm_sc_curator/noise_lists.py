@@ -65,18 +65,6 @@ NOISE_PATTERNS = {
     'SexChromosome': r'^(XIST|UTY|DDX3Y|Xist|Uty|Ddx3y)',  # Removes XIST (Female) and Y-linked genes (Male)
 }
 
-NOISE_PATTERNS.__doc__ = """
-Dictionary of regex patterns defining noise modules.
-
-Keys are human-readable module names. Values are regex strings used to match gene
-symbols. Modules include:
-- technical/mapping artifacts (e.g., Ensembl IDs, LOC, predicted genes),
-- clonotype features (TCR/Ig variable/constant regions),
-- ubiquitous biological programs (mitochondrial, ribosomal, heat shock, stress),
-- batch-associated confounders (HLA/MHC class I, sex-chromosome markers).
-
-Used by: FeatureDistiller.detect_biological_noise()
-"""
 
 # Full Cell Cycle Genes from Tirosh et al. (Science 2016)
 # Combined G1/S, G2/M, and Melanoma Core Cycling Genes
@@ -115,38 +103,11 @@ PROLIFERATION_SENTINELS = {
     "Mki67", "Cdk1", "Ccnb1", "Ccnb2", "Pcna", "Top2a", "Birc5",
 }
 
-PROLIFERATION_SENTINELS.__doc__ = """
-Sentinel proliferation markers that should be retained by default.
-
-These genes are often biologically informative (cycling states) and are therefore
-excluded from masking even though they belong to cell-cycle programs.
-
-Used by: masking/distillation stage (whitelist augmentation / rescue logic).
-"""
-
 # Automatically generate Mouse format (Title Case: Mki67, Pcna)
 # This makes the tool universal without manual listing.
 _CELL_CYCLE_ALL = _HUMAN_CC_GENES.union({g.capitalize() for g in _HUMAN_CC_GENES})
 CELL_CYCLE_GENES = _CELL_CYCLE_ALL.difference(PROLIFERATION_SENTINELS)
 
-CELL_CYCLE_GENES.__doc__ = """
-Curated cell-cycle gene set (Human + Mouse ortholog formatting) excluding sentinels.
-
-Derived from Tirosh et al. (Science 2016) and expanded with capitalization variants
-to support Human/Mouse datasets. Sentinel proliferation markers are removed to avoid
-masking meaningful cycling signals.
-"""
-
 NOISE_LISTS = {
     'CellCycle_State': CELL_CYCLE_GENES
 }
-
-NOISE_LISTS.__doc__ = """
-Curated non-regex noise gene sets.
-
-This dictionary complements `NOISE_PATTERNS` (regex modules) with explicit gene lists
-for programs where a fixed list is preferable (e.g., cell cycle state).
-Keys are module names; values are sets of gene symbols.
-
-Used by: FeatureDistiller.detect_biological_noise()
-"""
