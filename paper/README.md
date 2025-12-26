@@ -30,24 +30,24 @@ already-produced prediction tables and does not call any LLM APIs during evaluat
 
 ### Ground-truth harmonization (single source of truth)
 Ground-truth labels (`Ground_Truth`) are derived **only from the author-provided cluster name strings**
-using deterministic mapping functions in `../benchmarks/gt_mappings.py`. These mappings are conservative
+using deterministic mapping functions in [`../benchmarks/gt_mappings.py`](../benchmarks/gt_mappings.py). These mappings are conservative
 and prefer stable, interpretable categories over overfitting fine subtypes.
 
 ### Ontology-aware hierarchical scoring
 We score predictions using a simple two-level ontology:
 (i) **major lineage** and (ii) **within-lineage state**. Scoring is computed by
-`../benchmarks/hierarchical_scoring.py` with dataset-specific `HierarchyConfig` objects:
+[`../benchmarks/hierarchical_scoring.py`](../benchmarks/hierarchical_scoring.py) with dataset-specific `HierarchyConfig` objects:
 
-- CD8: `../benchmarks/cd8_config.py` (w_lineage=0.7, w_state=0.3; strict T vs NK penalties)
-- CD4: `../benchmarks/cd4_config.py` (w_lineage=0.7, w_state=0.3; strict cross-lineage penalties)
-- CAF/MSC: `../benchmarks/caf_config.py` (w_lineage=0.3, w_state=0.7; Fibroblast↔Endothelial partial lineage credit)
-- Mouse B-lineage (decoy robustness): `../benchmarks/mouse_b_config.py` (w_lineage=0.5, w_state=0.5)
+- CD8: [`../benchmarks/cd8_config.py`](../benchmarks/cd8_config.py) (w_lineage=0.7, w_state=0.3; strict T vs NK penalties)
+- CD4: [`../benchmarks/cd4_config.py`](../benchmarks/cd4_config.py) (w_lineage=0.7, w_state=0.3; strict cross-lineage penalties)
+- CAF/MSC: [`../benchmarks/caf_config.py`](../benchmarks/caf_config.py) (w_lineage=0.3, w_state=0.7; Fibroblast↔Endothelial partial lineage credit)
+- Mouse B-lineage (decoy robustness): [`../benchmarks/mouse_b_config.py`](../benchmarks/mouse_b_config.py) (w_lineage=0.5, w_state=0.5)
 
 This scheme awards full credit only when both the expected major lineage and state match, and applies
 hard cross-lineage penalties for biologically incompatible calls.
 
 ### Reproducibility notes
-- All preprocessing and subsampling are fixed by the ID lists in `source_data/subsampled_ids/`.
+- All preprocessing and subsampling are fixed by the ID lists in [`source_data/subsampled_ids/`](source_data/subsampled_ids/).
 - Local preprocessing uses fixed random seeds where applicable; however, LLM outputs may still vary
   across runs even with temperature=0 depending on the backend/provider.
 - Evaluation outputs are derived artifacts written from integrated CSVs and do not modify upstream inputs.
