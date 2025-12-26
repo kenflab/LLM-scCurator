@@ -5,8 +5,9 @@ theme:
   features:
     - navigation.instant
     - navigation.tracking
+    - navigation.top
     - content.code.copy
-
+    - toc.integrate
 
 nav:
   - Home: index.md
@@ -26,9 +27,22 @@ plugins:
             show_root_heading: true
             docstring_style: numpy
 
+            # --- additions (look & readability) ---
+            show_object_full_path: false
+            show_root_toc_entry: false
+            merge_init_into_class: true
+            show_signature: true
+            separate_signature: true
+            signature_crossrefs: true
+            heading_level: 2
+            docstring_section_style: list
+
 markdown_extensions:
   - admonition
   - pymdownx.details
   - pymdownx.superfences
   - toc:
       permalink: true
+
+extra_css:
+  - stylesheets/extra.css
