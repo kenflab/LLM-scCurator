@@ -1,14 +1,49 @@
+"""
+Deterministic ground-truth label mappings for benchmarking.
+
+This module defines dataset-specific functions that map author-provided cluster names
+(strings) to a harmonized `Ground_Truth` category used in evaluation.
+
+Design principles
+-----------------
+- Deterministic: mapping depends only on the cluster name string (no expression data).
+- Conservative: coarse categories are preferred over overfitting fine subtypes.
+- Single source of truth: evaluation scripts should import these functions rather than
+  re-implementing ad hoc label logic.
+
+Notes
+-----
+These mappings are intended for benchmarking and figure generation. They do not claim
+to be a biological re-annotation of the source atlases.
+"""
 
 # LLM-scCurator/benchmarks/gt_mappings.py
 # Source of truth: cluster_name → Ground_Truth category
 
 def get_cd8_ground_truth(cluster_name: str) -> str:
     """
-    Map Zheng et al. CD8 meta.cluster names to GT categories.
+    Map Zheng et al. CD8 meta.cluster names to harmonized ground-truth categories.
 
-    The GT labels are intentionally slightly finer (Naive / Effector / EffectorMemory /
-    Exhausted / ISG / MAIT / NK_killer / Cycling), and are later collapsed into
-    coarse (major, state) pairs by CD8_HIER_CFG.gt_rules.
+    The resulting labels are intentionally moderately granular (e.g., Naive, Effector,
+    EffectorMemory, Exhausted, ISG, MAIT, NK-like, Cycling). During evaluation, these
+    are further collapsed into (major, state) pairs by the CD8 hierarchy configuration
+    (`CD8_HIER_CFG.gt_rules`), enabling ontology-aware scoring.
+
+    Parameters
+    ----------
+    cluster_name : str
+        Author-provided cluster identifier or meta.cluster name.
+
+    Returns
+    -------
+    str
+        Harmonized CD8 ground-truth label (e.g., "CD8_Naive", "CD8_Exhausted").
+        If no rule matches, returns "CD8_Other".
+
+    Notes
+    -----
+    - Matching is case-insensitive and based on substring heuristics.
+    - Rule order matters (first match wins).
     """
     s = str(cluster_name).lower()
 
@@ -55,11 +90,27 @@ def get_cd8_ground_truth(cluster_name: str) -> str:
 
 def get_cd4_ground_truth(cluster_name: str) -> str:
     """
-    Map Zheng et al. CD4 meta.cluster names to GT categories.
+    Map Zheng et al. CD4 meta.cluster names to harmonized ground-truth categories.
 
-    We intentionally keep this mapping simple and deterministic, based only on
-    the author-provided cluster names (Tn/Tm/Tem/Temra/Th17/Tfh/Treg/ISG).
-    Finer biological nuances are handled at the scoring layer, not here.
+    This mapping is intentionally simple and deterministic, relying only on the
+    author-provided cluster names (e.g., Tn/Tm/Tem/Temra/Tfh/Th17/Treg/ISG/Cycling).
+    Finer biological nuance is handled at the scoring layer rather than here.
+
+    Parameters
+    ----------
+    cluster_name : str
+        Author-provided cluster identifier or meta.cluster name.
+
+    Returns
+    -------
+    str
+        Harmonized CD4 ground-truth label (e.g., "CD4_Treg", "CD4_Tem.EffMem").
+        If no rule matches, returns "CD4_Other".
+
+    Notes
+    -----
+    - Matching is case-insensitive and based on substring heuristics.
+    - Rule order matters (first match wins).
     """
     s = str(cluster_name).lower()
 
@@ -99,15 +150,32 @@ def get_cd4_ground_truth(cluster_name: str) -> str:
 
 def get_msc_ground_truth(cluster_name: str) -> str:
     """
-    Ground-truth mapping for the CAF / MSC benchmark.
+    Map CAF/MSC benchmark cluster names to compact stromal ground-truth categories.
 
-    We deliberately collapse the space into a small set of biologically
-    interpretable states:
-        - Fibro_iCAF      (MSC / inflammatory CAFs)
-        - Fibro_myCAF     (myofibroblastic / activated CAFs)
-        - Fibro_PVL       (perivascular / pericyte / smooth muscle lineage)
-        - Fibro_Cycling   (cycling fibroblasts that are not clearly PVL)
-        - Endothelial     (vascular endothelial lineage)
+    We deliberately collapse stromal heterogeneity into a small set of interpretable
+    states suitable for robust benchmarking:
+
+    - "Fibro_iCAF"    : inflammatory CAF / MSC-like
+    - "Fibro_myCAF"   : myofibroblastic / activated CAF-like
+    - "Fibro_PVL"     : perivascular / pericyte / smooth muscle lineage
+    - "Fibro_Cycling" : cycling fibroblasts not clearly PVL/endothelial
+    - "Endothelial"   : vascular endothelial lineage
+
+    Parameters
+    ----------
+    cluster_name : str
+        Author-provided cluster label.
+
+    Returns
+    -------
+    str
+        Harmonized stromal ground-truth label.
+        If no rule matches, returns "Fibro_Other".
+
+    Notes
+    -----
+    - PVL detection takes precedence over cycling to avoid mislabeling "Cycling PVL".
+    - Matching is case-insensitive and based on substring heuristics.
     """
     s = str(cluster_name).lower()
 
@@ -138,7 +206,28 @@ def get_msc_ground_truth(cluster_name: str) -> str:
 
 def get_bcell_ground_truth(cluster_name: str) -> str:
     """
-    Tabula Muris Senis B-cell atlas (contamination detection).
+    Map Tabula Muris Senis B-cell atlas cluster names to contamination-focused labels.
+
+    This benchmark is used to test robustness to misleading marker programs. The mapping
+    intentionally assigns several non-B-like strings to decoy categories to reflect the
+    benchmark design.
+
+    Parameters
+    ----------
+    cluster_name : str
+        Author-provided cluster label.
+
+    Returns
+    -------
+    str
+        Harmonized label used for the mouse B-cell benchmark.
+        If no rule matches, returns "B_Other".
+
+    Notes
+    -----
+    The returned categories (e.g., "Erythrocyte_like", "Mast_like", "pDC_Myeloid_like")
+    are evaluation constructs for contamination/decoy detection rather than definitive
+    cell-type claims.
     """
     s = str(cluster_name).lower().strip()
     if "immature b cell" in s:

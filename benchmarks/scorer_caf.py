@@ -30,17 +30,18 @@ _SUBTYPE_KEYWORDS = [
 
 def score_caf_hierarchical(row: pd.Series, col_name: str) -> float:
     """
-    CAF / PVL benchmark-specific wrapper.
+    Legacy CAF/PVL scoring wrapper (currently unused).
 
-    We no longer assign an automatic 0.0 to generic "fibroblast" answers.
-    Instead, we rely on the hierarchical scorer:
+    This module is retained for backward compatibility with earlier benchmark drafts.
+    The current evaluation uses the generic ontology-aware scorer via `CAF_HIER_CFG`,
+    and this wrapper simply delegates to `score_hierarchical(...)`.
 
-      - If the method only says "fibroblast", it gets partial credit
-        from the lineage term (w_lineage = 0.3) but 0 for the state.
-      - If it specifies the subtype (iCAF / myCAF / PVL / Endothelial),
-        and matches the Ground Truth, it reaches a full score of 1.0.
+    Notes
+    -----
+    - `_SUBTYPE_KEYWORDS` is not used by the current implementation.
+    - This file is safe to remove once all downstream scripts are confirmed to import
+      scoring wrappers exclusively from `caf_config.py`.
     """
-    # We keep `ans` here in case we later want to log or debug,
-    # but the scoring itself is delegated to the generic scorer.
+
     ans = str(row[col_name]).lower()
     return score_hierarchical(row, col_name, cfg=CAF_HIER_CFG)

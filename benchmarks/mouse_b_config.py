@@ -1,17 +1,30 @@
-# LLM-scCurator/benchmarks/mouse_b_config.py
+"""
+Hierarchy configuration for the Tabula Muris Senis mouse B-lineage benchmark.
+
+This benchmark is designed to quantify robustness against misleading marker programs
+(decoys/contaminants) rather than to exhaustively subtype B-cell maturation.
+
+Ground truth (after `get_bcell_ground_truth()`) uses the following labels:
+- "Erythrocyte_like"
+- "Mast_like"
+- "pDC_Myeloid_like"
+- "Mature_B"
+- "B_Other" (ambiguous B-lineage; falls back to default_state)
+
+Scoring intent
+--------------
+- Major lineage distinguishes true B-lineage from contaminants (Erythroid/Myeloid).
+- State identifies which decoy program (or Mature_B) is present.
+- Lineage and state are weighted equally (w_lineage=0.5, w_state=0.5).
+- Misclassifying contaminants as B-lineage (or vice versa) receives a score of 0.0
+  via hard cross-lineage penalties.
+
+Notes
+-----
+This configuration is deterministic and intended for reviewer-facing reproducible evaluation.
+"""
 
 from .hierarchical_scoring import HierarchyConfig, score_hierarchical
-
-"""
-HierarchyConfig for the Tabula Muris Senis mouse B-lineage benchmark.
-
-Ground_Truth labels after get_bcell_ground_truth():
-    - "Erythrocyte_like"
-    - "Mast_like"
-    - "pDC_Myeloid_like"
-    - "Mature_B"
-    - "B_Other" (ambiguous late pro-B etc.; falls back to default_state)
-"""
 
 MOUSE_B_CFG = HierarchyConfig(
     # 1) Lineage: separate true B lineage from contaminants
@@ -98,7 +111,7 @@ MOUSE_B_CFG = HierarchyConfig(
         ("mast_like", ("Myeloid", "Mast_like")),
         ("pdc_myeloid_like", ("Myeloid", "pDC_Myeloid_like")),
         ("mature_b", ("BLineage", "Mature_B")),
-        # "B_Other" は default_state="Other" に落ちる
+        # "B_Other" intentionally falls back to default_state="Other".
     ],
 
     # 4) Penalties: miscalling contaminants as B cells (and vice versa) is 0
@@ -118,7 +131,7 @@ MOUSE_B_CFG = HierarchyConfig(
         "ambiguous",
     ],
 
-    # Lineage と state を同等に評価 (0.5 / 0.5)
+    # Lineage and state are weighted equally (0.5 / 0.5).
     w_lineage=0.5,
     w_state=0.5,
 
@@ -129,6 +142,28 @@ MOUSE_B_CFG = HierarchyConfig(
 
 def score_mouse_b(row, col_name):
     """
-    Thin wrapper so that scoring API matches other benchmarks.
+    Score one prediction column using the Mouse B-lineage benchmark configuration.
+
+    This is a thin wrapper around `score_hierarchical(...)` that fixes `cfg=MOUSE_B_CFG`
+    to match the scoring API used by other benchmark tasks.
+
+    Parameters
+    ----------
+    row : pandas.Series
+        A row from the evaluation table. Must include:
+        - `row[col_name]`: prediction text (free-form)
+        - `row["Ground_Truth"]`: harmonized ground-truth label
+    col_name : str
+        Name of the column containing the prediction text to score.
+
+    Returns
+    -------
+    float
+        Ontology-aware hierarchical score in the range [0.0, 1.0].
+
+    Notes
+    -----
+    - Any `failure_keywords` present in the prediction text force a score of 0.0.
+    - "B_Other" intentionally maps to (default_major="BLineage", default_state="Other").
     """
     return score_hierarchical(row, col_name, cfg=MOUSE_B_CFG)

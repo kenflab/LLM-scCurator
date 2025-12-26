@@ -1,10 +1,27 @@
+"""
+Ontology-aware evaluation for Figure 2 benchmarks.
 
-# LLM-scCurator/benchmarks/evaluate_all.py
-#
-# Ontology-aware evaluation for Figure 2 benchmarks.
-# - Uses gt_mappings.py as the single source of truth for Ground_Truth.
-# - Computes hierarchical scores for all methods.
-# - Outputs per-dataset summary + confusion matrices (Standard / Curated).
+This script evaluates multiple annotation pipelines using a hierarchy-aware scoring
+scheme that tolerates near-misses within the same major lineage/state ontology.
+
+Key design choices
+------------------
+- Ground-truth is derived deterministically from cluster identifiers using `gt_mappings.py`
+  (single source of truth for label harmonization).
+- Scoring is ontology-aware via per-task hierarchy configs (e.g., CD8/CD4/MSC/Mouse B),
+  enabling partial credit for correct major lineage with imperfect subtype.
+- Outputs include:
+  (i) per-dataset scored CSVs (row-wise scores for each pipeline),
+  (ii) summary table used for Fig. 2, and
+  (iii) confusion matrices + per-state precision/recall/F1 for Standard and Curated.
+
+Notes
+-----
+This script is intended for reproducible benchmarking. It does not call any LLMs and
+does not modify upstream benchmark inputs; it only reads integrated CSVs and writes
+derived evaluation artifacts.
+"""
+
 
 import os
 import argparse
@@ -27,7 +44,7 @@ from .gt_mappings import (
     get_bcell_ground_truth,
 )
 
-# ---- dataset-specific scoring wrappers (API を統一) --------------------------
+# ---- dataset-specific scoring wrappers --------------------------
 
 
 def _score_cd8(row, col, cfg):
@@ -39,12 +56,12 @@ def _score_cd4(row, col, cfg):
 
 
 def _score_msc(row, col, cfg):
-    # cfg は使わないが、他とシグネチャを合わせるため残す
+    # `cfg` is unused for MSC, but kept to unify the wrapper signature across tasks.
     return score_caf_hierarchical(row, col)
 
 
 def _score_mouse_b(row, col, cfg):
-    # cfg は使わない
+    # `cfg` is unused for Mouse B; retained for a unified wrapper signature.
     return score_mouse_b(row, col)
 
 
@@ -73,7 +90,6 @@ TASKS = {
     },
 }
 
-# 評価対象とするメソッド（カラム名の素）
 METHODS_TO_EVALUATE = [
     "Standard_Answer",
     "Curated_Answer",
@@ -87,9 +103,29 @@ METHODS_TO_EVALUATE = [
 
 def _build_state_series(df, cfg, pred_col):
     """
-    Build GT_state / Pred_state series for confusion matrix,
-    using the ontology mapping in cfg.gt_rules.
+    Ontology-aware evaluation for Figure 2 benchmarks.
+
+    This script evaluates multiple annotation pipelines using a hierarchy-aware scoring
+    scheme that tolerates near-misses within the same major lineage/state ontology.
+
+    Key design choices
+    ------------------
+    - Ground-truth is derived deterministically from cluster identifiers using `gt_mappings.py`
+      (single source of truth for label harmonization).
+    - Scoring is ontology-aware via per-task hierarchy configs (e.g., CD8/CD4/MSC/Mouse B),
+      enabling partial credit for correct major lineage with imperfect subtype.
+    - Outputs include:
+      (i) per-dataset scored CSVs (row-wise scores for each pipeline),
+      (ii) summary table used for Fig. 2, and
+      (iii) confusion matrices + per-state precision/recall/F1 for Standard and Curated.
+
+    Notes
+    -----
+    This script is intended for reproducible benchmarking. It does not call any LLMs and
+    does not modify upstream benchmark inputs; it only reads integrated CSVs and writes
+    derived evaluation artifacts.
     """
+
     gt_states = []
     pred_states = []
 
@@ -111,8 +147,22 @@ def _build_state_series(df, cfg, pred_col):
 
 def _confusion_and_per_state_metrics(gt, pred):
     """
-    Confusion matrix + per-state precision / recall / F1.
+    Compute a confusion matrix and per-state precision/recall/F1 metrics.
+
+    Parameters
+    ----------
+    gt : pandas.Series
+        Ground-truth state labels.
+    pred : pandas.Series
+        Predicted state labels.
+
+    Returns
+    -------
+    tuple[pandas.DataFrame, pandas.DataFrame]
+        cm : Confusion matrix (rows = GT, cols = Pred).
+        metrics_df : Per-state metrics with columns {State, Support, Precision, Recall, F1}.
     """
+
     cm = pd.crosstab(gt, pred)
     labels = sorted(set(gt.unique()) | set(pred.unique()))
     rows = []
@@ -149,12 +199,42 @@ def _confusion_and_per_state_metrics(gt, pred):
 
 def evaluate_dataset(dataset_name, csv_path, output_dir):
     """
-    - Load CSV for a dataset
-    - Derive Ground_Truth from cluster names using gt_mappings
-    - Score all available methods
-    - Save scored CSV + confusion matrices (Standard / Curated)
-    - Return rows for summary table
+    Evaluate one benchmark dataset with ontology-aware hierarchical scoring.
+
+    Workflow
+    --------
+    1) Load the integrated per-cluster CSV for the given dataset.
+    2) Derive `Ground_Truth` deterministically from the cluster identifier using a
+       dataset-specific GT mapping function (single source of truth).
+    3) For each available pipeline column, compute a per-row hierarchical score
+       (0.0–1.0) using a task-specific hierarchy config.
+    4) Write:
+       - a scored CSV with appended score columns, and
+       - confusion matrices + per-state metrics for Standard and Curated pipelines.
+
+    Parameters
+    ----------
+    dataset_name : str
+        Dataset key. Must match an entry in `TASKS` (e.g., "CD8", "CD4", "MSC", "MOUSE_B").
+    csv_path : str
+        Path to the integrated benchmark CSV for this dataset.
+    output_dir : str
+        Directory where evaluation artifacts will be written.
+
+    Returns
+    -------
+    list[dict]
+        Rows for the Figure 2 summary table. Each dict contains:
+        {Dataset, Pipeline, N, MeanScore, FracScoreEq1, FracScoreGe0_5}.
+
+    Notes
+    -----
+    - The script prefers cleaned subtype columns (`*_Subtype_Clean`) when available,
+      falling back to raw answer columns (`*_Answer`) otherwise.
+    - Confusion matrices are computed only for pipelines {Standard, Curated} to keep
+      reviewer-facing outputs concise and comparable.
     """
+
     print(f"\n[INFO] Processing {dataset_name} from {csv_path}...")
 
     if not os.path.exists(csv_path):
@@ -202,9 +282,6 @@ def evaluate_dataset(dataset_name, csv_path, output_dir):
     cm_inputs = {}  # pipeline name -> column name of textual prediction
 
     for method in METHODS_TO_EVALUATE:
-        # NOTE:
-        #   - method は "Standard_Answer" のような「生」カラム名
-        #   - まずは *_Subtype_Clean を優先し、なければ *_Answer を使う
         subtype_col = method.replace("Answer", "Subtype_Clean")
         target_col = None
 
@@ -214,7 +291,6 @@ def evaluate_dataset(dataset_name, csv_path, output_dir):
             target_col = method
 
         if target_col is None:
-            # このメソッドは当該データセットには存在しない
             continue
 
         pipeline_name = method.replace("_Answer", "")
@@ -280,6 +356,15 @@ def evaluate_dataset(dataset_name, csv_path, output_dir):
 
 
 def main():
+    """
+    CLI entry point.
+
+    Reads integrated benchmark CSVs from --data_dir, evaluates all datasets, and writes:
+    - per-dataset scored CSVs,
+    - confusion matrices (Standard/Curated),
+    - Figure2_Benchmark_Summary.csv in --out_dir.
+    """
+
     parser = argparse.ArgumentParser(
         description="Ontology-aware evaluation for LLM-scCurator benchmarks (Fig.2)."
     )

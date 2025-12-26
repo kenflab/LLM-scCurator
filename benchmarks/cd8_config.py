@@ -1,5 +1,20 @@
+"""
+CD8 benchmark hierarchy configuration.
 
-# cd8_config.py
+This module defines the task-specific ontology configuration used to score CD8⁺ T cell
+annotations in an ontology-aware manner. The configuration specifies:
+
+- prediction-side aliases for major lineage parsing (T, NK, B, Myeloid, Other),
+- prediction-side aliases for within-lineage state parsing (Naive, EffMem, Exhausted, ISG, MAIT, Cycling),
+- ground-truth mapping rules (Ground_Truth → expected major/state), and
+- scoring constraints (hard cross-lineage penalties, failure keywords, weights).
+
+Notes
+-----
+This CD8 benchmark is intentionally strict about T vs NK confusion: near-lineage partial
+credit is disabled (`near_lineage_pairs = set()`), and T↔NK calls receive a score of 0.0
+via `major_penalties`. This enforces a conservative evaluation regime.
+"""
 
 from .hierarchical_scoring import HierarchyConfig, score_hierarchical
 import pandas as pd
@@ -63,7 +78,7 @@ CD8_HIER_CFG = HierarchyConfig(
             "ki-67",
             "cell cycle",
         ],
-        # Naive は「naive」だけを見る（central memory は別扱い）
+        # Naive is matched strictly on "naive" (central memory is intentionally not treated as Naive).
         "Naive": [
             "naive",
         ],
@@ -115,13 +130,13 @@ CD8_HIER_CFG = HierarchyConfig(
     ],
 
     # 4) Hard cross-lineage penalties
-    #    T 期待のところを NK と呼んだら 0 点（その逆も同様）
+    # Hard penalties: T↔NK confusions receive 0.0 (and likewise for other forbidden lineages).
     major_penalties={
         "T": {"B", "Myeloid", "NK"},
         "NK": {"B", "Myeloid", "T"},
     },
 
-    # 5) near_lineage_pairs は空にする（T↔NK の partial credit は廃止）
+    # 5) No near-lineage partial credit for CD8 (T↔NK partial credit disabled).
     near_lineage_pairs=set(),
 
     # 6) Failure keywords
@@ -148,6 +163,28 @@ CD8_HIER_CFG = HierarchyConfig(
 
 def score_answer(row: pd.Series, col_name: str) -> float:
     """
-    Thin wrapper around the generic hierarchical scorer using the CD8 config.
+    Score one prediction column using the CD8 hierarchy configuration.
+
+    This is a thin wrapper around `score_hierarchical(...)` that fixes `cfg=CD8_HIER_CFG`
+    for the CD8 benchmark.
+
+    Parameters
+    ----------
+    row : pandas.Series
+        A row from the evaluation table. Must include:
+        - `row[col_name]`: prediction text (free-form)
+        - `row["Ground_Truth"]`: harmonized ground-truth label
+    col_name : str
+        Name of the column containing the prediction text to score.
+
+    Returns
+    -------
+    float
+        Ontology-aware hierarchical score in the range [0.0, 1.0].
+
+    Notes
+    -----
+    - Prediction text is normalized inside the scorer (lowercased, stripped).
+    - Any `failure_keywords` present in the prediction text force a score of 0.0.
     """
     return score_hierarchical(row, col_name, cfg=CD8_HIER_CFG)

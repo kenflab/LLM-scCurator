@@ -1,5 +1,24 @@
+"""
+Ontology-aware hierarchical scoring utilities.
 
-# hierarchical_scoring.py
+This module provides a lightweight, backend-agnostic scoring layer for evaluating
+LLM-derived (or otherwise free-text) cell-type annotations against a harmonized
+ground truth. The scorer maps both ground-truth labels and prediction text to a
+(common) ontology consisting of:
+
+- a major lineage (e.g., T, B, NK, Myeloid), and
+- a within-lineage state (e.g., Naive, EffMem, Exhausted, ISG).
+
+Scoring is hierarchical:
+1) Major lineage receives a higher weight (default 0.7).
+2) State receives a lower weight (default 0.3).
+3) Optional hard penalties enforce zero score for biologically incompatible
+   lineage confusions (e.g., expected T predicted as B or Myeloid).
+4) Optional near-lineage pairs allow partial credit (e.g., T ↔ NK).
+
+The design is intentionally simple and deterministic to support reproducible
+benchmarking and figure generation.
+"""
 
 from __future__ import annotations
 from dataclasses import dataclass, field
@@ -10,11 +29,51 @@ import pandas as pd
 @dataclass
 class HierarchyConfig:
     """
-    Generic config for ontology / hierarchy-aware scoring.
+    Configuration for ontology-aware hierarchical scoring.
 
-    You can reuse this for CD8, CD4, B cells, myeloid, spatial tasks, etc.
-    All task-specific logic is expressed as dictionaries here.
+    All task-specific behavior is expressed through dictionaries in this config
+    (aliases, ground-truth mapping rules, and penalty sets). This allows the same
+    scoring function to be reused across immune, stromal, and spatial benchmarks.
+
+    Attributes
+    ----------
+    lineage_aliases : dict[str, list[str]]
+        Mapping from major lineage name to a list of substrings used to detect that
+        lineage in free-text predictions (case-insensitive).
+        Example: {"T": ["t cell", "cd8", "cd4"], "B": ["b cell"], ...}
+    state_aliases : dict[str, list[str]]
+        Mapping from state name to a list of substrings used to detect that state
+        in free-text predictions (case-insensitive).
+        Example: {"Naive": ["naive", "tcm"], "Exhausted": ["exhaust"], ...}
+    gt_rules : list[tuple[str, tuple[str, str]]]
+        Ordered rules mapping ground-truth label strings to an expected (major, state).
+        Each rule is a substring match; the first match wins.
+        Example: [("naive", ("T", "Naive")), ("nk", ("NK", "EffMem")), ...]
+    major_penalties : dict[str, set[str]]
+        Hard cross-lineage penalties. Keys are expected majors; values are predicted
+        majors that receive an immediate score of 0.0 if matched.
+    near_lineage_pairs : set[frozenset]
+        Pairs of majors that receive partial credit if confused (e.g., T ↔ NK).
+    failure_keywords : list[str]
+        If any keyword appears in the prediction text (after normalization),
+        the score is forced to 0.0 (e.g., "error", "unknown").
+    w_lineage : float
+        Weight assigned to major lineage correctness (default 0.7).
+    w_state : float
+        Weight assigned to state correctness (default 0.3).
+    default_major : str
+        Fallback major if ground truth does not match any rule or prediction cannot
+        be parsed (default "Other").
+    default_state : str
+        Fallback state if ground truth does not match any rule or prediction cannot
+        be parsed (default "Other").
+
+    Notes
+    -----
+    This config is intentionally task-local and does not depend on external ontologies.
+    For rigorous comparisons, keep the mapping rules stable across runs.
     """
+
     # 1) How to parse major lineage from prediction text
     #    e.g. {"T": ["t cell", "cd8", ...], "B": ["b cell", ...], ...}
     lineage_aliases: Dict[str, List[str]]
@@ -49,7 +108,22 @@ class HierarchyConfig:
 
 
 def _parse_major_lineage_generic(ans: str, cfg: HierarchyConfig) -> str:
-    """Parse major lineage (T / B / NK / Myeloid / Other) from prediction text."""
+    """
+    Parse the predicted major lineage from free-text output.
+
+    Parameters
+    ----------
+    ans : str
+        Raw prediction text (free-form).
+    cfg : HierarchyConfig
+        Task-specific ontology configuration.
+
+    Returns
+    -------
+    str
+        Predicted major lineage label. If no alias matches, returns `cfg.default_major`.
+    """
+
     a = ans.lower()
     for major, keywords in cfg.lineage_aliases.items():
         if any(k in a for k in keywords):
@@ -58,7 +132,22 @@ def _parse_major_lineage_generic(ans: str, cfg: HierarchyConfig) -> str:
 
 
 def _parse_state_generic(ans: str, cfg: HierarchyConfig) -> str:
-    """Parse state (Naive / EffMem / Resident / Exhausted / ISG / etc.) from prediction text."""
+    """
+    Parse the predicted within-lineage state from free-text output.
+
+    Parameters
+    ----------
+    ans : str
+        Raw prediction text (free-form).
+    cfg : HierarchyConfig
+        Task-specific ontology configuration.
+
+    Returns
+    -------
+    str
+        Predicted state label. If no alias matches, returns `cfg.default_state`.
+    """
+
     a = ans.lower()
     for state, keywords in cfg.state_aliases.items():
         if any(k in a for k in keywords):
@@ -68,8 +157,22 @@ def _parse_state_generic(ans: str, cfg: HierarchyConfig) -> str:
 
 def _expected_major_state_generic(gt: str, cfg: HierarchyConfig) -> Tuple[str, str]:
     """
-    Map Ground_Truth label to expected (major, state) according to gt_rules.
-    Rules are applied in order; first match wins (substring match).
+    Map a ground-truth label to the expected (major, state) ontology tuple.
+
+    Rules are applied in order; the first substring match wins. If no rule matches,
+    returns (cfg.default_major, cfg.default_state).
+
+    Parameters
+    ----------
+    gt : str
+        Ground-truth label (typically a harmonized category string).
+    cfg : HierarchyConfig
+        Task-specific ontology configuration.
+
+    Returns
+    -------
+    tuple[str, str]
+        (expected_major, expected_state)
     """
     g = str(gt).lower()
     for pattern, (major, state) in cfg.gt_rules:
@@ -85,17 +188,51 @@ def score_hierarchical(
     cfg: HierarchyConfig,
 ) -> float:
     """
-    Generic ontology-aware hierarchical scorer.
+    Compute an ontology-aware hierarchical score for one prediction.
 
-    - First evaluates major lineage (heavy weight).
-    - Then evaluates state (lighter weight).
-    - Strong penalties for clearly wrong lineages (e.g. T→B, T→Myeloid).
-    - Partial credit between near lineages (e.g. T↔NK).
+    The score is computed in three steps:
+
+    1) Fail-fast: if the normalized prediction text contains any `failure_keywords`,
+       return 0.0.
+    2) Major lineage scoring (weighted by `cfg.w_lineage`):
+       - If the predicted major is in `major_penalties[expected_major]`, return 0.0.
+       - If predicted major equals expected major: lineage_score = 1.0.
+       - If (pred_major, exp_major) is in `near_lineage_pairs`: lineage_score = 0.5.
+       - Otherwise: lineage_score = 0.0.
+    3) State scoring (weighted by `cfg.w_state`):
+       - state_score = 1.0 if predicted state equals expected state else 0.0.
+
+    The final score is:
+        total = w_lineage * lineage_score + w_state * state_score,
+    clipped to [0.0, 1.0].
+
+    Parameters
+    ----------
+    row : pandas.Series
+        A row from the evaluation table. Must include:
+        - `row[col_name]`: prediction text
+        - `row["Ground_Truth"]`: ground-truth label
+    col_name : str
+        Column name containing the prediction text.
+    cfg : HierarchyConfig
+        Task-specific ontology configuration.
+
+    Returns
+    -------
+    float
+        Hierarchical score in the range [0.0, 1.0].
+
+    Notes
+    -----
+    This scorer is deterministic and intentionally conservative:
+    it assigns no partial credit for state if the state string does not match the
+    expected state alias mapping.
     """
+    
     raw_ans = str(row[col_name])
     ans = raw_ans.lower().replace("*", "").replace("\n", " ").strip()
 
-    # 0) Kill switch
+    # 0) Fail-fast: explicit failure tokens
     if any(k in ans for k in cfg.failure_keywords):
         return 0.0
 
@@ -103,7 +240,7 @@ def score_hierarchical(
     pred_major = _parse_major_lineage_generic(ans, cfg)
     pred_state = _parse_state_generic(ans, cfg)
 
-    # 1) Major lineage scoring
+    # 1) Major lineage scoring (with hard penalties / near-lineage partial credit)
     #    Hard cross penalties
     forbidden = cfg.major_penalties.get(exp_major, set())
     if pred_major in forbidden:
@@ -117,10 +254,10 @@ def score_hierarchical(
     else:
         lineage_score = 0.0
 
-    # 2) State scoring
+    # 2) State scoring (exact match on parsed state)
     state_score = 1.0 if pred_state == exp_state else 0.0
 
-    # 3) Weighted combination (range [0, 1])
+    # 3) Weighted combination (clipped to [0, 1])
     total = cfg.w_lineage * lineage_score + cfg.w_state * state_score
     total = float(max(0.0, min(1.0, total)))
     return total

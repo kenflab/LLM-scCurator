@@ -1,5 +1,32 @@
+"""
+CAF/MSC benchmark hierarchy configuration.
 
-# caf_config.py
+This module defines an ontology configuration for stromal benchmarking, tailored to
+CAF/MSC-rich datasets where within-stroma states are the primary target of evaluation.
+
+Major lineage (used for coarse penalties/partial credit)
+--------------------------------------------------------
+- Fibroblast (stromal/mesenchymal, including PVL/pericyte continuum)
+- Endothelial (vascular lineage)
+- Immune (non-stromal immune cells; treated as clearly incorrect for stromal clusters)
+- Tumor (epithelial/carcinoma; treated as clearly incorrect for stromal clusters)
+
+States (used for confusion matrices and primary scoring)
+--------------------------------------------------------
+- iCAF, myCAF, PVL, Cycling, Endothelial
+
+Scoring intent
+--------------
+- State is emphasized (w_state=0.7) to distinguish CAF programs.
+- Major lineage still contributes (w_lineage=0.3) and enforces hard penalties against
+  Immune/Tumor miscalls.
+- Fibroblast ↔ Endothelial receives partial lineage credit to tolerate vascular-niche
+  ambiguity while still rewarding correct state calls when possible.
+
+This configuration is deterministic and intended for reviewer-facing reproducible
+benchmarking.
+"""
+
 from .hierarchical_scoring import HierarchyConfig
 from typing import Set, FrozenSet
 
@@ -163,7 +190,7 @@ CAF_HIER_CFG = HierarchyConfig(
     },
 
     # 5) Near-lineage pairs
-    #    Fibroblast ↔ Endothelial は「血管ニッチ」での誤差として 0.5 の lineage 部分点を与える
+    # Fibroblast ↔ Endothelial: award partial lineage credit (0.5) to tolerate vascular-niche ambiguity.
     near_lineage_pairs={
         frozenset({"Fibroblast", "Endothelial"}),
     },

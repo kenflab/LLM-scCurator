@@ -1,5 +1,22 @@
+"""
+CD4 benchmark hierarchy configuration.
 
-# cd4_config.py
+This module defines the task-specific ontology configuration used to score CD4⁺ T cell
+annotations in an ontology-aware, hierarchy-aware manner. The configuration specifies:
+
+- prediction-side aliases for major lineage parsing (T, NK, B, Myeloid, Other),
+- prediction-side aliases for within-lineage state parsing (Treg, Tfh, Th17, ISG, Cycling,
+  Naive, Exhausted, EffMem),
+- ground-truth mapping rules (Ground_Truth → expected major/state), and
+- strict scoring constraints (hard cross-lineage penalties, failure keywords, weights).
+
+Notes
+-----
+For CD4 benchmarking we intentionally avoid granting implicit T-lineage credit:
+predictions must contain explicit T-cell terminology to be parsed as "T". If no alias
+matches, the prediction is assigned to `default_major="Other"`, which yields no lineage
+credit under the strict penalty regime.
+"""
 
 from .hierarchical_scoring import HierarchyConfig, score_hierarchical
 import pandas as pd
@@ -177,6 +194,28 @@ CD4_HIER_CFG = HierarchyConfig(
 
 def score_cd4(row: pd.Series, col_name: str) -> float:
     """
-    Convenience wrapper around the generic hierarchical scorer using the CD4 config.
+    Score one prediction column using the CD4 hierarchy configuration.
+
+    This is a thin wrapper around `score_hierarchical(...)` that fixes `cfg=CD4_HIER_CFG`
+    for the CD4 benchmark.
+
+    Parameters
+    ----------
+    row : pandas.Series
+        A row from the evaluation table. Must include:
+        - `row[col_name]`: prediction text (free-form)
+        - `row["Ground_Truth"]`: harmonized ground-truth label
+    col_name : str
+        Name of the column containing the prediction text to score.
+
+    Returns
+    -------
+    float
+        Ontology-aware hierarchical score in the range [0.0, 1.0].
+
+    Notes
+    -----
+    - Any `failure_keywords` present in the prediction text force a score of 0.0.
+    - Near-lineage partial credit is disabled (`near_lineage_pairs = set()`).
     """
     return score_hierarchical(row, col_name, cfg=CD4_HIER_CFG)
