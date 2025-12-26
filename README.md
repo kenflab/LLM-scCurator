@@ -192,14 +192,14 @@ Set your provider API key as an environment variable:
 See each provider’s documentation for how to obtain an API key and for current usage policies.
 ![Get API Key GIF](https://github.com/user-attachments/assets/70791b03-341d-4449-af07-1d181768f01c)
 
-- **Gemini Steps:**
+- **Gemini steps:**
 1.  Go to **[Google AI Studio](https://aistudio.google.com/)**.
 2.  Log in with your Google Account.
 3.  Click **Get API key** (top-left) $\rightarrow$ **Create API key**.
 4.  Copy the key and use it in your code.
 
 
-- **OPENAI Steps:**
+- **OpenAI steps:**
 1.  Go to **[OpenAI Platform](https://platform.openai.com/api-keys)**.
 2.  Log in with your OpenAI Account.
 3.  Click **Create new secret key** $\rightarrow$ **Create secret key**.
