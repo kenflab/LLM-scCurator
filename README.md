@@ -192,6 +192,11 @@ Notes:
     ☝️ Runs end-to-end on a public Scanpy dataset (**no API key required** by default).  
     - 🔑 [Optional](README.md#-backends-llm-api-keys-setup): If an API key is provided (replace `GEMINI_API_KEY = "YOUR_KEY_HERE"`), the notebook can also run **LLM-scCurator automatic hierarchical cell annotation**.
 
+  - **OpenAI quickstart (OpenAI backend: [colab_quickstart_openai.ipynb](examples/colab/colab_quickstart_openai.ipynb))**
+  - [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/kenflab/LLM-scCurator/blob/master/examples/colab/colab_quickstart_openai.ipynb) <br>
+    ☝️ Same workflow as the Python quickstart, but configured for the OpenAI backend.
+    - 🔑 [Optional](README.md#-backends-llm-api-keys-setup): If an API key is provided (replace `OPENAI_API_KEY= "YOUR_KEY_HERE"`), the notebook can also run **LLM-scCurator automatic hierarchical cell annotation**. `OPENAI_API_KEY` requires OpenAI API billing (paid API credits).
+
 - **R / Seurat quickstart (export → Python LLM-scCurator → back to Seurat: [colab_quickstart_R.ipynb](examples/colab/colab_quickstart_R.ipynb))**
   - [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/kenflab/LLM-scCurator/blob/master/examples/colab/colab_quickstart_R.ipynb) <br>
     ☝️ Runs a minimal Seurat workflow in R, exports a Seurat object to an AnnData-ready folder, runs LLM-scCurator in Python, then re-imports labels into Seurat for visualization and marker sanity checks.  
