@@ -28,6 +28,16 @@
 ---
 ## 📦 Installation
 
+- #### Option A (recommended): Install from PyPI
+  ```bash
+  pip install "llm-sc-curator[gemini]"
+  # or: pip install "llm-sc-curator[openai]"
+  # or: pip install "llm-sc-curator[all]"
+  ```
+  Notes:
+  > PyPI release coming with v0.1.0.
+
+- #### Option B: Install from GitHub (development)
   ```bash
   # 1. Clone the repository
   git clone https://github.com/kenflab/LLM-scCurator.git
