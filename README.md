@@ -60,7 +60,9 @@ We provide an official Docker environment (Python + R + Jupyter), sufficient to 
   ```bash
   # from the repo root (optional, for notebooks / file access)
   docker pull ghcr.io/kenflab/llm-sc-curator:official
-
+  ```
+  Run Jupyter:
+  ```
   docker run --rm -it \
     -p 8888:8888 \
     -v "$PWD":/work \
@@ -92,6 +94,9 @@ We provide an official Docker environment (Python + R + Jupyter), sufficient to 
   # Option B2: Build locally without Compose (alternative)
   # from the repo root
   docker build -f docker/Dockerfile -t llm-sc-curator:official .
+  ```
+  Run Jupyter:
+  ```
   docker run --rm -it \
     -p 8888:8888 \
     -v "$PWD":/work \
@@ -104,18 +109,24 @@ We provide an official Docker environment (Python + R + Jupyter), sufficient to 
 
 ---
 ## 🖥️ Apptainer / Singularity (HPC)
-Build a .sif from the Docker image:
+- #### Option A: Prebuilt image (recommended)
+  Use the published image from GitHub Container Registry (GHCR).
+  ```bash
+  apptainer build llm-sc-curator.sif docker://ghcr.io/kenflab/llm-sc-curator:official
+  ```
+
+- #### Option B:  a .sif from the Docker image (development)
   ```bash
   docker compose -f docker/docker-compose.yml build
   apptainer build llm-sc-curator.sif docker-daemon://llm-sc-curator:official
   ```
 
-Run Jupyter:
+Run Jupyter (either image):
   ```bash
   apptainer exec --cleanenv \
     --bind "$PWD":/work \
     llm-sc-curator.sif \
-    bash -lc 'jupyter lab --ip=0.0.0.0 --port=8888 --no-browser --NotebookApp.token="" --NotebookApp.password=""'
+    bash -lc 'jupyter lab --ip=0.0.0.0 --port=8888 --no-browser 
   ```
 ---
 ## 🔒 Privacy
