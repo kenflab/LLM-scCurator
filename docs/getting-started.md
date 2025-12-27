@@ -6,18 +6,27 @@ For the conceptual model (masking, rescue, leakage-safe lineage filtering, hiera
 ---
 
 ## Install
-```bash
-pip install llm-sc-curator
-```
+- #### Option A (recommended): Install from PyPI
+  ```bash
+  pip install "llm-sc-curator[gemini]"
+  # or: pip install "llm-sc-curator[openai]"
+  # or: pip install "llm-sc-curator[all]"
+  ```
+  
+  > Notes: PyPI release coming with v0.1.0.
 
-From source (development):
-```bash
-git clone https://github.com/kenflab/LLM-scCurator.git
-cd LLM-scCurator
-pip install -e .
-```
-
-> Note: If you already have a Scanpy/Seurat pipeline environment, installing into that environment is typically sufficient.
+- #### Option B: Install from GitHub (development)
+  ```bash
+  # 1. Clone the repository
+  git clone https://github.com/kenflab/LLM-scCurator.git
+  
+  # 2. Navigate to the directory
+  cd LLM-scCurator
+  
+  # 3. Install the package (and dependencies)
+  pip install .
+  ```
+  > Notes: If you already have a Scanpy/Seurat pipeline environment, you can install it into that environment.
 
 ## Configure an LLM backend (optional)
 
@@ -88,18 +97,59 @@ If you prefer a fully contained environment (Python + R + Jupyter), we provide a
   Open Jupyter:
   [http://localhost:8888](http://localhost:8888) 
   (Use the token printed in the container logs.) 
-  Notes:
-  > For manuscript reproducibility, we also provide versioned tags (e.g., :v0.1.0). Prefer a version tag when matching a paper release.
+ 
+  > Notes: For manuscript reproducibility, we also provide versioned tags (e.g., :v0.1.0). Prefer a version tag when matching a paper release.
 
 - #### Option B: Build locally (development)
   ```bash
+  # Option B1: Build locally with Compose
   # from the repo root
   docker compose -f docker/docker-compose.yml build
   docker compose -f docker/docker-compose.yml up
   ```
   Open Jupyter:
-  [http://localhost:8888](http://localhost:8888) 
+  [http://localhost:8888](http://localhost:8888)  <br>  
   Workspace mount: /work
+
+  
+  ```bash
+  # Option B2: Build locally without Compose (alternative)
+  # from the repo root
+  docker build -f docker/Dockerfile -t llm-sc-curator:official .
+  ```
+  Run Jupyter:
+  ```
+  docker run --rm -it \
+    -p 8888:8888 \
+    -v "$PWD":/work \
+    -e GEMINI_API_KEY \
+    -e OPENAI_API_KEY \
+    llm-sc-curator:official
+  ```
+  Open Jupyter:
+  [http://localhost:8888](http://localhost:8888)  <br>  
+
+---
+## Apptainer / Singularity (HPC)
+- #### Option A: Prebuilt image (recommended)
+  Use the published image from GitHub Container Registry (GHCR).
+  ```bash
+  apptainer build llm-sc-curator.sif docker://ghcr.io/kenflab/llm-sc-curator:official
+  ```
+
+- #### Option B:  a .sif from the Docker image (development)
+  ```bash
+  docker compose -f docker/docker-compose.yml build
+  apptainer build llm-sc-curator.sif docker-daemon://llm-sc-curator:official
+  ```
+
+Run Jupyter (either image):
+  ```bash
+  apptainer exec --cleanenv \
+    --bind "$PWD":/work \
+    llm-sc-curator.sif \
+    bash -lc '
+  ```
 
 ## Next steps
 - Design and terminology: **[Concepts](concepts.md)**
