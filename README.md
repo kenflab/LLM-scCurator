@@ -208,6 +208,8 @@ Set your provider API key as an environment variable:
 See each provider’s documentation for how to obtain an API key and for current usage policies.
 ![Get API Key GIF](https://github.com/user-attachments/assets/70791b03-341d-4449-af07-1d181768f01c)
 
+
+
 - **Gemini steps:**
 1.  Go to **[Google AI Studio](https://aistudio.google.com/)**.
 2.  Log in with your Google Account.
@@ -219,3 +221,9 @@ See each provider’s documentation for how to obtain an API key and for current
 2.  Log in with your OpenAI Account.
 3.  Click **Create new secret key** $\rightarrow$ **Create secret key**.
 4.  Copy the key and use it in your code.
+
+Notes:
+> Google Gemini can be used within its free-tier limits. <br> 
+> OpenAI API usage requires enabling billing (paid API credits); ChatGPT subscriptions (e.g. Plus) do NOT include API usage. 
+
+
