@@ -1,12 +1,16 @@
 # LLM-scCurator
 
 <p align="left">
-  <img src="docs/assets/LLM-scCurator_logo.png" width="90" alt="LLM-scCurator" style="vertical-align: middle; margin-right: 10px;">
+  <img src="https://raw.githubusercontent.com/kenflab/LLM-scCurator/main/docs/assets/LLM-scCurator_logo.png"
+       width="90" alt="LLM-scCurator"
+       style="vertical-align: middle; margin-right: 10px;">
   <span style="font-size: 28px; font-weight: 700; vertical-align: middle;">
     Dynamic feature masking to improve robustness of zero-shot cell-type annotation with LLMs.
   </span>
 </p>
 
+
+     
 [![Docs](https://readthedocs.org/projects/llm-sccurator/badge/?version=latest)](https://llm-sccurator.readthedocs.io/)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17970494.svg)](https://doi.org/10.5281/zenodo.17970494)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
