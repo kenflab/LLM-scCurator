@@ -236,20 +236,23 @@ See each provider’s documentation for how to obtain an API key and for current
 
 
 
-- **Gemini steps:**
-1.  Go to **[Google AI Studio](https://aistudio.google.com/)**.
-2.  Log in with your Google Account.
-3.  Click **Get API key** (top-left) $\rightarrow$ **Create API key**.
-4.  Copy the key and use it in your code. <br>  
+- **Option A (Gemini steps):**
+  1.  Go to **[Google AI Studio](https://aistudio.google.com/)**.
+  2.  Log in with your Google Account.
+  3.  Click **Get API key** (top-left) $\rightarrow$ **Create API key**.
+  4.  Copy the key and use it in your code. <br>  
 
-- **OpenAI steps:**
-1.  Go to **[OpenAI Platform](https://platform.openai.com/api-keys)**.
-2.  Log in with your OpenAI Account.
-3.  Click **Create new secret key** $\rightarrow$ **Create secret key**.
-4.  Copy the key and use it in your code.
+
+- **Option B (OpenAI steps):**
+  1.  Go to **[OpenAI Platform](https://platform.openai.com/api-keys)**.
+  2.  Log in with your OpenAI Account.
+  3.  Click **Create new secret key** $\rightarrow$ **Create secret key**.
+  4.  Copy the key and use it in your code.
 
 Notes:
 > Google Gemini can be used within its free-tier limits. <br> 
 > OpenAI API usage requires enabling billing (paid API credits); ChatGPT subscriptions (e.g. Plus) do NOT include API usage. 
+
+
 
 
