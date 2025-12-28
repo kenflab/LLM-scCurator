@@ -7,20 +7,18 @@
   </span>
 </p>
 
-
-[![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-![Docker](https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=white)
-![Jupyter](https://img.shields.io/badge/Jupyter-F37626?logo=jupyter&logoColor=white)
-![R](https://img.shields.io/badge/R-276DC3?logo=r&logoColor=white)
-
+[![Docs](https://readthedocs.org/projects/llm-sccurator/badge/?version=latest)](https://llm-sccurator.readthedocs.io/)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17970494.svg)](https://doi.org/10.5281/zenodo.17970494)
-
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
+![R](https://img.shields.io/badge/R-276DC3?logo=r&logoColor=white)
+![Jupyter](https://img.shields.io/badge/Jupyter-F37626?logo=jupyter&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=white)
 
 ---
 
 ## 🚀 Overview
-**LLM-scCurator** is a Large Language Model–based curator for single-cell and spatial transcriptomics. It performs noise-aware marker distillation—suppressing technical programs (e.g., ribosomal/mitochondrial), clonotype signals (TCR/Ig), and stress signatures while rescuing lineage markers—and applies leakage-safe lineage filters before prompting an LLM. It supports hierarchical (coarse-to-fine) annotation for single-cell and spatial transcriptomics data.
+**LLM-scCurator** is a Large Language Model–based curator for single-cell and spatial transcriptomics. It performs noise-aware marker distillation—suppressing technical programs (e.g., ribosomal/mitochondrial), clonotype signals (TCR/Ig), and stress signatures while rescuing lineage markers—and applies leakage-safe lineage filters before prompting an LLM. It supports hierarchical (coarse-to-fine) annotation for single-cell and spatial transcriptomics data. See the documentation for full tutorials and API reference: https://llm-sccurator.readthedocs.io/
 
 
 ### Key Features
