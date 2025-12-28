@@ -35,9 +35,12 @@ jobs:
         with:
           context: .
           file: docker/Dockerfile
+          platforms: linux/amd64
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
           provenance: false
           sbom: false
         env:
