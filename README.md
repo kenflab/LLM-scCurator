@@ -7,18 +7,15 @@
   </span>
 </p>
 
-## Citation
-Zenodo archive (v0.1.0) DOI: [10.5281/zenodo.17970494](https://doi.org/10.5281/zenodo.17970494)  
-GitHub release tag: [v0.1.0](https://github.com/kenflab/LLM-scCurator/releases/tag/v0.1.0)
-
-
----
 
 [![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 ![Docker](https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=white)
 ![Jupyter](https://img.shields.io/badge/Jupyter-F37626?logo=jupyter&logoColor=white)
 ![R](https://img.shields.io/badge/R-276DC3?logo=r&logoColor=white)
+
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17970494.svg)](https://doi.org/10.5281/zenodo.17970494)
+
 
 ---
 
@@ -259,6 +256,14 @@ See each provider’s documentation for how to obtain an API key and for current
 Notes:
 > Google Gemini can be used within its free-tier limits. <br> 
 > OpenAI API usage requires enabling billing (paid API credits); ChatGPT subscriptions (e.g. Plus) do NOT include API usage. 
+
+---
+## Citation
+Zenodo archive (v0.1.0) DOI: [10.5281/zenodo.17970494](https://doi.org/10.5281/zenodo.17970494)  
+GitHub release tag: [v0.1.0](https://github.com/kenflab/LLM-scCurator/releases/tag/v0.1.0)
+
+
+
 
 
 
