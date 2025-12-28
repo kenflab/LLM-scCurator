@@ -32,6 +32,6 @@ preferred-citation:
       given-names: "Ken"
   year: 2025
   version: 0.1.0
+  doi: "10.5281/zenodo.17970494"
   url: "https://github.com/kenflab/LLM-scCurator"
   repository-code: "https://github.com/kenflab/LLM-scCurator"
-  # doi: "10.5281/zenodo.XXXXXXX"  # add after Zenodo release is minted
