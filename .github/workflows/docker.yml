@@ -65,21 +65,14 @@ jobs:
           META_FILE: ${{ runner.temp }}/build-metadata.json
         run: |
           set -euo pipefail
-
-          d="$(python3 - <<'PY'
-import json, os
-p = os.environ["META_FILE"]
-j = json.load(open(p))
-print(j.get("containerimage.digest",""))
-PY
-)"
+          d="$(python3 -c 'import json,os; j=json.load(open(os.environ["META_FILE"])); print(j.get("containerimage.digest",""))')"
           echo "DIGEST=$d"
           test -n "$d"
-
           mkdir -p /tmp/digests
           plat="${{ matrix.platform }}"
           safe="${plat//\//_}"
           echo "$d" > "/tmp/digests/${safe}.digest"
+
 
       - uses: actions/upload-artifact@v4
         with:
