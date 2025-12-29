@@ -60,6 +60,7 @@ We provide an official Docker environment (Python + R + Jupyter), sufficient to 
 
 - #### Option A: Prebuilt image (recommended)
   Use the published image from GitHub Container Registry (GHCR).
+  
   Notes:
   > Prebuilt images will be published to GHCR with the v0.1.0 release. Until then, you can build locally(See **Option B**)
 
