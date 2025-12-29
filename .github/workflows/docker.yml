@@ -56,20 +56,30 @@ jobs:
           cache-to: type=gha,mode=max,scope=${{ matrix.platform }}
           provenance: false
           sbom: false
+          metadata-file: ${{ runner.temp }}/build-metadata.json
         env:
           BUILDKIT_PROGRESS: plain
 
       - name: Export digest
+        env:
+          META_FILE: ${{ runner.temp }}/build-metadata.json
         run: |
           set -euo pipefail
-          d="${{ steps.buildx.outputs.digest }}"
+
+          d="$(python3 - <<'PY'
+import json, os
+p = os.environ["META_FILE"]
+j = json.load(open(p))
+print(j.get("containerimage.digest",""))
+PY
+)"
           echo "DIGEST=$d"
           test -n "$d"
+
           mkdir -p /tmp/digests
           plat="${{ matrix.platform }}"
-          safe="${plat//\//_}"   # linux/amd64 -> linux_amd64
+          safe="${plat//\//_}"
           echo "$d" > "/tmp/digests/${safe}.digest"
-
 
       - uses: actions/upload-artifact@v4
         with:
