@@ -19,7 +19,7 @@ jobs:
       - uses: docker/login-action@v3
         with:
           registry: ghcr.io
-          username: kenflab
+          username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - uses: docker/metadata-action@v5
