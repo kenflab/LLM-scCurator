@@ -96,16 +96,19 @@ jobs:
 
       - name: Create & push manifest list
         run: |
-          DIGESTS=""
+          set -euo pipefail
+
+          TAG_ARGS=""
+          while IFS= read -r t; do
+            [ -n "$t" ] && TAG_ARGS="$TAG_ARGS -t $t"
+          done <<EOF
+${{ steps.meta.outputs.tags }}
+EOF
+
+          DIGEST_ARGS=""
           for f in /tmp/digests/*.digest; do
-            DIGESTS="$DIGESTS ${{ env.IMAGE }}@$(cat $f)"
+            DIGEST_ARGS="$DIGEST_ARGS ${{ env.IMAGE }}@$(cat "$f")"
           done
-          docker buildx imagetools create \
-            $(python - <<'PY'
-import json, os
-j=json.loads(os.environ["DOCKER_METADATA_OUTPUT_JSON"])
-print(" ".join([f"-t {t}" for t in j["tags"]]))
-PY
-) $DIGESTS
-        env:
-          DOCKER_METADATA_OUTPUT_JSON: ${{ steps.meta.outputs.json }}
+
+          docker buildx imagetools create $TAG_ARGS $DIGEST_ARGS
+
