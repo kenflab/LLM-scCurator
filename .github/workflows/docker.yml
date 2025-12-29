@@ -2,7 +2,8 @@ name: build-and-push-ghcr
 
 on:
   push:
-    tags: ["v*.*.*"]
+    tags:
+      - "v*"
   workflow_dispatch:
 
 env:
@@ -16,8 +17,10 @@ jobs:
         include:
           - platform: linux/amd64
             runner: ubuntu-latest
+            suffix: amd64
           - platform: linux/arm64
             runner: ubuntu-24.04-arm
+            suffix: arm64
     runs-on: ${{ matrix.runner }}
     permissions:
       contents: read
@@ -25,7 +28,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-
       - uses: docker/setup-buildx-action@v3
 
       - uses: docker/login-action@v3
@@ -34,50 +36,21 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - uses: docker/metadata-action@v5
-        id: meta
-        with:
-          images: ${{ env.IMAGE }}
-          tags: |
-            type=semver,pattern={{version}}
-            type=sha
-            type=raw,value=official,enable=${{ startsWith(github.ref, 'refs/tags/v') }}
-
-      - name: Build & push (by digest)
-        id: buildx
+      - name: Build & push (platform tag)
         uses: docker/build-push-action@v6
         with:
           context: .
           file: docker/Dockerfile
           platforms: ${{ matrix.platform }}
-          labels: ${{ steps.meta.outputs.labels }}
-          outputs: type=image,name=${{ env.IMAGE }},push-by-digest=true,name-canonical=true,push=true
+          push: true
+          tags: |
+            ${{ env.IMAGE }}:tmp-${{ github.sha }}-${{ matrix.suffix }}
           cache-from: type=gha,scope=${{ matrix.platform }}
           cache-to: type=gha,mode=max,scope=${{ matrix.platform }}
           provenance: false
           sbom: false
-          metadata-file: ${{ runner.temp }}/build-metadata.json
         env:
           BUILDKIT_PROGRESS: plain
-
-      - name: Export digest
-        env:
-          META_FILE: ${{ runner.temp }}/build-metadata.json
-        run: |
-          set -euo pipefail
-          d="$(python3 -c 'import json,os; j=json.load(open(os.environ["META_FILE"])); print(j.get("containerimage.digest",""))')"
-          echo "DIGEST=$d"
-          test -n "$d"
-          mkdir -p /tmp/digests
-          plat="${{ matrix.platform }}"
-          safe="${plat//\//_}"
-          echo "$d" > "/tmp/digests/${safe}.digest"
-
-
-      - uses: actions/upload-artifact@v4
-        with:
-          name: digests-${{ matrix.platform }}
-          path: /tmp/digests/*.digest
 
   merge:
     runs-on: ubuntu-latest
@@ -86,12 +59,6 @@ jobs:
       contents: read
       packages: write
     steps:
-      - uses: actions/download-artifact@v4
-        with:
-          path: /tmp/digests
-          pattern: digests-*
-          merge-multiple: true
-
       - uses: docker/setup-buildx-action@v3
 
       - uses: docker/login-action@v3
@@ -120,9 +87,7 @@ jobs:
             [ -n "$t" ] && TAG_ARGS="$TAG_ARGS -t $t"
           done <<< "$TAGS"
 
-          DIGEST_ARGS=""
-          for f in /tmp/digests/*.digest; do
-            DIGEST_ARGS="$DIGEST_ARGS ${{ env.IMAGE }}@$(cat "$f")"
-          done
-
-          docker buildx imagetools create $TAG_ARGS $DIGEST_ARGS
+          docker buildx imagetools create \
+            $TAG_ARGS \
+            ${{ env.IMAGE }}:tmp-${{ github.sha }}-amd64 \
+            ${{ env.IMAGE }}:tmp-${{ github.sha }}-arm64
