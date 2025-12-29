@@ -22,7 +22,7 @@
 ---
 
 ## 🚀 Overview
-**LLM-scCurator** is a Large Language Model–based curator for single-cell and spatial transcriptomics. It performs noise-aware marker distillation—suppressing technical programs (e.g., ribosomal/mitochondrial), clonotype signals (TCR/Ig), and stress signatures while rescuing lineage markers—and applies leakage-safe lineage filters before prompting an LLM. It supports hierarchical (coarse-to-fine) annotation for single-cell and spatial transcriptomics data. See the documentation for full tutorials and API reference: [https://llm-sccurator.readthedocs.io](https://llm-sccurator.readthedocs.io)
+**LLM-scCurator** is a Large Language Model–based curator for single-cell and spatial transcriptomics. It performs noise-aware marker distillation—suppressing technical programs (e.g., ribosomal/mitochondrial), clonotype signals (TCR/Ig), and stress signatures while rescuing lineage markers—and applies leakage-safe lineage filters before prompting an LLM. It supports hierarchical (coarse-to-fine) annotation for single-cell and spatial transcriptomics data. See the documentation for full tutorials and API reference: [https://llm-sccurator.readthedocs.io/](https://llm-sccurator.readthedocs.io/)
 
 
 ### Key Features
@@ -39,6 +39,7 @@
   pip install llm-sc-curator
 
   ```
+  (See PyPI project page: [https://pypi.org/project/llm-sc-curator/](https://pypi.org/project/llm-sc-curator/))
 
 - #### Option B: Install from GitHub (development)
   ```bash
