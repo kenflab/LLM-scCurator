@@ -61,13 +61,11 @@ We provide an official Docker environment (Python + R + Jupyter), sufficient to 
 - #### Option A: Prebuilt image (recommended)
   Use the published image from GitHub Container Registry (GHCR).
   
-  Notes:
-  > Prebuilt images will be published to GHCR with the v0.1.0 release. Until then, you can build locally(See **Option B**)
-
   ```bash
   # from the repo root (optional, for notebooks / file access)
   docker pull ghcr.io/kenflab/llm-sc-curator:official
   ```
+
   Run Jupyter:
   ```
   docker run --rm -it \
@@ -82,7 +80,7 @@ We provide an official Docker environment (Python + R + Jupyter), sufficient to 
   (Use the token printed in the container logs.)
   <br>  
   Notes:
-  > For manuscript reproducibility, we also provide versioned tags (e.g., :v0.1.0). Prefer a version tag when matching a paper release.
+  > For manuscript reproducibility, we also provide versioned tags (e.g., :0.1.0). Prefer a version tag when matching a paper release.
 
 
 - #### Option B: Build locally (development)
