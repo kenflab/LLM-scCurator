@@ -22,7 +22,7 @@
 ---
 
 ## 🚀 Overview
-**LLM-scCurator** is a Large Language Model–based curator for single-cell and spatial transcriptomics. It performs noise-aware marker distillation—suppressing technical programs (e.g., ribosomal/mitochondrial), clonotype signals (TCR/Ig), and stress signatures while rescuing lineage markers—and applies leakage-safe lineage filters before prompting an LLM. It supports hierarchical (coarse-to-fine) annotation for single-cell and spatial transcriptomics data. See the documentation for full tutorials and API reference: https://llm-sccurator.readthedocs.io/
+**LLM-scCurator** is a Large Language Model–based curator for single-cell and spatial transcriptomics. It performs noise-aware marker distillation—suppressing technical programs (e.g., ribosomal/mitochondrial), clonotype signals (TCR/Ig), and stress signatures while rescuing lineage markers—and applies leakage-safe lineage filters before prompting an LLM. It supports hierarchical (coarse-to-fine) annotation for single-cell and spatial transcriptomics data. See the documentation for full tutorials and API reference: [https://llm-sccurator.readthedocs.io](https://llm-sccurator.readthedocs.io)
 
 
 ### Key Features
@@ -36,12 +36,9 @@
 
 - #### Option A (recommended): Install from PyPI
   ```bash
-  pip install "llm-sc-curator[gemini]"
-  # or: pip install "llm-sc-curator[openai]"
-  # or: pip install "llm-sc-curator[all]"
+  pip install llm-sc-curator
+
   ```
-  Notes:
-  > PyPI release coming with v0.1.0.
 
 - #### Option B: Install from GitHub (development)
   ```bash
@@ -173,7 +170,7 @@ We respect the sensitivity of clinical and biological data. **LLM-scCurator** is
 You can use **LLM-scCurator** in two ways:
 
 - **Option A (recommended): Export → run in Python** 
-  We provide a helper script [`examples/R/export_to_curator.R`](examples/R/export_to_curator.R) to export your Seurat object seamlessly for processing in Python.
+  We provide a helper script [`examples/R/export_to_curator.R`](https://github.com/kenflab/LLM-scCurator/blob/main/examples/R/export_to_curator.R) to export your Seurat object seamlessly for processing in Python.
   ```R  
   source("examples/R/export_to_curator.R")
   Rscript examples/R/export_to_curator.R \
@@ -196,38 +193,38 @@ You can use **LLM-scCurator** in two ways:
 - #### Option B: Run from R via reticulate (advanced)
   If you prefer to stay in R, you can invoke the Python package via reticulate (Python-in-R).
   This is more sensitive to Python environment configuration, so we recommend Option A for most users.
-  - Use the **[official Docker](README.md#-docker-official-environment) (Python + R + Jupyter)** and follow the step-by-step tutorial notebook: 📓 [`examples/R/run_llm_sccurator_R_reticulate.ipynb`](examples/R/run_llm_sccurator_R_reticulate.ipynb) <br> 
+  - Use the **[official Docker](https://github.com/kenflab/LLM-scCurator/blob/main/README.md#-docker-official-environment) (Python + R + Jupyter)** and follow the step-by-step tutorial notebook: 📓 [`examples/R/run_llm_sccurator_R_reticulate.ipynb`](https://github.com/kenflab/LLM-scCurator/blob/main/examples/R/run_llm_sccurator_R_reticulate.ipynb) <br> 
     The notebook includes:
       - Use LLM-scCurator for robust marker distillation (no API key required)
-      - 🔑 [Optional](README.md#-backends-llm-api-keys-setup): Requires an API key for LLM-scCurator annotation .
+      - 🔑 [Optional](https://github.com/kenflab/LLM-scCurator/blob/main/README.md#-backends-llm-api-keys-setup): Requires an API key for LLM-scCurator annotation .
 
 
 ---
 ## 📄 Manuscript reproduction
-For manuscript-facing verification (benchmarks, figures, and Source Data), use the versioned assets under [`paper/`](paper). See [`paper/README.md`](paper#readme) for the primary instructions.
+For manuscript-facing verification (benchmarks, figures, and Source Data), use the versioned assets under [`paper/`](https://github.com/kenflab/LLM-scCurator/blob/main/paper). See [`paper/README.md`](https://github.com/kenflab/LLM-scCurator/blob/main/paper#readme) for the primary instructions.
 
 Notes:
- > * Figures are supported by exported Source Data in [`paper/source_data/`](paper/source_data) (see [`paper/FIGURE_MAP.csv`](paper/FIGURE_MAP.csv)  for panel → file mapping).
+ > * Figures are supported by exported Source Data in [`paper/source_data/`](https://github.com/kenflab/LLM-scCurator/blob/main/paper/source_data) (see [`paper/FIGURE_MAP.csv`](https://github.com/kenflab/LLM-scCurator/blob/main/paper/FIGURE_MAP.csv)  for panel → file mapping).
  > * Re-running LLM/API calls or external reference annotators is optional; LLM API outputs may vary across runs even with temperature=0.
- > * For transparency, we include read-only provenance notebooks with example run logs in [`paper/notebooks/`](paper/notebooks)
+ > * For transparency, we include read-only provenance notebooks with example run logs in [`paper/notebooks/`](https://github.com/kenflab/LLM-scCurator/blob/main/paper/notebooks)
 
 ---
 ### 📓 Colab notebooks
 
-- **Python / Scanpy quickstart (recommended: [colab_quickstart.ipynb](examples/colab/colab_quickstart.ipynb))**
+- **Python / Scanpy quickstart (recommended: [colab_quickstart.ipynb](https://github.com/kenflab/LLM-scCurator/blob/main/examples/colab/colab_quickstart.ipynb))**
   - [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/kenflab/LLM-scCurator/blob/master/examples/colab/colab_quickstart.ipynb) <br>
     ☝️ Runs end-to-end on a public Scanpy dataset (**no API key required** by default).  
-    - 🔑 [Optional](README.md#-backends-llm-api-keys-setup): If an API key is provided (replace `GEMINI_API_KEY = "YOUR_KEY_HERE"`), the notebook can also run **LLM-scCurator automatic hierarchical cell annotation**.
+    - 🔑 [Optional](https://github.com/kenflab/LLM-scCurator/blob/main/README.md#-backends-llm-api-keys-setup): If an API key is provided (replace `GEMINI_API_KEY = "YOUR_KEY_HERE"`), the notebook can also run **LLM-scCurator automatic hierarchical cell annotation**.
 
-  - **OpenAI quickstart (OpenAI backend: [colab_quickstart_openai.ipynb](examples/colab/colab_quickstart_openai.ipynb))**
+  - **OpenAI quickstart (OpenAI backend: [colab_quickstart_openai.ipynb](https://github.com/kenflab/LLM-scCurator/blob/main/examples/colab/colab_quickstart_openai.ipynb))**
   - [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/kenflab/LLM-scCurator/blob/master/examples/colab/colab_quickstart_openai.ipynb) <br>
     ☝️ Same workflow as the Python / Scanpy quickstart, but configured for the OpenAI backend.
-    - 🔑 [Optional](README.md#-backends-llm-api-keys-setup): If an API key is provided (replace `OPENAI_API_KEY= "YOUR_KEY_HERE"`), the notebook can also run **LLM-scCurator automatic hierarchical cell annotation**. `OPENAI_API_KEY` requires OpenAI API billing (paid API credits).
+    - 🔑 [Optional](https://github.com/kenflab/LLM-scCurator/blob/main/README.md#-backends-llm-api-keys-setup): If an API key is provided (replace `OPENAI_API_KEY= "YOUR_KEY_HERE"`), the notebook can also run **LLM-scCurator automatic hierarchical cell annotation**. `OPENAI_API_KEY` requires OpenAI API billing (paid API credits).
 
-- **R / Seurat quickstart (export → Python LLM-scCurator → back to Seurat: [colab_quickstart_R.ipynb](examples/colab/colab_quickstart_R.ipynb))**
+- **R / Seurat quickstart (export → Python LLM-scCurator → back to Seurat: [colab_quickstart_R.ipynb](https://github.com/kenflab/LLM-scCurator/blob/main/examples/colab/colab_quickstart_R.ipynb))**
   - [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/kenflab/LLM-scCurator/blob/master/examples/colab/colab_quickstart_R.ipynb) <br>
     ☝️ Runs a minimal Seurat workflow in R, exports a Seurat object to an AnnData-ready folder, runs LLM-scCurator in Python, then re-imports labels into Seurat for visualization and marker sanity checks.  
-    - 🔑 [Optional](README.md#-backends-llm-api-keys-setup): Requires an API key for LLM-scCurator annotation (same setup as above).
+    - 🔑 [Optional](https://github.com/kenflab/LLM-scCurator/blob/main/README.md#-backends-llm-api-keys-setup): Requires an API key for LLM-scCurator annotation (same setup as above).
     - Recommended for Seurat users who want to keep Seurat clustering/UMAP but use LLM-scCurator for robust marker distillation and annotation.
 
 ---
@@ -263,9 +260,6 @@ Notes:
 ## Citation
 Zenodo archive (v0.1.0) DOI: [10.5281/zenodo.17970494](https://doi.org/10.5281/zenodo.17970494)  
 GitHub release tag: [v0.1.0](https://github.com/kenflab/LLM-scCurator/releases/tag/v0.1.0)
-
-
-
 
 
 
