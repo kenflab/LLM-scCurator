@@ -12,12 +12,15 @@
 
      
 [![Docs](https://readthedocs.org/projects/llm-sccurator/badge/?version=latest)](https://llm-sccurator.readthedocs.io/)
+[![bioRxiv](https://img.shields.io/badge/bioRxiv-10.64898%2F2025.12.28.696778-B31B1B.svg)](https://doi.org/10.64898/2025.12.28.696778)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17970494.svg)](https://doi.org/10.5281/zenodo.17970494)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
 ![R](https://img.shields.io/badge/R-276DC3?logo=r&logoColor=white)
 ![Jupyter](https://img.shields.io/badge/Jupyter-F37626?logo=jupyter&logoColor=white)
-![Docker](https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=white)　　
+
+**Cite:** bioRxiv DOI: [10.64898/2025.12.28.696778](https://doi.org/10.64898/2025.12.28.696778) • Zenodo (v0.1.0) DOI: [10.5281/zenodo.17970494](https://doi.org/10.5281/zenodo.17970494)
 
 ---
 
@@ -260,8 +263,9 @@ Notes:
 
 ---
 ## Citation
-Zenodo archive (v0.1.0) DOI: [10.5281/zenodo.17970494](https://doi.org/10.5281/zenodo.17970494)  
-GitHub release tag: [v0.1.0](https://github.com/kenflab/LLM-scCurator/releases/tag/v0.1.0)
+- bioRxiv preprint: [10.64898/2025.12.28.696778](https://doi.org/10.64898/2025.12.28.696778)
+- Zenodo archive (v0.1.0): [10.5281/zenodo.17970494](https://doi.org/10.5281/zenodo.17970494)
+- GitHub release tag: [v0.1.0](https://github.com/kenflab/LLM-scCurator/releases/tag/v0.1.0)
 
 
 
