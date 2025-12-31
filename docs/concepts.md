@@ -30,3 +30,37 @@ LLM-scCurator separates annotation into two explicit steps:
 2. **Fine-grained subtype/state** within that lineage
 
 This structure reduces hallucinations under ambiguous inputs and makes failure modes easier to diagnose.
+
+## Stable outputs (table contract)
+
+LLM-scCurator’s cluster-level annotation is often consumed outside Python notebooks
+(e.g., by collaborators using spreadsheets). To keep downstream analyses stable across versions,
+we treat the exported cluster table as a **public contract**.
+
+### Core principles
+
+- The cluster ID column is preserved as-is: `{cluster_col}` (e.g., `seurat_clusters`).
+- `n_cells` is a reserved meta column (int).
+- LLM-derived fields are namespaced by a prefix (default: `Curated`) using:
+- `{prefix}_{FieldName}` where `FieldName` is **UpperCamelCase** (e.g., `CellType`).
+
+### Minimum stable fields (v0.1.x)
+
+These columns are guaranteed when exporting cluster annotations:
+
+- `{prefix}_CellType` (string)
+- `{prefix}_Confidence` (string; `High` / `Medium` / `Low`)
+- `{prefix}_ConfidenceScore` (float; `High=2`, `Medium=1`, `Low=0`)
+- `{prefix}_Reasoning` (string)
+- `{prefix}_Genes` (string; `;`-separated)
+
+### Forward-compatible extension fields
+
+Depending on the backend and configuration, additional fields may be returned.
+To remain forward-compatible, any extra keys are preserved and exported as
+namespaced columns:
+
+- `{prefix}_<UpperCamelCaseKey>`
+
+Downstream code should rely on the minimum stable fields above and treat any
+additional columns as optional.
