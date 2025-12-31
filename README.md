@@ -225,9 +225,8 @@ We respect the sensitivity of clinical and biological data. **LLM-scCurator** is
         new_col="Curated_CellType",
     )
     ```
-    <br>  
-    Notes:
-    > Manuscript results correspond to v0.1.0; later minor releases add user-facing utilities without changing core behavior.
+  Notes:
+  > Manuscript results correspond to v0.1.0; later minor releases add user-facing utilities without changing core behavior.
 
 ### 📊 For R / Seurat Users
 You can use **LLM-scCurator** in two ways:
