@@ -148,28 +148,86 @@ We respect the sensitivity of clinical and biological data. **LLM-scCurator** is
 ### 🐍 For Python / Scanpy Users
 1) Set your API key (simplest: paste in the notebook)
   ```python
+  import scanpy as sc
+  from llm_sc_curator import LLMscCurator
+
   GEMINI_API_KEY = "PASTE_YOUR_KEY_HERE"
   # OPENAI_API_KEY = "PASTE_YOUR_KEY_HERE"  # optional
+
+  # Load your data
+  adata = sc.read_h5ad("my_data.h5ad")
+    
+  # Initialize with your API Key (Google AI Studio)
+  curator = LLMscCurator(api_key=GEMINI_API_KEY)
+  curator.set_global_context(adata)
   ```
 
 2) Run LLM-scCurator
-  ```python
-  import scanpy as sc
-  from llm_sc_curator import LLMscCurator
-  
-  # Initialize with your API Key (Google AI Studio)
-  curator = LLMscCurator(api_key=GEMINI_API_KEY)
-  
-  # Load your data
-  adata = sc.read_h5ad("my_data.h5ad")
-  
-  # Run fully automated hierarchical annotation
-  adata = curator.run_hierarchical_discovery(adata)
-  
-  # Visualize
-  sc.pl.umap(adata, color=['major_type', 'fine_type'])
-  ```
+  - **Option A: hierarchical discovery mode(iterative coarse-to-fine clustering and labeling)** 
+    ```python    
+    # Fully automated hierarchical annotation (includes clustering)
+    adata = curator.run_hierarchical_discovery(adata)
+    
+    # Visualize
+    sc.pl.umap(adata, color=['major_type', 'fine_type'])
+    ```
 
+  - **Option B: Annotate your existing clusters (cluster → table/CSV → per-cell labels)**  
+  Use this when you already have clusters (e.g., Seurat `seurat_clusters`, `Leiden`, etc.) and want to annotate each cluster once, then propagate labels to cells.
+    ```python
+    # v0.1.1+
+    from llm_sc_curator import (
+        export_cluster_annotation_table,
+        apply_cluster_map_to_cells,
+    )
+  
+    cluster_col = "seurat_clusters"  # change if needed
+    
+    # 1) Annotate each cluster (once)
+    clusters = sorted(adata.obs[cluster_col].astype(str).unique())
+    cluster_results = {}
+    genes_by_cluster = {}
+    
+    for cl in clusters:
+        genes = curator.curate_features(
+            adata,
+            group_col=cluster_col,
+            target_group=str(cl),
+            use_statistics=True,
+        )
+        genes_by_cluster[str(cl)] = genes or []
+    
+        if genes:
+            cluster_results[str(cl)] = curator.annotate(genes, use_auto_context=True)
+        else:
+            cluster_results[str(cl)] = {
+                "cell_type": "NoGenes",
+                "confidence": "Low",
+                "reasoning": "Curated gene list empty",
+            }
+    
+    # 2) Export a shareable cluster table (CSV/DataFrame)
+    df_cluster = export_cluster_annotation_table(
+        adata,
+        cluster_col=cluster_col,
+        cluster_results=cluster_results,
+        genes_by_cluster=genes_by_cluster,
+        prefix="Curated",
+    )
+    df_cluster.to_csv("cluster_curated_map.csv", index=False)
+    
+    # 3) Propagate cluster labels to per-cell labels
+    apply_cluster_map_to_cells(
+        adata,
+        cluster_col=cluster_col,
+        df_cluster=df_cluster,
+        label_col="Curated_CellType",
+        new_col="Curated_CellType",
+    )
+    ```
+    <br>  
+    Notes:
+    > Manuscript results correspond to v0.1.0; later minor releases add user-facing utilities without changing core behavior.
 
 ### 📊 For R / Seurat Users
 You can use **LLM-scCurator** in two ways:
