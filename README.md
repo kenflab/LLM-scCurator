@@ -286,7 +286,7 @@ You can use **LLM-scCurator** in two ways:
   - Use the **[official Docker](https://github.com/kenflab/LLM-scCurator/blob/main/README.md#-docker-official-environment) (Python + R + Jupyter)** and follow the step-by-step tutorial notebook: 📓 [`examples/R/run_llm_sccurator_R_reticulate.ipynb`](https://github.com/kenflab/LLM-scCurator/blob/main/examples/R/run_llm_sccurator_R_reticulate.ipynb) <br> 
     The notebook includes:
       - Use LLM-scCurator for robust marker distillation (no API key required)
-      - 🔑 [Optional](https://github.com/kenflab/LLM-scCurator/blob/main/README.md#-backends-llm-api-keys-setup): Requires an API key for LLM-scCurator annotation .
+      - 🔑 [Optional](https://github.com/kenflab/LLM-scCurator/blob/main/README.md#-backends-llm-api-keys-setup): For annotation, use Gemini/OpenAI APIs (API key required) or Ollama (no API key) .
 
 
 ---
