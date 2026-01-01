@@ -59,7 +59,8 @@ Notes:
 > If you already have a Scanpy/Seurat pipeline environment, you can install it into that environment.
 ---
 ## 🐳 Docker (official environment)
-We provide an official Docker environment (Python + R + Jupyter), sufficient to run LLM-scCurator and most paper figure generation.
+We provide an official Docker environment (Python + R + Jupyter), sufficient to run LLM-scCurator and most paper figure generation.  
+Optionally includes **Ollama** for local LLM annotation (no cloud API key required).
 
 - #### Option A: Prebuilt image (recommended)
   Use the published image from GitHub Container Registry (GHCR).
