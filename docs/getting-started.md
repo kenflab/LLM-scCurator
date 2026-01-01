@@ -30,9 +30,11 @@ For the conceptual model (masking, rescue, leakage-safe lineage filtering, hiera
   > Notes: If you already have a Scanpy/Seurat pipeline environment, you can install it into that environment.
 
 ## Configure an LLM backend (optional)
-
 LLM-scCurator can run marker distillation locally.  
-If you want **automatic LLM-based annotation**, provide an API key for your backend.
+LLM-scCurator supports both cloud LLM APIs (Gemini / OpenAI) and a local LLM backend (Ollama).
+Notes:
+> No manual installation is required: the official Docker environment already includes LLM-scCurator and its dependencies.  
+> If you use the local Ollama backend, no API key is needed.
 
 ### Environment variables
 
@@ -152,7 +154,8 @@ df_cluster.head()
 
 
 ## Docker (official environment)
-If you prefer a fully contained environment (Python + R + Jupyter), we provide an official Docker image.
+If you prefer a fully contained environment (Python + R + Jupyter), we provide an official Docker image.  
+Optionally includes Ollama for local LLM annotation (no cloud API key required).
 
 - #### Option A: Prebuilt image (recommended)
   Use the published image from GitHub Container Registry (GHCR).
