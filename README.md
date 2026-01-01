@@ -317,9 +317,14 @@ Notes:
     - Recommended for Seurat users who want to keep Seurat clustering/UMAP but use LLM-scCurator for robust marker distillation and annotation.
 
 ---
-## 🔑 Backends (LLM API keys) Setup
+## 🔑 Backends setup (API keys or local Ollama)
 
-Set your provider API key as an environment variable:
+LLM-scCurator supports both **cloud LLM APIs** (Gemini / OpenAI) and a **local LLM** backend (Ollama).  
+Notes:
+> No manual installation is required: [**the official Docker environment already includes LLM-scCurator and its dependencies**](https://github.com/kenflab/LLM-scCurator/blob/main/README.md#option-b-build-locally-development).  
+> If you use the **local Ollama backend**, no API key is needed.
+
+Set your provider API key as an environment variable (Cloud LLM APIs):
 - `GEMINI_API_KEY` for Google Gemini
 - `OPENAI_API_KEY` for OpenAI API
 
