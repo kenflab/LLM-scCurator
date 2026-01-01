@@ -11,3 +11,15 @@ services:
     environment:
       GEMINI_API_KEY: ${GEMINI_API_KEY:-}
       OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      LLMSC_OLLAMA_HOST: http://ollama:11434
+      LLMSC_OLLAMA_MODEL: llama3.1:8b
+    depends_on:
+      - ollama
+
+  ollama:
+    image: ollama/ollama
+    volumes:
+      - ollama:/root/.ollama
+
+volumes:
+  ollama:
