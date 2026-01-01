@@ -87,33 +87,47 @@ We provide an official Docker environment (Python + R + Jupyter), sufficient to 
 
 
 - #### Option B: Build locally (development)
-  ```bash
-  # Option B1: Build locally with Compose
-  # from the repo root
-  docker compose -f docker/docker-compose.yml build
-  docker compose -f docker/docker-compose.yml up
-  ```
-  Open Jupyter:
-  [http://localhost:8888](http://localhost:8888)  <br>  
-  Workspace mount: /work
 
-  
-  ```bash
-  # Option B2: Build locally without Compose (alternative)
-  # from the repo root
-  docker build -f docker/Dockerfile -t llm-sc-curator:official .
-  ```
-  Run Jupyter:
-  ```
-  docker run --rm -it \
-    -p 8888:8888 \
-    -v "$PWD":/work \
-    -e GEMINI_API_KEY \
-    -e OPENAI_API_KEY \
-    llm-sc-curator:official
-  ```
-  Open Jupyter:
-  [http://localhost:8888](http://localhost:8888)  <br>  
+  - ##### Option B-1: Build locally with Compose (recommended for dev)
+    ```bash
+    # from the repo root
+    docker compose -f docker/docker-compose.yml build
+    docker compose -f docker/docker-compose.yml up
+    ```
+
+    **B-1.1) Open Jupyter**
+    - [http://localhost:8888](http://localhost:8888) 
+      Workspace mount: `/work`
+
+    **B-1.2) If prompted for "Password or token"**
+    - Get the tokenized URL from container logs:
+      ```bash
+      docker compose -f docker/docker-compose.yml logs -f llm-sc-curator
+      ```
+    - Then either:
+      - open the printed URL (contains `?token=...`) in your browser, or
+      - paste the token value into the login prompt.
+
+  - ##### Option B-2: Build locally without Compose (alternative)
+    ```bash
+    # from the repo root
+    docker build -f docker/Dockerfile -t llm-sc-curator:official .
+    ```
+
+    **B-2.1) Run Jupyter**
+    ```bash
+    docker run --rm -it \
+      -p 8888:8888 \
+      -v "$PWD":/work \
+      -e GEMINI_API_KEY \
+      -e OPENAI_API_KEY \
+      llm-sc-curator:official
+    ```
+
+    **B-2.2) Open Jupyter**
+    - [http://localhost:8888](http://localhost:8888)
+      Workspace mount: `/work`  
+ 
 
 ---
 ## 🖥️ Apptainer / Singularity (HPC)
