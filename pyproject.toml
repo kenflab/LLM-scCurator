@@ -1,0 +1,37 @@
+[build-system]
+requires = ["setuptools>=64", "wheel", "setuptools-scm>=8"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "llm-sc-curator"
+dynamic = ["version"]
+description = "Dynamic feature distillation framework for robust zero-shot LLM annotation."
+readme = { file = "README.md", content-type = "text/markdown" }
+requires-python = ">=3.10"
+authors = [{ name = "Ken Furudate" }]
+dependencies = [
+  "scanpy>=1.11.5",
+  "pandas>=2.3.3",
+  "numpy>=2.0.2",
+  "scipy>=1.16.3",
+  "python-igraph>=1.0.0",
+  "leidenalg>=0.11.0",
+]
+
+[project.optional-dependencies]
+openai = ["openai>=1.0.0"]
+gemini = ["google-generativeai>=0.8.5"]
+all = ["openai>=1.0.0", "google-generativeai>=0.8.5"]
+
+[project.urls]
+Homepage = "https://llm-sccurator.readthedocs.io/"
+Repository = "https://github.com/kenflab/LLM-scCurator"
+
+[tool.setuptools]
+packages = { find = {} }
+
+[tool.setuptools_scm]
+# tags like v0.1.2 -> version 0.1.2
+tag_regex = "^v(?P<version>\\d+\\.\\d+\\.\\d+)$"
+version_scheme = "no-guess-dev"
+local_scheme = "no-local-version"
