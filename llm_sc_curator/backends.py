@@ -1,7 +1,12 @@
 from abc import ABC, abstractmethod
+from functools import wraps
 import json
-import time
 import logging
+import os
+import random
+import time
+import urllib.request
+
 
 class BaseLLMBackend(ABC):
     """
@@ -35,7 +40,7 @@ class BaseLLMBackend(ABC):
             Model output as a string. In JSON mode, this should be a JSON object encoded
             as a string (e.g., '{"cell_type": "...", "confidence": "...", "reasoning": "..."}').
         """
-        pass
+        raise NotImplementedError
 
 def retry_with_backoff(retries=3, backoff_in_seconds=1):
     """
@@ -72,8 +77,6 @@ def retry_with_backoff(retries=3, backoff_in_seconds=1):
     - This decorator does not alter successful outputs; it only changes failure-path
       behavior by adding retry attempts.
     """
-    import random
-    from functools import wraps
 
     NON_RETRYABLE_PATTERNS = [
         "401", "403", "invalid_api_key", "unauthorized", "forbidden",
@@ -102,7 +105,12 @@ def retry_with_backoff(retries=3, backoff_in_seconds=1):
         @wraps(func)
         def wrapper(*args, **kwargs):
             x = 0
+            # json_mode can be passed as kwarg or 3rd positional arg:
+            # method call signature: (self, prompt, json_mode=False)
             json_mode = bool(kwargs.get("json_mode", False))
+            if "json_mode" not in kwargs and len(args) >= 3:
+                json_mode = bool(args[2])
+            
             parsefail_used = False  # allow at most one retry for JSON parse failures
 
             while True:
@@ -116,7 +124,7 @@ def retry_with_backoff(retries=3, backoff_in_seconds=1):
                     elif isinstance(result, str):
                         s = result.strip()
 
-                        if s.startswith("Gemini Error:") or s.startswith("OpenAI Error:"):
+                        if s.startswith("Gemini Error:") or s.startswith("OpenAI Error:") or s.startswith("Ollama Error:"):
                             retryable = _should_retry_error_text(s)
 
                         elif json_mode and s.startswith("{") and s.endswith("}"):
@@ -358,6 +366,186 @@ class OpenAIBackend(BaseLLMBackend):
                     return json.dumps({"cell_type": "Error", "confidence": "Low", "reasoning": str(err)})
                 return f"OpenAI Error: {err}"
 
+
+
+class OllamaBackend(BaseLLMBackend):
+    """
+    Ollama local backend for LLM-scCurator.
+
+    This backend sends prompts to a locally running Ollama server via the REST
+    Chat API and returns the assistant response as a single string. It is a
+    drop-in implementation of :class:`BaseLLMBackend`.
+
+    The primary use case is institutional / on-prem environments where outbound
+    calls to cloud LLM APIs are restricted and inference must run locally.
+
+    Parameters
+    ----------
+    host : str, optional
+        Base URL of the Ollama server.
+
+        If not provided, the value is resolved in the following order:
+
+        1) Environment variable ``LLMSC_OLLAMA_HOST``
+        2) Default: ``"http://ollama:11434"`` (Docker Compose friendly)
+
+        Trailing slashes are removed automatically.
+
+    model_name : str, optional
+        Ollama model name/tag (e.g., ``"llama3.1:8b"`` or ``"qwen2.5:7b-instruct"``).
+
+        If not provided, the value is resolved in the following order:
+
+        1) Environment variable ``LLMSC_OLLAMA_MODEL``
+        2) Default: ``"llama3.1:8b"``
+
+    temperature : float, optional
+        Sampling temperature forwarded to Ollama as ``options.temperature``.
+        Use ``0.0`` for more deterministic classification-style behavior.
+
+        If not provided, defaults to environment variable
+        ``LLMSC_OLLAMA_TEMPERATURE`` (default ``0.0``).
+
+    timeout : float, optional
+        Per-request timeout (seconds) for the HTTP call to Ollama.
+        CPU-only inference can be slow; raise this value for large prompts.
+
+        If not provided, defaults to environment variable
+        ``LLMSC_OLLAMA_TIMEOUT`` (default ``120``).
+
+    Notes
+    -----
+    API endpoint
+        This backend uses the Ollama Chat endpoint:
+
+        - ``POST {host}/api/chat``
+
+    JSON mode
+        If ``json_mode=True``, the request includes ``format="json"`` which asks
+        Ollama to return a single JSON object (not fenced). The returned value is
+        still a *string* (JSON text), consistent with the `BaseLLMBackend` contract.
+
+        This backend performs a lightweight validation by attempting ``json.loads``
+        on the returned content; on failure it returns a "soft error" JSON payload.
+
+    Failure behavior
+        On exceptions, the backend returns a soft error:
+        - In JSON mode: JSON text with keys ``cell_type``, ``confidence``, ``reasoning``.
+        - Otherwise: a string prefixed with ``"Ollama Error:"``.
+
+        When wrapped by :func:`retry_with_backoff`, these failures can be retried.
+
+    Examples
+    --------
+    Docker Compose (default host)::
+
+        # export LLMSC_OLLAMA_MODEL=llama3.1:8b
+        backend = OllamaBackend()
+        out = backend.generate("Return a JSON object: {\"x\": 1}", json_mode=True)
+
+    Local host::
+
+        backend = OllamaBackend(host="http://localhost:11434", model_name="llama3.1:8b")
+        out = backend.generate("Hello", json_mode=False)
+    """
+
+    def __init__(
+        self,
+        host: str | None = None,
+        model_name: str | None = None,
+        temperature: float | None = None,
+        timeout: float | None = None,
+    ):
+        host = host if host is not None else os.environ.get("LLMSC_OLLAMA_HOST", "http://ollama:11434")
+        model_name = model_name if model_name is not None else os.environ.get("LLMSC_OLLAMA_MODEL", "llama3.1:8b")
+
+        if temperature is None:
+            temperature = float(os.environ.get("LLMSC_OLLAMA_TEMPERATURE", "0.0"))
+        if timeout is None:
+            timeout = float(os.environ.get("LLMSC_OLLAMA_TIMEOUT", "120"))
+
+        self.host = str(host).rstrip("/")
+        self.model_name = str(model_name)
+        self.temperature = float(temperature)
+        self.timeout = float(timeout)
+
+    @retry_with_backoff(retries=3)
+    def generate(self, prompt: str, json_mode: bool = False) -> str:
+        """
+        Generate a completion from Ollama.
+
+        Parameters
+        ----------
+        prompt : str
+            Prompt text to send to Ollama.
+        json_mode : bool, default=False
+            If True, request a single JSON object response (returned as JSON text).
+
+        Returns
+        -------
+        str
+            Model output as a string.
+
+            - If ``json_mode=False``: free-form assistant text.
+            - If ``json_mode=True``: a JSON object encoded as text.
+
+            On failure:
+            - If ``json_mode=True``: returns JSON text with keys
+              ``cell_type="Error"``, ``confidence="Low"``, and ``reasoning``.
+            - Otherwise: returns a string prefixed with ``"Ollama Error:"``.
+        """
+
+        url = f"{self.host}/api/chat"
+        payload = {
+            "model": self.model_name,
+            "stream": False,
+            "messages": [{"role": "user", "content": prompt}],
+            "options": {"temperature": self.temperature},
+        }
+        if json_mode:
+            payload["format"] = "json"
+
+        data = json.dumps(payload).encode("utf-8")
+        req = urllib.request.Request(
+            url,
+            data=data,
+            headers={"Content-Type": "application/json"},
+            method="POST",
+        )
+
+        try:
+            with urllib.request.urlopen(req, timeout=self.timeout) as resp:
+                raw = resp.read().decode("utf-8", errors="replace")
+            obj = json.loads(raw)
+
+            content = ""
+            if isinstance(obj, dict):
+                msg = obj.get("message") or {}
+                if isinstance(msg, dict):
+                    content = (msg.get("content") or "").strip()
+
+            if not content and isinstance(obj, dict):
+                content = (obj.get("response") or "").strip()
+
+            if json_mode:
+                s = (content or "").strip()
+                try:
+                    json.loads(s)  # lightweight validity check
+                    return s
+                except Exception:
+                    return json.dumps({
+                        "cell_type": "Error",
+                        "confidence": "Low",
+                        "reasoning": f"Ollama returned non-JSON in json_mode: {s[:200]}"
+                    })
+
+            return content if content else raw.strip()
+
+        except Exception as e:
+            if json_mode:
+                return json.dumps({"cell_type": "Error", "confidence": "Low", "reasoning": str(e)})
+            return f"Ollama Error: {e}"
+
 class LocalLLMBackend(BaseLLMBackend):
     """
     Placeholder backend for future local model integrations.
@@ -372,7 +560,6 @@ class LocalLLMBackend(BaseLLMBackend):
     vLLM, or an on-premise service) into the `BaseLLMBackend` interface.
     """
 
-    @retry_with_backoff(retries=3)
     def generate(self, prompt: str, json_mode: bool = False) -> str:
 
         """

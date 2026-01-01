@@ -10,7 +10,7 @@ import warnings
 import logging
 from .noise_lists import PROLIFERATION_SENTINELS, NOISE_PATTERNS
 from .masking import FeatureDistiller
-from .backends import BaseLLMBackend, GeminiBackend, OpenAIBackend, LocalLLMBackend
+from .backends import BaseLLMBackend, GeminiBackend, OpenAIBackend, OllamaBackend, LocalLLMBackend
 
 # Setup Logging
 logger = logging.getLogger(__name__)
@@ -168,6 +168,7 @@ class LLMscCurator:
         self.last_inferred_context = None
         self.allow_internal_normalization = allow_internal_normalization
         self.normalization_target_sum = normalization_target_sum
+        self.backend = self.llm  # alias for user-facing clarity (e.g., Ollama/OpenAI/Gemini)
 
     # -------------------------------------------------------------------------
     # Normalization helper
