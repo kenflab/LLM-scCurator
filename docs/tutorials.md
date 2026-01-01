@@ -7,7 +7,8 @@ Use these pages when you want an end-to-end example rather than a conceptual ove
 
 ## Quickstart
 
-Choose the fastest path for your environment:
+Choose the fastest path for your environment:  
+
 - **Python / Scanpy (Colab):** minimal end-to-end run on a public dataset  
   → [Open notebook on GitHub](https://github.com/kenflab/LLM-scCurator/blob/master/examples/colab/colab_quickstart.ipynb)
 
@@ -27,11 +28,11 @@ Choose the fastest path for your environment:
   → **Colon Xenium (Fig.2h; ED Fig.3d):** [Open notebook on GitHub](https://github.com/kenflab/LLM-scCurator/blob/master/paper/notebooks/07_Colon_Xenium.ipynb)  
   → **OSCC Visium (ED Fig.3a–c):** [Open notebook on GitHub](https://github.com/kenflab/LLM-scCurator/blob/master/paper/notebooks/08_OSCC_Visium.ipynb)
 
-- **Fully local LLM (Ollama):** Curate features and optionally annotate clusters using a local LLM backend (no external transmission). 
-[Open notebook on GitHub](https://github.com/kenflab/LLM-scCurator/blob/main/examples/local/local_quickstart_ollama.ipynb)
+- **Fully local LLM (Ollama):** Curate features and optionally annotate clusters using a local LLM backend (no external transmission).  
+  → [Open notebook on GitHub](https://github.com/kenflab/LLM-scCurator/blob/main/examples/local/local_quickstart_ollama.ipynb)
 
-- **Local feature distillation → Approved chat LLM annotation (no external LLM API calls):** Curate features locally, export a curated cluster→genes table, then annotate it via an institution-approved **chat interface** (e.g., Microsoft Copilot “Work”) by uploading the CSV/Excel or pasting markers. 
-[Open notebook on GitHub](https://github.com/kenflab/LLM-scCurator/blob/main/examples/local/local_quickstart_approved_ai_workflow.ipynb)
+- **Local feature distillation → Approved chat LLM annotation (no external LLM API calls):** Curate features locally, export a curated cluster→genes table, then annotate it via an institution-approved **chat interface** (e.g., Microsoft Copilot “Work”) by uploading the CSV/Excel or pasting markers.  
+  → [Open notebook on GitHub](https://github.com/kenflab/LLM-scCurator/blob/main/examples/local/local_quickstart_approved_ai_workflow.ipynb)
 
 
 
