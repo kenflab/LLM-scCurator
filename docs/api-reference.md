@@ -20,6 +20,7 @@
         - BaseLLMBackend
         - GeminiBackend
         - OpenAIBackend
+        - OllamaBackend
         - LocalLLMBackend
       show_source: false
       show_if_no_docstring: false
