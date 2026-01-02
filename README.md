@@ -15,7 +15,8 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 - **Docs:** https://llm-sccurator.readthedocs.io/  
-- **Reproduce & cite:** [Paper reproducibility](https://github.com/kenflab/LLM-scCurator?tab=readme-ov-file#-quick-start) = Zenodo v0.1.0 (DOI: [10.5281/zenodo.17970494](https://zenodo.org/records/17970494)). Cite bioRxiv preprint (DOI: [10.64898/2025.12.28.696778](https://www.biorxiv.org/content/10.64898/2025.12.28.696778v1)). Newer tags (e.g., v0.1.2) add usability features without changing paper benchmarks.
+- **[Paper reproducibility](https://github.com/kenflab/LLM-scCurator?tab=readme-ov-file#-quick-start):** Zenodo v0.1.0 (DOI: [10.5281/zenodo.17970494](https://zenodo.org/records/17970494)).
+- **Cite:** bioRxiv preprint (DOI: [10.64898/2025.12.28.696778](https://www.biorxiv.org/content/10.64898/2025.12.28.696778v1)). Newer tags (e.g., v0.1.2) add usability features without changing paper benchmarks.
 
 
 ---
