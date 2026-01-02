@@ -16,8 +16,7 @@
 
 - **Docs:** https://llm-sccurator.readthedocs.io/  
 - **[Paper reproducibility](https://github.com/kenflab/LLM-scCurator?tab=readme-ov-file#-manuscript-reproduction):** Zenodo v0.1.0 (DOI: [10.5281/zenodo.17970494](https://zenodo.org/records/17970494)).
-- **Cite:** bioRxiv preprint (DOI: [10.64898/2025.12.28.696778](https://www.biorxiv.org/content/10.64898/2025.12.28.696778v1)). Newer tags (e.g., v0.1.2) add usability features without changing paper benchmarks.
-
+- **Cite:** bioRxiv preprint (DOI: [10.64898/2025.12.28.696778](https://www.biorxiv.org/content/10.64898/2025.12.28.696778v1)). Newer tags (see [GitHub Releases](https://github.com/kenflab/LLM-scCurator/releases)) add usability features without changing paper benchmarks.
 
 ---
 
@@ -32,14 +31,32 @@
 - **🌍 Spatial ready:** Validated on scRNA-seq (10x) and spatial transcriptomics (Xenium, Visium).
 - **🔒 Privacy-first, institutional-ready:** [Feature distillation runs locally](https://github.com/kenflab/LLM-scCurator?tab=readme-ov-file#-privacy); annotation works with **cloud or local LLM backends**, or **institution-approved chat UIs (no tool-side API calls)**.
 
+<p align="center">
+  <img
+    src="https://github.com/kenflab/LLM-scCurator/blob/main/docs/assets/LLM-scCurator_Fig1a_bioRxiv_2025.png"
+    width="75%"
+    alt="LLM-scCurator overview: data-centric feature distillation"
+  >
+</p>
+
+<p align="center">
+  <em>
+    Fig. 1a. Overview of LLM-scCurator: data-centric, adaptive feature distillation recovers identity markers despite biological-noise programs (e.g., ribosomal, cell-cycle, stress).
+    (<a href="https://doi.org/10.64898/2025.12.28.696778">bioRxiv preprint</a>)
+  </em>
+</p>
+
+
+
 
 
 ---
 ## 📦 Installation
+[![PyPI version](https://img.shields.io/pypi/v/llm-sc-curator.svg)](https://pypi.org/project/llm-sc-curator/)
 [![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
 ![R](https://img.shields.io/badge/R-276DC3?logo=r&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=white)
 ![Jupyter](https://img.shields.io/badge/Jupyter-F37626?logo=jupyter&logoColor=white)
-![Docker](https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=white)　　
 
 - #### Option A (recommended): Install from PyPI
   ```bash
