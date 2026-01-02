@@ -173,6 +173,8 @@ Many institutions restrict which AI tools can be used with internal clinical or 
 
 ---
 ## ⚡ Quick Start
+Documentation (—**Getting started**, **Concepts**, **User guide**, and the full **API reference**—): [https://llm-sccurator.readthedocs.io/](https://llm-sccurator.readthedocs.io/)
+
 ### 🐍 For Python / Scanpy Users
 1) Set your API key (simplest: paste in the notebook)
   ```python
