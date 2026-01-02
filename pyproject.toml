@@ -24,8 +24,9 @@ gemini = ["google-generativeai>=0.8.5"]
 all = ["openai>=1.0.0", "google-generativeai>=0.8.5"]
 
 [project.urls]
-Homepage = "https://llm-sccurator.readthedocs.io/"
 Repository = "https://github.com/kenflab/LLM-scCurator"
+Documentation = "https://llm-sccurator.readthedocs.io/"
+Issues = "https://github.com/kenflab/LLM-scCurator/issues"
 
 [tool.setuptools]
 packages = { find = {} }
