@@ -42,7 +42,7 @@
 <p align="center">
   <em>
     Fig. 1a. Overview of LLM-scCurator: data-centric, adaptive feature distillation recovers identity markers despite biological-noise programs (e.g., ribosomal, cell-cycle, stress).
-    (<a href="https://doi.org/10.64898/2025.12.28.696778">bioRxiv preprint</a>)
+    (<a href="https://www.biorxiv.org/content/10.64898/2025.12.28.696778v1.full">bioRxiv preprint</a>)
   </em>
 </p>
 
