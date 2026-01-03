@@ -7,7 +7,7 @@ name = "llm-sc-curator"
 dynamic = ["version"]
 description = "Dynamic feature distillation framework for robust zero-shot LLM annotation."
 readme = { file = "README.md", content-type = "text/markdown" }
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 authors = [{ name = "Ken Furudate" }]
 dependencies = [
   "scanpy>=1.11.5",
