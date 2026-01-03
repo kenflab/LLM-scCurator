@@ -33,16 +33,17 @@ jobs:
         run: python -m twine check dist/*
 
       - name: Guard
+        id: guard
         run: |
           python - <<'PY'
-          import os, re, sys
-          tag=os.environ["GITHUB_REF_NAME"]
-          if not re.fullmatch(r"v\d+\.\d+\.\d+", tag):
-            print(f"Skip publish for non-stable tag: {tag}")
-            sys.exit(0)
-          print("Stable tag:", tag)
+          import os, re
+          tag=os.environ.get("GITHUB_REF_NAME","")
+          stable=bool(re.fullmatch(r"v\d+\.\d+\.\d+", tag))
+          print(f"tag={tag} stable={stable}")
+          with open(os.environ["GITHUB_OUTPUT"], "a") as f:
+            f.write(f"stable={'true' if stable else 'false'}\n")
           PY
 
       - name: Publish to PyPI
-        if: startsWith(github.ref, 'refs/tags/') && (github.ref_name =~ '^v[0-9]+\\.[0-9]+\\.[0-9]+$')
+        if: steps.guard.outputs.stable == 'true'
         uses: pypa/gh-action-pypi-publish@release/v1
