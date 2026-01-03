@@ -132,7 +132,9 @@ RUN micromamba run -n py python -m pip install -U \
 
 WORKDIR /opt/LLM-scCurator
 COPY . /opt/LLM-scCurator
-RUN micromamba run -n py python -m pip install -e ".[all]"
+ENV SETUPTOOLS_SCM_PRETEND_VERSION=0.0.0
+RUN micromamba run -n py python -m pip install -vvv -e ".[all]"
+
 
 # -----------------------------
 # 4) Sanity checks
