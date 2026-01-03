@@ -43,4 +43,4 @@ extend-exclude = ["benchmarks", "paper", "examples"]
 
 [tool.ruff.lint]
 select = ["F"]
-ignore = ["E501"] 
+ignore = ["F401"]
