@@ -39,7 +39,7 @@ local_scheme = "no-local-version"
 
 [tool.ruff]
 line-length = 100
-extend-exclude = ["benchmarks", "paper"]
+extend-exclude = ["benchmarks", "paper", "examples"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I"]
