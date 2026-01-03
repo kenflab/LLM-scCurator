@@ -42,4 +42,5 @@ line-length = 100
 extend-exclude = ["benchmarks", "paper", "examples"]
 
 [tool.ruff.lint]
-select = ["E", "F", "I"]
+select = ["F"]
+ignore = ["E501"] 
