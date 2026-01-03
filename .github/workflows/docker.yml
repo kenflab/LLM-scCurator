@@ -3,7 +3,7 @@ name: build-and-push-ghcr
 on:
   push:
     tags:
-      - "v*"
+      - "v*.*.*"
   workflow_dispatch:
 
 env:
@@ -72,14 +72,17 @@ jobs:
         with:
           images: ${{ env.IMAGE }}
           tags: |
+            # include the git tag itself (e.g., v0.1.0)
+            type=ref,event=tag
+
             # v0.1.0 -> 0.1.0
-            type=semver,pattern={{version}},enable=${{ startsWith(github.ref, 'refs/tags/v') }}
+            type=semver,pattern={{version}}
 
             # convenience tags for users
-            type=raw,value=official,enable=${{ startsWith(github.ref, 'refs/tags/v') }}
-            type=raw,value=latest,enable=${{ startsWith(github.ref, 'refs/tags/v') }}
+            type=raw,value=official
+            type=raw,value=latest
 
-            # still nice to have for traceability (manual runs too)
+            # traceability
             type=sha
 
       - name: Create & push manifest list
