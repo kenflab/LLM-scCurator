@@ -37,10 +37,13 @@ jobs:
 
       - run: python -m pip install -U pip
 
-      # packaging sanity
+      - run: pip install -U ruff
+      - run: ruff check .
+
+      # packaging sanity (editable install)
       - run: pip install -e .
 
-      # optional: also validate extras (catches ".[all] broken" early)
+      # optional deps sanity (extras)
       - run: pip install -e ".[all]"
 
       # import smoke
