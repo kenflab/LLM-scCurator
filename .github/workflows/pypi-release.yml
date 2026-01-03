@@ -32,7 +32,7 @@ jobs:
       - name: Twine check
         run: python -m twine check dist/*
 
-      - name: Guard: only publish on stable semver tags
+      - name: Guard
         run: |
           python - <<'PY'
           import os, re, sys
