@@ -10,6 +10,23 @@ env:
   IMAGE: ghcr.io/${{ github.repository_owner }}/llm-sc-curator
 
 jobs:
+  guard:
+    runs-on: ubuntu-latest
+    outputs:
+      stable: ${{ steps.guard.outputs.stable }}
+    steps:
+      - name: Guard:
+        id: guard
+        run: |
+          python - <<'PY'
+          import os, re
+          tag=os.environ.get("GITHUB_REF_NAME","")
+          stable=bool(re.fullmatch(r"v\d+\.\d+\.\d+", tag))
+          with open(os.environ["GITHUB_OUTPUT"], "a") as f:
+            f.write(f"stable={'true' if stable else 'false'}\n")
+          print(f"tag={tag} stable={stable}")
+          PY
+
   build:
     strategy:
       fail-fast: false
