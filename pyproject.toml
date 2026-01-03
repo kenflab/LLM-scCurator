@@ -36,3 +36,9 @@ packages = { find = {} }
 tag_regex = "^v(?P<version>\\d+\\.\\d+\\.\\d+)$"
 version_scheme = "no-guess-dev"
 local_scheme = "no-local-version"
+
+[tool.ruff]
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I"]
