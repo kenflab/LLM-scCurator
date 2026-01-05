@@ -181,7 +181,7 @@ We respect the sensitivity of clinical and biological data. LLM-scCurator is des
 - **Minimal transmission (optional):** If you choose to use an external LLM API, only anonymized, cluster-level marker lists (e.g., top 50 gene symbols) and minimal tissue context are sent.
 - **User control:** You decide what additional context (e.g., disease state, treatment, platform) to include. Always follow institutional policy and the LLM provider’s terms before sharing any information.
 
-### Example workflows (institutional-policy friendly)
+### Institutional-friendly workflows
 
 Many institutions restrict which AI tools can be used with internal clinical or research datasets. To support these real-world constraints, we provide two end-to-end workflows that keep raw matrices and cell-level metadata local and avoid external LLM API calls unless explicitly permitted:
 
