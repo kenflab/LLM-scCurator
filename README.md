@@ -12,6 +12,7 @@
 [![Docs](https://readthedocs.org/projects/llm-sccurator/badge/?version=latest)](https://llm-sccurator.readthedocs.io/)
 [![bioRxiv](https://img.shields.io/badge/bioRxiv-10.64898%2F2025.12.28.696778-B31B1B.svg)](https://doi.org/10.64898/2025.12.28.696778)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17970494.svg)](https://doi.org/10.5281/zenodo.17970494)
+[![RRID](https://img.shields.io/badge/RRID-SCR_027945-blue)](https://scicrunch.org/resolver/SCR_027945)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 - **Docs:** https://llm-sccurator.readthedocs.io/  
@@ -377,7 +378,7 @@ Notes:
 - bioRxiv preprint: [10.64898/2025.12.28.696778](https://doi.org/10.64898/2025.12.28.696778)
 - Zenodo archive (v0.1.0): [10.5281/zenodo.17970494](https://doi.org/10.5281/zenodo.17970494)
 - GitHub release tag: [v0.1.0](https://github.com/kenflab/LLM-scCurator/releases/tag/v0.1.0)
-
+- Software RRID: [RRID:SCR_027945](https://scicrunch.org/resolver/SCR_027945)
 
 
 
