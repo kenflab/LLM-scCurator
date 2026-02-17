@@ -34,7 +34,7 @@
 
 <p align="center">
   <img
-    src="https://github.com/kenflab/LLM-scCurator/blob/main/docs/assets/LLM-scCurator_Fig1a_bioRxiv_2025.png"
+    src="https://raw.githubusercontent.com/kenflab/LLM-scCurator/main/docs/assets/LLM-scCurator_Fig1a_bioRxiv_2025.png"
     width="75%"
     alt="LLM-scCurator overview: data-centric feature distillation"
   >
