@@ -1,3 +1,22 @@
 site/
 .venv/
 __pycache__/
+
+# gb resubmission scratch / local working area
+paper/gb_resubmission/
+
+# gb resubmission local benchmark inputs
+paper/gb_resubmission/input/*.h5ad
+paper/gb_resubmission/input/*.csv
+paper/gb_resubmission/*.ipynb
+
+# local outputs
+paper/gb_resubmission/output/
+
+# secrets
+.env
+
+# macOS / local trash
+.DS_Store
+**/.DS_Store
+.Trash-*/
