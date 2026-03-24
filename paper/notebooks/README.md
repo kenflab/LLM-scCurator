@@ -6,8 +6,7 @@ These notebooks are optional and provided for transparency.
 Panel verification is supported by the exported Source Data in [`../source_data/`](../source_data), indexed by [`../FIGURE_MAP.csv`](../FIGURE_MAP.csv).
 Some notebooks may depend on large public inputs and computing.
 
-Note on LLM calls: we fix local random seeds for deterministic preprocessing; however, LLM API outputs may still vary across runs even with temperature=0.
-
+Note on LLM calls: we fix local random seeds for deterministic preprocessing; however, LLM API outputs may still vary across runs even with temperature = 0.
 
 ## Table of contents
 
@@ -30,23 +29,28 @@ Note on LLM calls: we fix local random seeds for deterministic preprocessing; ho
 - Mouse B: [`02_run_mouse_b_benchmark.ipynb`](02_run_mouse_b_benchmark.ipynb)
 
 ### 03 — Evaluate benchmarks / scoring exports
-- [`03_evaluate_benchmarks.ipynb`](03_evaluate_benchmarks.ipynb): — computes ontology-aware scores and summary tables used in Source Data and figure panels (Fig. 2a-d) 
+- [`03_evaluate_benchmarks.ipynb`](03_evaluate_benchmarks.ipynb): computes ontology-aware scores and benchmark summary tables used downstream in Source Data and figure panels.
 
-### 04 — Landscape (figure assembly helper)
-- [`04_landscape.ipynb`](04_landscape.ipynb): — generates gene landscap (Fig1b, c, and EDFig. 1a)
+### 04 — Fig. 2a–d and Fig. S1 assembly
+- [`04_Fig2a_d_FigS1.ipynb`](04_Fig2a_d_FigS1.ipynb): exports stepwise feature-level summaries, representative rank-shift tables, and supporting CD8 burden landscapes for Fig. 2a–d and Fig. S1.
 
-### 05 — Compare top-N genes (figure assembly helper)
-- [`05_compare_top_N_genes.ipynb`](05_compare_top_N_genes.ipynb): — compares top-N input gene lists across methods and exports noise-category breakdowns for plotting (Fig. 2e, f)
+### 05 — Fig. 2e–f stepwise task-level analyses
+- [`05_Fig2e_f_StepwiseAnalyses.ipynb`](05_Fig2e_f_StepwiseAnalyses.ipynb): exports task-level Sanno summaries and cluster-by-variant scoring tables for Fig. 2e–f.
 
-### 06 — Simulation
-- [`06_Simulation.ipynb`](06_simulation.ipynb): — runs marker noise injection to stress-test robustness and generate plot-ready summaries (Fig. 2g)
+### 06 — Fig. 3 cross-benchmark comparison
+- [`06_Fig3_minimal.ipynb`](06_Fig3_minimal.ipynb): generates cross-benchmark summary tables for Standard, LLM-scCurator, and reference-based comparators used in Fig. 3.
 
+### 07 — Fig. 4 robustness / ambiguity analyses
+- [`07_Fig4_minimal.ipynb`](07_Fig4_minimal.ipynb): exports top-N stress-test summaries, low-consistency rates, in-silico biological-noise injection results, and ambiguity-prone state comparisons for Fig. 4.
 
-### 07 — Colon Xenium (spatial validation)
-- [`07_Colon_Xenium.ipynb`](07_Colon_Xenium.ipynb): — generate Xenium spatial plots and pseudo-bulk heatmap matrices (Fig. 2h and ED Fig. 3d).
+### 08 — Fig. S3 cross-dataset feature-distillation summaries
+- [`08_FigS3_minimal.ipynb`](08_FigS3_minimal.ipynb): exports cross-dataset backend-free summaries of biological-noise fraction, low-Gini burden, canonical marker recall, and supporting ranked gene lists for Fig. S3.
 
-### 08 — OSCC Visium (spatial validation)
-- [`08_OSCC_Visium.ipynb`](08_OSCC_Visium.ipynb): — generate Visium spatial plots and pseudo-bulk heatmap matrices (ED Fig. 3a–c).
+### 09 — Colon Xenium (spatial validation)
+- [`09_Colon_Xenium.ipynb`](10_Colon_Xenium.ipynb): generates Xenium spatial maps and pseudobulk heatmap matrices for Fig. 5.
 
-### 09 — Marker_effects (spatial validation)
-- [`09_marker_effects.ipynb`](09_marker_effects.ipynb): — compute one-vs-rest marker effect sizes (AUROC, log2FC, Δdet) and export *_marker_effects.csv (Source Data for ED Fig. 3c–d).
+### 10 — OSCC Visium (spatial validation)
+- [`10_OSCC_Visium.ipynb`](09_OSCC_Visium.ipynb): generates Visium spatial maps and pseudobulk heatmap matrices for Fig. S5.
+
+### 11 — Marker effects (spatial validation)
+- [`11_marker_effects.ipynb`](11_marker_effects.ipynb): computes one-vs-rest marker effect sizes (AUROC, log2FC, Δdet) and exports `*_marker_effects.csv` files used in Source Data for Fig. 5b and Fig. S5c.
