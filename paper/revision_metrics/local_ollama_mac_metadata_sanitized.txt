@@ -1,0 +1,17 @@
+=== Local open-weight backend metadata ===
+Date: 2026-07-10
+OS: macOS 15.7.7, Apple Silicon arm64
+Python: 3.11.9
+llm-sc-curator package metadata version: 0.1.1
+LLM-scCurator backend: OllamaBackend
+Ollama version: 0.31.2
+Model: llama3.1:8b
+Model digest: 46e0c10c039e
+Model size: 4.9 GB
+Temperature: 0
+Timeout: 600 sec
+Hosted API used: No
+OLLAMA_HOST: 127.0.0.1:11434
+OLLAMA_NUM_PARALLEL: 1
+OLLAMA_KEEP_ALIVE: 5m
+Notes: Absolute local paths, hostname, and user-specific environment paths were removed before public release.
