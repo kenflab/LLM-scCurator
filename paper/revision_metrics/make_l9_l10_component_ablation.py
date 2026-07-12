@@ -469,7 +469,7 @@ def write_tables_to_excel(letter_xlsx: Path, summary: pd.DataFrame, cluster_metr
         mode="a",
         if_sheet_exists="replace",
     ) as writer:
-        summary.to_excel(writer, sheet_name="L9_component_ablation_summary", index=False)
+        summary.to_excel(writer, sheet_name="L10_component_ablation_summary", index=False)
         cluster_metrics.to_excel(writer, sheet_name="L9_component_ablation_cluster_metrics", index=False)
 
 
