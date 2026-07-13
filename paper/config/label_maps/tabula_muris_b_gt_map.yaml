@@ -1,7 +1,7 @@
 # paper/config/label_maps/tabula_muris_b_gt_map.yaml
 version: 1
 dataset_id: tabula_muris_b
-input_key: cell_ontology_class
+input_key: meta.cluster
 
 matching:
   mode: substring_ci
@@ -15,18 +15,30 @@ labels:
   - B_Other
 
 rules:
-  # Contaminants first
+  # Specific source labels must precede the broad B-cell rule.
   - label: Erythrocyte_like
-    include_any: ["erythrocyte", "erythroid", "erythroblast", "rbc", "red blood", "hemoglobin", "hbb", "hba"]
+    include_any:
+      - "immature b cell"
+
+  - label: B_Other
+    include_any:
+      - "late pro-b cell"
+    used_in_confusion: false
 
   - label: Mast_like
-    include_any: ["mast", "basophil", "cpa3", "kit", "fcer1a"]
+    include_any:
+      - "naive b cell"
 
   - label: pDC_Myeloid_like
-    include_any: ["pdc", "plasmacytoid", "dendritic", "siglech", "bst2", "irf8", "myeloid", "monocyte", "macrophage"]
+    include_any:
+      - "precursor b cell"
 
-  # B lineage
   - label: Mature_B
-    include_any: ["b cell", "b-cell", "b lymphocyte", "follicular", "ms4a1", "cd79a", "cd79b", "mature b"]
+    include_any:
+      - "b cell"
+      - "b-cell"
+      - "b lymphocyte"
+      - "follicular"
+      - "mature b"
 
 default_label: B_Other
