@@ -47,7 +47,7 @@ datasets:
     gt_map_path: label_maps/tabula_muris_b_gt_map.yaml
     n_genes: 50
     model_name: models/gemini-2.5-pro
-    exclude_gt_labels: ["B_Other"]
+    exclude_gt_labels: []
     hvg_kwargs:
       n_top_genes: 2000
       subset: false
