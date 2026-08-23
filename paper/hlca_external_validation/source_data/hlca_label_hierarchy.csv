@@ -1,0 +1,25 @@
+path_id,ann_level_1,ann_level_2,ann_level_3,n_cells
+HLCA_PATH_001,Endothelial,Blood vessels,EC arterial,7391
+HLCA_PATH_002,Endothelial,Blood vessels,EC capillary,23205
+HLCA_PATH_003,Endothelial,Blood vessels,EC venous,12975
+HLCA_PATH_004,Endothelial,Lymphatic EC,Lymphatic EC differentiating,566
+HLCA_PATH_005,Endothelial,Lymphatic EC,Lymphatic EC mature,4001
+HLCA_PATH_006,Endothelial,Lymphatic EC,Lymphatic EC proliferating,28
+HLCA_PATH_007,Epithelial,Airway epithelium,Basal,84713
+HLCA_PATH_008,Epithelial,Airway epithelium,Multiciliated lineage,41098
+HLCA_PATH_009,Epithelial,Airway epithelium,Rare,885
+HLCA_PATH_010,Epithelial,Airway epithelium,Secretory,80327
+HLCA_PATH_011,Epithelial,Alveolar epithelium,AT1,7937
+HLCA_PATH_012,Epithelial,Alveolar epithelium,AT2,62405
+HLCA_PATH_013,Epithelial,Submucosal Gland,Submucosal Secretory,4700
+HLCA_PATH_014,Immune,Lymphoid,B cell lineage,6284
+HLCA_PATH_015,Immune,Lymphoid,Innate lymphoid cell NK,16978
+HLCA_PATH_016,Immune,Lymphoid,T cell lineage,50859
+HLCA_PATH_017,Immune,Myeloid,Dendritic cells,10319
+HLCA_PATH_018,Immune,Myeloid,Macrophages,111844
+HLCA_PATH_019,Immune,Myeloid,Mast cells,6623
+HLCA_PATH_020,Immune,Myeloid,Monocytes,26529
+HLCA_PATH_021,Stroma,Fibroblast lineage,Fibroblasts,20384
+HLCA_PATH_022,Stroma,Fibroblast lineage,Myofibroblasts,716
+HLCA_PATH_023,Stroma,Smooth muscle,SM activated stress response,556
+HLCA_PATH_024,Stroma,Smooth muscle,Smooth muscle FAM83D+,335

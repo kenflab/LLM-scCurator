@@ -1,0 +1,127 @@
+prediction_id,prediction_text,prediction_normalized,n_calls,auto_match_type,mapped_path_id,mapped_ann_level_1,mapped_ann_level_2,mapped_ann_level_3,mapping_note
+35091a3fc168,AT2-AT1 transitioning,at2 at1 transitioning,1,,LEVEL_2,Epithelial,Alveolar epithelium,,Transition/intermediate label does not uniquely resolve AT1 versus AT2; assigned only through HLCA level 2.
+7b30776c6c8c,AT2-differentiating,at2 differentiating,1,,HLCA_PATH_012,Epithelial,Alveolar epithelium,AT2,AT2 is the stated base identity; the differentiating qualifier is finer than the evaluated HLCA level 3.
+eebce08f6e9d,Adventitial Fibroblast,adventitial fibroblast,14,,HLCA_PATH_021,Stroma,Fibroblast lineage,Fibroblasts,
+eebce08f6e9d,Adventitial fibroblast,adventitial fibroblast,17,,HLCA_PATH_021,Stroma,Fibroblast lineage,Fibroblasts,
+09b1de39a382,Alveolar Differentiation Intermediate,alveolar differentiation intermediate,9,,LEVEL_2,Epithelial,Alveolar epithelium,,Transition/intermediate label does not uniquely resolve AT1 versus AT2; assigned only through HLCA level 2.
+8f0bc88e5be1,Alveolar Epithelial Transitioning,alveolar epithelial transitioning,1,,LEVEL_2,Epithelial,Alveolar epithelium,,Transition/intermediate label does not uniquely resolve AT1 versus AT2; assigned only through HLCA level 2.
+f131218f83da,Alveolar Fibroblast,alveolar fibroblast,1,,HLCA_PATH_021,Stroma,Fibroblast lineage,Fibroblasts,
+7c10bef8163b,Alveolar Macrophage,alveolar macrophage,51,,HLCA_PATH_018,Immune,Myeloid,Macrophages,
+e794ebb81092,Alveolar Macrophage (ISG-high),alveolar macrophage isg high,1,,HLCA_PATH_018,Immune,Myeloid,Macrophages,
+83396a59b168,Alveolar Macrophage (proliferating),alveolar macrophage proliferating,12,,HLCA_PATH_018,Immune,Myeloid,Macrophages,
+09b59c1e6baa,Alveolar Type 1 (AT1) cell,alveolar type 1 at1 cell,3,,HLCA_PATH_011,Epithelial,Alveolar epithelium,AT1,
+0c770368d6de,Alveolar Type 2,alveolar type 2,5,,HLCA_PATH_012,Epithelial,Alveolar epithelium,AT2,
+c28947963976,Alveolar Type 2 (AT2) cell,alveolar type 2 at2 cell,20,,HLCA_PATH_012,Epithelial,Alveolar epithelium,AT2,
+b82341e023f4,Alveolar Type 2 Cell,alveolar type 2 cell,2,,HLCA_PATH_012,Epithelial,Alveolar epithelium,AT2,
+b82341e023f4,Alveolar Type 2 cell,alveolar type 2 cell,1,,HLCA_PATH_012,Epithelial,Alveolar epithelium,AT2,
+639fa9094976,Arterial Endothelial (ISG-high),arterial endothelial isg high,1,,HLCA_PATH_001,Endothelial,Blood vessels,EC arterial,
+fdcbc1537978,Arterial Endothelial Cell,arterial endothelial cell,2,,HLCA_PATH_001,Endothelial,Blood vessels,EC arterial,
+fdcbc1537978,Arterial endothelial cell,arterial endothelial cell,3,,HLCA_PATH_001,Endothelial,Blood vessels,EC arterial,
+15012b6521a0,Arterial smooth muscle cell,arterial smooth muscle cell,2,,LEVEL_2,Stroma,Smooth muscle,,Generic smooth muscle label does not distinguish SM activated stress response from Smooth muscle FAM83D+.
+4f61752b50bc,B cell,b cell,5,,HLCA_PATH_014,Immune,Lymphoid,B cell lineage,
+7162eeffe485,Basal cell,basal cell,20,,HLCA_PATH_007,Epithelial,Airway epithelium,Basal,
+c9ad0230652c,Basal cell (proliferating),basal cell proliferating,3,,HLCA_PATH_007,Epithelial,Airway epithelium,Basal,
+a265dbd2d7f8,CD8+ Cytotoxic T cell,cd8 cytotoxic t cell,7,,HLCA_PATH_016,Immune,Lymphoid,T cell lineage,
+728d807efcd7,CD8+ T cell,cd8 t cell,2,,HLCA_PATH_016,Immune,Lymphoid,T cell lineage,
+321026866240,CD8+ T cell (proliferating),cd8 t cell proliferating,3,,HLCA_PATH_016,Immune,Lymphoid,T cell lineage,
+df5069e1bae0,CD8+ T cell GZMK+,cd8 t cell gzmk,1,,HLCA_PATH_016,Immune,Lymphoid,T cell lineage,
+c2d7da7765cb,CD8+ Tissue-resident Memory T cell,cd8 tissue resident memory t cell,1,,HLCA_PATH_016,Immune,Lymphoid,T cell lineage,
+c89d0e7bfc18,CD8+ Trm GZMK+,cd8 trm gzmk,1,,HLCA_PATH_016,Immune,Lymphoid,T cell lineage,
+30454a598198,Capillary,capillary,1,,HLCA_PATH_002,Endothelial,Blood vessels,EC capillary,
+ce94fb087aa5,Capillary Aerocyte,capillary aerocyte,1,,HLCA_PATH_002,Endothelial,Blood vessels,EC capillary,
+5f7b18b262f2,Capillary EC,capillary ec,5,,HLCA_PATH_002,Endothelial,Blood vessels,EC capillary,
+5b0a12f92420,Capillary Endothelial (ISG-high),capillary endothelial isg high,1,,HLCA_PATH_002,Endothelial,Blood vessels,EC capillary,
+de434e5193a6,Capillary Endothelial Cell,capillary endothelial cell,1,,HLCA_PATH_002,Endothelial,Blood vessels,EC capillary,
+3750799797cf,Capillary Endothelial Cell (ISG-high),capillary endothelial cell isg high,1,,HLCA_PATH_002,Endothelial,Blood vessels,EC capillary,
+ce94fb087aa5,Capillary aerocyte,capillary aerocyte,4,,HLCA_PATH_002,Endothelial,Blood vessels,EC capillary,
+3aec8dcb7551,Capillary aerocyte (ISG-high),capillary aerocyte isg high,1,,HLCA_PATH_002,Endothelial,Blood vessels,EC capillary,
+c67e8cba4d72,Capillary endothelial,capillary endothelial,1,,HLCA_PATH_002,Endothelial,Blood vessels,EC capillary,
+de434e5193a6,Capillary endothelial cell,capillary endothelial cell,4,,HLCA_PATH_002,Endothelial,Blood vessels,EC capillary,
+3750799797cf,Capillary endothelial cell (ISG-high),capillary endothelial cell isg high,11,,HLCA_PATH_002,Endothelial,Blood vessels,EC capillary,
+531c360ddd94,Ciliated cell,ciliated cell,20,,HLCA_PATH_008,Epithelial,Airway epithelium,Multiciliated lineage,
+39740a4f39e9,Classical Monocyte,classical monocyte,4,,HLCA_PATH_020,Immune,Myeloid,Monocytes,
+e9933e8a7556,Club,club,1,,HLCA_PATH_010,Epithelial,Airway epithelium,Secretory,
+4aa6e0295fb7,Club-ciliated,club ciliated,2,,LEVEL_2,Epithelial,Airway epithelium,,Mixed club-ciliated label spans Secretory and Multiciliated lineage; assigned only through HLCA level 2.
+96ca48de472d,Conventional dendritic cell 2,conventional dendritic cell 2,1,,HLCA_PATH_017,Immune,Myeloid,Dendritic cells,
+d17ab2e46be4,Conventional dendritic cell type 2,conventional dendritic cell type 2,2,,HLCA_PATH_017,Immune,Myeloid,Dendritic cells,
+e27c2e1e0daa,Cytotoxic T cell,cytotoxic t cell,2,,HLCA_PATH_016,Immune,Lymphoid,T cell lineage,
+34f8d23185c8,Deuterosomal,deuterosomal,2,,HLCA_PATH_008,Epithelial,Airway epithelium,Multiciliated lineage,
+68ac7a37b74a,Deuterosomal cell,deuterosomal cell,4,,HLCA_PATH_008,Epithelial,Airway epithelium,Multiciliated lineage,
+dbc52b37762b,Doublet,doublet,1,,UNMAPPED,,,,Doublet is not a single HLCA cell identity and is therefore left unmapped.
+3b85e6b6440a,EC arterial (ISG-high),ec arterial isg high,1,,HLCA_PATH_001,Endothelial,Blood vessels,EC arterial,
+b1eb626ef524,FABP4+ Macrophage,fabp4 macrophage,1,,HLCA_PATH_018,Immune,Myeloid,Macrophages,
+4230a0307147,FCN1+ Macrophage,fcn1 macrophage,1,,HLCA_PATH_018,Immune,Myeloid,Macrophages,
+9848bc37cb12,Fibroblast,fibroblast,3,,HLCA_PATH_021,Stroma,Fibroblast lineage,Fibroblasts,
+843b275aca47,Gamma Delta T cell (proliferating),gamma delta t cell proliferating,2,,HLCA_PATH_016,Immune,Lymphoid,T cell lineage,
+c29ed9c8c3cc,Gamma-delta T cell,gamma delta t cell,8,,HLCA_PATH_016,Immune,Lymphoid,T cell lineage,
+37a654727b1c,Gamma-delta T cell (activated),gamma delta t cell activated,2,,HLCA_PATH_016,Immune,Lymphoid,T cell lineage,
+843b275aca47,Gamma-delta T cell (proliferating),gamma delta t cell proliferating,4,,HLCA_PATH_016,Immune,Lymphoid,T cell lineage,
+66c83aed3a82,Goblet,goblet,3,,HLCA_PATH_010,Epithelial,Airway epithelium,Secretory,
+859a0d5b9ec5,Goblet cell,goblet cell,25,,HLCA_PATH_010,Epithelial,Airway epithelium,Secretory,
+d7380e492337,Hillock cell,hillock cell,1,,HLCA_PATH_007,Epithelial,Airway epithelium,Basal,Official HLCA hierarchy places Hillock-like cells under Basal at level 3.
+dc78749aefba,Inflammatory Macrophage,inflammatory macrophage,1,,HLCA_PATH_018,Immune,Myeloid,Macrophages,
+d80c8826c619,Interstitial Macrophage,interstitial macrophage,6,,HLCA_PATH_018,Immune,Myeloid,Macrophages,
+0b626580ef70,Ionocyte,ionocyte,7,,HLCA_PATH_009,Epithelial,Airway epithelium,Rare,
+2d34f2c48857,Lymphatic Endothelial,lymphatic endothelial,1,,LEVEL_2,Endothelial,Lymphatic EC,,"Generic lymphatic endothelial label does not distinguish mature, differentiating, or proliferating HLCA level-3 states."
+5d72f5d31c41,Lymphatic Endothelial (proliferating),lymphatic endothelial proliferating,3,,HLCA_PATH_006,Endothelial,Lymphatic EC,Lymphatic EC proliferating,
+1e0d4ad98eea,Lymphatic Endothelial Cell,lymphatic endothelial cell,16,,LEVEL_2,Endothelial,Lymphatic EC,,"Generic lymphatic endothelial label does not distinguish mature, differentiating, or proliferating HLCA level-3 states."
+d41c121d9889,Lymphatic Endothelial Cell (proliferating),lymphatic endothelial cell proliferating,2,,HLCA_PATH_006,Endothelial,Lymphatic EC,Lymphatic EC proliferating,
+1e0d4ad98eea,Lymphatic endothelial cell,lymphatic endothelial cell,1,,LEVEL_2,Endothelial,Lymphatic EC,,"Generic lymphatic endothelial label does not distinguish mature, differentiating, or proliferating HLCA level-3 states."
+d41c121d9889,Lymphatic endothelial cell (proliferating),lymphatic endothelial cell proliferating,1,,HLCA_PATH_006,Endothelial,Lymphatic EC,Lymphatic EC proliferating,
+b0ae25055c3d,Macrophage,macrophage,5,,HLCA_PATH_018,Immune,Myeloid,Macrophages,
+370f7b411177,Macrophage FABP4+,macrophage fabp4,1,,HLCA_PATH_018,Immune,Myeloid,Macrophages,
+69047754b5ca,Macrophage-Epithelial Doublet,macrophage epithelial doublet,1,,UNMAPPED,,,,Doublet is not a single HLCA cell identity and is therefore left unmapped.
+6b912c8f3982,Mast cell,mast cell,24,,HLCA_PATH_019,Immune,Myeloid,Mast cells,
+971e9a466ff2,Migratory DC,migratory dc,2,,HLCA_PATH_017,Immune,Myeloid,Dendritic cells,
+3c515f35d917,Monocyte,monocyte,2,,HLCA_PATH_020,Immune,Myeloid,Monocytes,
+4fef9a8f5ccc,Monocyte-derived Alveolar Macrophage,monocyte derived alveolar macrophage,1,,HLCA_PATH_018,Immune,Myeloid,Macrophages,
+0941f1ac8143,Monocyte-derived Macrophage,monocyte derived macrophage,14,,HLCA_PATH_018,Immune,Myeloid,Macrophages,
+6f9bc54ed012,Monocyte-derived Macrophage (ISG-high),monocyte derived macrophage isg high,2,,HLCA_PATH_018,Immune,Myeloid,Macrophages,
+bd73c19e421a,Multiciliated lineage,multiciliated lineage,1,normalized exact,HLCA_PATH_008,Epithelial,Airway epithelium,Multiciliated lineage,
+d2cfac38dd50,Myofibroblast,myofibroblast,2,,HLCA_PATH_022,Stroma,Fibroblast lineage,Myofibroblasts,
+e67b3b48c372,NK cell,nk cell,7,,HLCA_PATH_015,Immune,Lymphoid,Innate lymphoid cell NK,
+be2adc583a6e,NKT cell,nkt cell,5,,LEVEL_2,Immune,Lymphoid,,NKT/T-like wording is ambiguous between T cell lineage and innate lymphoid cell NK at this codebook depth.
+d3ca273ec497,Naive B cell,naive b cell,1,,HLCA_PATH_014,Immune,Lymphoid,B cell lineage,
+d3ca9ed9e672,Natural Killer T-like cell,natural killer t like cell,3,,LEVEL_2,Immune,Lymphoid,,NKT/T-like wording is ambiguous between T cell lineage and innate lymphoid cell NK at this codebook depth.
+0bc399db3c1b,Natural Killer cell,natural killer cell,6,,HLCA_PATH_015,Immune,Lymphoid,Innate lymphoid cell NK,
+071246e725ff,Neuroendocrine,neuroendocrine,1,,HLCA_PATH_009,Epithelial,Airway epithelium,Rare,
+36b0124aa871,Pericyte,pericyte,5,,HLCA_PATH_021,Stroma,Fibroblast lineage,Fibroblasts,Official HLCA hierarchy places Pericytes under Fibroblasts at level 3; retained despite the broader mural-cell usage of this term.
+ac33fefd9703,Plasma cell,plasma cell,9,,HLCA_PATH_014,Immune,Lymphoid,B cell lineage,
+7af5054634f3,Plasmablast,plasmablast,1,,HLCA_PATH_014,Immune,Lymphoid,B cell lineage,
+2e8410f8b075,Plasmablast (proliferating),plasmablast proliferating,2,,HLCA_PATH_014,Immune,Lymphoid,B cell lineage,
+8cc8680e70e5,Plasmacytoid DC,plasmacytoid dc,2,,HLCA_PATH_017,Immune,Myeloid,Dendritic cells,
+bc41e6f2451f,Plasmacytoid Dendritic Cell,plasmacytoid dendritic cell,4,,HLCA_PATH_017,Immune,Myeloid,Dendritic cells,
+e0dbf0ab1c4d,Proximal Ciliated,proximal ciliated,1,,HLCA_PATH_008,Epithelial,Airway epithelium,Multiciliated lineage,
+69b0ebe2fbd0,Pulmonary Artery Endothelial (ISG-high),pulmonary artery endothelial isg high,3,,HLCA_PATH_001,Endothelial,Blood vessels,EC arterial,
+30ec7d6b4c62,Pulmonary Artery Endothelial Cell (ISG-high),pulmonary artery endothelial cell isg high,1,,HLCA_PATH_001,Endothelial,Blood vessels,EC arterial,
+95d2e64b9a41,Pulmonary Ionocyte,pulmonary ionocyte,2,,HLCA_PATH_009,Epithelial,Airway epithelium,Rare,
+604861e9563f,Pulmonary Neuroendocrine Cell,pulmonary neuroendocrine cell,4,,HLCA_PATH_009,Epithelial,Airway epithelium,Rare,
+604861e9563f,Pulmonary Neuroendocrine cell,pulmonary neuroendocrine cell,1,,HLCA_PATH_009,Epithelial,Airway epithelium,Rare,
+989113b0fd63,SMG serous,smg serous,2,,HLCA_PATH_013,Epithelial,Submucosal Gland,Submucosal Secretory,
+e044167e0b22,Secretory,secretory,13,normalized exact,HLCA_PATH_010,Epithelial,Airway epithelium,Secretory,
+7eaf2346cbda,Secretory cell,secretory cell,1,,HLCA_PATH_010,Epithelial,Airway epithelium,Secretory,
+a70a6197a7a0,Secretory cell (ISG-high),secretory cell isg high,1,,HLCA_PATH_010,Epithelial,Airway epithelium,Secretory,
+0267eca2fea6,Serous,serous,3,,HLCA_PATH_013,Epithelial,Submucosal Gland,Submucosal Secretory,Interpreted as lung submucosal-gland serous; official HLCA hierarchy places SMG serous under Submucosal Secretory.
+bb5ae488712f,Serous cell of submucosal gland,serous cell of submucosal gland,1,,HLCA_PATH_013,Epithelial,Submucosal Gland,Submucosal Secretory,
+ca50810dea8c,Smooth Muscle,smooth muscle,2,,LEVEL_2,Stroma,Smooth muscle,,Generic smooth muscle label does not distinguish SM activated stress response from Smooth muscle FAM83D+.
+758a150b05b1,Smooth muscle cell,smooth muscle cell,7,,LEVEL_2,Stroma,Smooth muscle,,Generic smooth muscle label does not distinguish SM activated stress response from Smooth muscle FAM83D+.
+6d8b84ab04e3,Submucosal Gland,submucosal gland,5,,LEVEL_2,Epithelial,Submucosal Gland,,Generic gland label supports the HLCA level-2 compartment but does not explicitly establish a secretory identity.
+555a837d4714,Submucosal Gland Basal,submucosal gland basal,2,,HLCA_PATH_007,Epithelial,Airway epithelium,Basal,Basal identity maps to HLCA Basal; the submucosal-gland location is treated as a finer qualifier.
+b889d13e08d6,Submucosal Gland Secretory,submucosal gland secretory,1,,HLCA_PATH_013,Epithelial,Submucosal Gland,Submucosal Secretory,
+4e8faf549012,Submucosal Gland Secretory cell,submucosal gland secretory cell,1,,HLCA_PATH_013,Epithelial,Submucosal Gland,Submucosal Secretory,
+392a95e2380d,Submucosal Gland Serous,submucosal gland serous,4,,HLCA_PATH_013,Epithelial,Submucosal Gland,Submucosal Secretory,
+e679d5397562,Submucosal Gland cell,submucosal gland cell,6,,LEVEL_2,Epithelial,Submucosal Gland,,Generic gland label supports the HLCA level-2 compartment but does not explicitly establish a secretory identity.
+01bd3097a66a,Suprabasal,suprabasal,4,,HLCA_PATH_007,Epithelial,Airway epithelium,Basal,
+8361001bda9d,Suprabasal cell,suprabasal cell,1,,HLCA_PATH_007,Epithelial,Airway epithelium,Basal,
+d377e9df7184,T cell,t cell,3,,HLCA_PATH_016,Immune,Lymphoid,T cell lineage,
+1c3c0f98661f,T cell (proliferating),t cell proliferating,3,,HLCA_PATH_016,Immune,Lymphoid,T cell lineage,
+7a7b1abcfa2b,Transitional AT2,transitional at2,6,,HLCA_PATH_012,Epithelial,Alveolar epithelium,AT2,AT2 is the stated base identity; the transitional qualifier is finer than the evaluated HLCA level 3.
+6dbc2bd594ca,Transitional Club-AT2,transitional club at2,2,,HLCA_PATH_010,Epithelial,Airway epithelium,Secretory,Official HLCA hierarchy places AT0/pre-TB secretory cells (Transitional Club-AT2) under Secretory at level 3.
+7957cb51d623,Tuft cell,tuft cell,2,,HLCA_PATH_009,Epithelial,Airway epithelium,Rare,
+2915a2b8e36c,Tuft cell (proliferating),tuft cell proliferating,1,,HLCA_PATH_009,Epithelial,Airway epithelium,Rare,
+4f4de5fb4345,Vascular Smooth Muscle,vascular smooth muscle,2,,LEVEL_2,Stroma,Smooth muscle,,Generic smooth muscle label does not distinguish SM activated stress response from Smooth muscle FAM83D+.
+610c1f4b57b8,Vascular Smooth Muscle Cell,vascular smooth muscle cell,2,,LEVEL_2,Stroma,Smooth muscle,,Generic smooth muscle label does not distinguish SM activated stress response from Smooth muscle FAM83D+.
+a18171a99f6d,"Vascular endothelial cell, venule",vascular endothelial cell venule,2,,HLCA_PATH_003,Endothelial,Blood vessels,EC venous,
+4f4de5fb4345,Vascular smooth muscle,vascular smooth muscle,3,,LEVEL_2,Stroma,Smooth muscle,,Generic smooth muscle label does not distinguish SM activated stress response from Smooth muscle FAM83D+.
+765db493f3d3,Venous endothelial cell (ISG-high),venous endothelial cell isg high,1,,HLCA_PATH_003,Endothelial,Blood vessels,EC venous,
+e3c9ab14ada9,Venous endothelium,venous endothelium,3,,HLCA_PATH_003,Endothelial,Blood vessels,EC venous,
