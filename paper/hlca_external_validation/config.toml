@@ -1,0 +1,57 @@
+[dataset]
+name = "HLCA core v1.0"
+dataset_id = "066943a2-fdac-4b29-b348-40cede398e4e"
+census_version = "2025-11-08"
+url = "https://cellxgene-census-public-us-west-2.s3.us-west-2.amazonaws.com/cell-census/2025-11-08/h5ads/066943a2-fdac-4b29-b348-40cede398e4e.h5ad"
+expected_bytes = 5873641828
+expected_etag = "07fc9d2db29de3e6a3612aad61d33ff5-88"
+expected_n_obs = 584944
+
+[columns]
+cluster = "leiden_3"
+level_1 = "ann_level_1"
+level_2 = "ann_level_2"
+level_3 = "ann_level_3"
+donor = "donor_id"
+source_dataset = "dataset"
+gene_symbol_candidates = ["feature_name", "gene_symbol", "gene_symbols"]
+
+[analysis]
+seed = 42
+max_cells_per_cluster = 300
+min_cells_per_gene = 3
+normalization_target_sum = 10000.0
+n_markers = 50
+n_repeats = 3
+bootstrap_iterations = 20000
+sanno_lineage_weight = 0.7
+sanno_state_weight = 0.3
+sanno_level_2_partial_credit = 0.5
+
+[llm]
+provider = "Google Gemini API"
+model = "gemini-2.5-pro"
+temperature = 0.0
+max_attempts = 5
+retry_base_seconds = 2.0
+tissue = "healthy human lung"
+dataset_context = "HLCA core v1.0"
+
+[paths]
+work_dir = "work"
+source_h5ad = "work/data/hlca_core_v1.0.h5ad"
+download_metadata = "work/data/hlca_core_v1.0.download.json"
+processed_h5ad = "work/intermediate/hlca_core_leiden3_sampled_log1p.h5ad"
+cluster_manifest = "work/intermediate/cluster_manifest.csv"
+label_hierarchy = "work/intermediate/hlca_label_hierarchy.csv"
+marker_lists = "work/intermediate/marker_lists.csv"
+raw_responses_dir = "work/results/raw_responses"
+mapping = "work/results/prediction_mapping.csv"
+call_scores = "work/results/call_level_scores.csv"
+cluster_scores = "work/results/cluster_level_scores.csv"
+summary = "work/results/paired_summary.csv"
+figure_main = "work/results/Fig3d_HLCA_external_validation"
+figure_supp = "work/results/FigS6_HLCA_metrics"
+figure_scope = "work/results/FigS7_HLCA_scope"
+umap_coordinates = "work/results/hlca_umap_coordinates.csv"
+run_metadata = "work/results/run_metadata.json"

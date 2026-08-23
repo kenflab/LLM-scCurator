@@ -20,3 +20,12 @@ paper/gb_resubmission/output/
 .DS_Store
 **/.DS_Store
 .Trash-*/
+
+# Python build and local environments
+.venv*/
+*.egg-info/
+*.py[cod]
+
+# HLCA external-validation workspace and edit backups
+paper/hlca_external_validation/work/
+paper/hlca_external_validation/*.before_*
