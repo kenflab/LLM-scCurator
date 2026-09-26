@@ -5,7 +5,6 @@ from __future__ import annotations
 import argparse
 import datetime as dt
 import importlib.metadata as md
-import importlib.util
 import json
 import os
 import platform
@@ -20,6 +19,8 @@ from typing import Any
 
 import numpy as np
 import pandas as pd
+
+from cd8_public_evaluation import PublicCD8Evaluator, PARSER_ID
 
 
 PROMPT_TEMPLATE_ID = "cd8_ollama_local_json_v1"
@@ -50,20 +51,6 @@ Ranked marker genes:
 Return only JSON in this schema:
 {{"cell_type": "...", "confidence": "High|Medium|Low", "reasoning": "..."}}
 """
-
-
-STATE_ORDER = [
-    "Naive",
-    "Effector",
-    "EffectorMemory",
-    "Exhausted",
-    "ISG",
-    "MAIT",
-    "NK_killer",
-    "Cycling",
-    "Other",
-    "Unknown",
-]
 
 
 def run_cmd(cmd: list[str], timeout: int = 20) -> str:
@@ -146,166 +133,6 @@ def parse_llm_json(raw: str) -> tuple[dict[str, str], str, str]:
             "parse_error",
             repr(e),
         )
-
-
-def normalize_text(x: Any) -> str:
-    return re.sub(r"[^a-z0-9]+", " ", str(x).lower()).strip()
-
-
-def fallback_parse_cd8_major_state(prediction_text: str) -> tuple[str, str]:
-    """
-    Conservative fallback parser for the CD8 local-backend check.
-    The script first tries to use the existing parser from make_l4_l5_letter_tables.py.
-    This fallback is used only if that parser cannot be loaded.
-    """
-    s = normalize_text(prediction_text)
-
-    non_t_patterns = {
-        "B": [" b cell", "plasma", "immunoglobulin", "cd79a", "ms4a1"],
-        "Myeloid": ["monocyte", "macrophage", "myeloid", "dc", "dendritic", "neutrophil"],
-        "Stromal": ["fibroblast", "caf", "endothelial", "pericyte", "smooth muscle"],
-        "Epithelial": ["epithelial", "tumor", "carcinoma", "malignant"],
-        "Erythroid": ["erythroid", "red blood", "rbc"],
-    }
-
-    for major, pats in non_t_patterns.items():
-        if any(p.strip() in s for p in pats):
-            return major, "Other"
-
-    if "mait" in s or "mucosal associated invariant" in s:
-        return "T", "MAIT"
-
-    if (
-        "isg" in s
-        or "interferon" in s
-        or "ifn" in s
-        or "ifit" in s
-        or "isg15" in s
-        or "mx1" in s
-    ):
-        return "T", "ISG"
-
-    if (
-        "cycling" in s
-        or "proliferating" in s
-        or "cell cycle" in s
-        or "mki67" in s
-        or "top2a" in s
-    ):
-        return "T", "Cycling"
-
-    if (
-        "exhaust" in s
-        or "tex" in s
-        or "pd 1" in s
-        or "pdcd1" in s
-        or "checkpoint" in s
-        or "havcr2" in s
-        or "lag3" in s
-        or "tox" in s
-    ):
-        return "T", "Exhausted"
-
-    if "nk" in s or "natural killer" in s or "nkg7" in s or "gnly" in s:
-        if "t cell" not in s and "cd8" not in s:
-            return "NK", "NK_killer"
-        return "T", "NK_killer"
-
-    if (
-        "naive" in s
-        or "central memory" in s
-        or "tcm" in s
-        or "ccr7" in s
-        or "sell" in s
-        or "tcf7" in s
-        or "lef1" in s
-        or "il7r" in s
-    ):
-        return "T", "Naive"
-
-    if (
-        "effector memory" in s
-        or "tem" in s
-        or "trm" in s
-        or "resident memory" in s
-        or "memory" in s
-        or "gzmk" in s
-        or "ltb" in s
-        or "aqp3" in s
-    ):
-        return "T", "EffectorMemory"
-
-    if (
-        "effector" in s
-        or "cytotoxic" in s
-        or "killer" in s
-        or "gzmb" in s
-        or "prf1" in s
-        or "cx3cr1" in s
-        or "klrg1" in s
-    ):
-        return "T", "Effector"
-
-    if "cd8" in s or "t cell" in s or "t lymphocyte" in s:
-        return "T", "Unknown"
-
-    return "Unknown", "Unknown"
-
-
-def load_existing_parser(parser_script: Path | None):
-    if parser_script is None or not parser_script.exists():
-        return None
-
-    spec = importlib.util.spec_from_file_location("existing_l4_l5_parser", parser_script)
-    if spec is None or spec.loader is None:
-        return None
-
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
-
-    fn = getattr(module, "parse_prediction_major_state", None)
-    if callable(fn):
-        return fn
-
-    return None
-
-
-def parse_major_state(
-    dataset: str,
-    prediction_text: str,
-    existing_parser=None,
-) -> tuple[str, str, str]:
-    if existing_parser is not None:
-        try:
-            maj, st = existing_parser(dataset, prediction_text)
-            return str(maj), str(st), "existing_parser"
-        except Exception:
-            pass
-
-    maj, st = fallback_parse_cd8_major_state(prediction_text)
-    return maj, st, "fallback_cd8_parser"
-
-
-def score_cd8_sanno(
-    pred_major: str,
-    pred_state: str,
-    gt_major: str,
-    gt_state: str,
-    w_lineage: float = 0.7,
-    w_state: float = 0.3,
-) -> float:
-    pred_major = str(pred_major)
-    pred_state = str(pred_state)
-    gt_major = str(gt_major)
-    gt_state = str(gt_state)
-
-    major_match = pred_major == gt_major
-
-    if not major_match:
-        return 0.0
-
-    state_match = pred_state == gt_state
-    return float(w_lineage * 1.0 + w_state * float(state_match))
 
 
 def load_cd8_inputs(in_xlsx: Path, audit_sheet: str) -> pd.DataFrame:
@@ -484,7 +311,6 @@ def main() -> None:
     parser.add_argument("--audit-sheet", default="L2_per_cluster_audit")
     parser.add_argument("--out-xlsx", default="paper/revision/LetterTables.xlsx")
     parser.add_argument("--outdir", default="paper/revision_tables")
-    parser.add_argument("--parser-script", default="paper/revision_metrics/make_l4_l5_letter_tables.py")
     parser.add_argument("--host", default=os.getenv("LLMSC_OLLAMA_HOST", "http://127.0.0.1:11434"))
     parser.add_argument("--model", default=os.getenv("LLMSC_OLLAMA_MODEL", "llama3.1:8b"))
     parser.add_argument("--temperature", type=float, default=float(os.getenv("LLMSC_OLLAMA_TEMPERATURE", "0")))
@@ -530,13 +356,29 @@ def main() -> None:
     except Exception:
         llmsc_version = "unknown"
 
-    parser_path = Path(args.parser_script) if args.parser_script else None
-    existing_parser = load_existing_parser(parser_path)
+    evaluator = PublicCD8Evaluator(Path(__file__).resolve().parents[2])
 
     df = load_cd8_inputs(in_xlsx, args.audit_sheet)
     print(f"Loaded CD8 input rows: {df.shape[0]}")
     if df.shape[0] != 17:
         print(f"WARNING: Expected 17 CD8 clusters, found {df.shape[0]}.")
+
+    # Validate all reference mappings before issuing any model calls.
+    for _, reference in df.iterrows():
+        expected = evaluator.expected(str(reference["Ground_Truth"]))
+        if expected != (str(reference["GT_Major"]), str(reference["GT_State"])):
+            raise ValueError(f"Public CD8 reference mapping differs for {reference['Cluster_ID']}")
+    if raw_csv.exists():
+        previous = pd.read_csv(raw_csv, dtype=str, keep_default_na=False)
+        if not previous.empty:
+            if "Parser_Used" not in previous or not previous["Parser_Used"].eq(PARSER_ID).all():
+                raise ValueError("Existing calls use a different parser. Rescore them offline or choose a new --outdir.")
+            for _, record in previous.iterrows():
+                evaluated = evaluator.evaluate(record["Parsed_CellType"], record["Ground_Truth"])
+                if (evaluated["Pred_Major"] != record["Pred_Major"]
+                    or evaluated["Pred_State"] != record["Pred_State"]
+                    or abs(evaluated["Score_Sanno"] - float(record["Score_Sanno"])) > 1e-12):
+                    raise ValueError("Existing calls disagree with the current public CD8 scorer; choose a new --outdir.")
 
     backend = OllamaBackend(
         host=args.host,
@@ -578,9 +420,11 @@ def main() -> None:
         "Hostname": socket.gethostname(),
         "Started_At": started_at,
         "Finished_At": "",
-        "Parser_Source": str(parser_path) if existing_parser is not None else "fallback_cd8_parser",
+        "Parser_Source": PARSER_ID,
         "Notes": "Marker lists were frozen from L2_per_cluster_audit; no marker recomputation was performed.",
     }
+
+    metadata.update(evaluator.provenance())
 
     completed = completed_key_set(raw_csv)
     new_calls = 0
@@ -633,18 +477,11 @@ def main() -> None:
                 duration = time.time() - t0
                 parsed, parse_status, parse_error = parse_llm_json(raw)
 
-                pred_major, pred_state, parser_used = parse_major_state(
-                    "CD8 T",
-                    parsed["cell_type"],
-                    existing_parser=existing_parser,
-                )
-
-                score = score_cd8_sanno(
-                    pred_major=pred_major,
-                    pred_state=pred_state,
-                    gt_major=gt_major,
-                    gt_state=gt_state,
-                )
+                evaluation = evaluator.evaluate(parsed["cell_type"], ground_truth)
+                pred_major = evaluation["Pred_Major"]
+                pred_state = evaluation["Pred_State"]
+                parser_used = evaluation["Parser_Used"]
+                score = evaluation["Score_Sanno"]
 
                 out_row = {
                     "Dataset": "CD8 T",
