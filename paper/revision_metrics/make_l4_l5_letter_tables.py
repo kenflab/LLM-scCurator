@@ -3,11 +3,40 @@
 from __future__ import annotations
 
 import argparse
+from dataclasses import replace
+from datetime import datetime, timezone
+import hashlib
+import json
 import shutil
+import sys
 from pathlib import Path
 
 import numpy as np
 import pandas as pd
+
+REPO_ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(REPO_ROOT))
+from benchmarks.cd8_config import CD8_HIER_CFG
+from benchmarks.cd4_config import CD4_HIER_CFG
+from benchmarks.caf_config import CAF_HIER_CFG
+from benchmarks.mouse_b_config import MOUSE_B_CFG
+from benchmarks.hierarchical_scoring import (
+    _expected_major_state_generic,
+    _parse_major_lineage_generic,
+    _parse_state_generic,
+    score_hierarchical,
+)
+
+CONFIGS = {"CD8 T": CD8_HIER_CFG, "CD4 T": CD4_HIER_CFG,
+           "MSC": CAF_HIER_CFG, "Mouse B": MOUSE_B_CFG}
+EXPECTED_CLUSTERS = {"CD8 T": 17, "CD4 T": 22, "MSC": 8, "Mouse B": 5}
+PREDICTION_COLUMNS = {
+    "Standard": ("Standard_CellType", "Standard_Answer"),
+    "Curated": ("Full_Pipeline_CellType", "Full_Pipeline_Answer", "Curated_Answer"),
+    "CellTypist": ("CellTypist_Answer",),
+    "SingleR": ("SingleR_Answer",),
+    "Azimuth": ("Azimuth_Answer",),
+}
 
 try:
     from scipy.stats import wilcoxon
@@ -95,119 +124,62 @@ def clean_audit_table(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
     
-def parse_bool(x) -> bool:
-    if pd.isna(x):
-        return False
-
-    if isinstance(x, (bool, np.bool_)):
-        return bool(x)
-
-    if isinstance(x, (int, float, np.integer, np.floating)):
-        return float(x) != 0.0
-
-    return str(x).strip().lower() in {
-        "true",
-        "t",
-        "1",
-        "1.0",
-        "yes",
-        "y",
-    }
-
-
-def get_default_weights(dataset: str) -> tuple[float, float]:
-    dataset = str(dataset).strip()
-
-    if dataset in DEFAULT_WEIGHTS:
-        return DEFAULT_WEIGHTS[dataset]
-
-    lower = dataset.lower()
-
-    if "cd8" in lower:
-        return (0.7, 0.3)
-    if "cd4" in lower:
-        return (0.7, 0.3)
-    if "msc" in lower or "caf" in lower:
-        return (0.3, 0.7)
-    if "mouse" in lower and "b" in lower:
-        return (0.5, 0.5)
-
-    raise ValueError(f"Unknown dataset for default S_anno weights: {dataset}")
-
-
-def filter_quantitative_benchmark(df: pd.DataFrame) -> pd.DataFrame:
-    """
-    Preferred filter:
-      Included_In_Quantitative_Benchmark == TRUE
-
-    Fallback:
-      UsedInConfusion == TRUE
-
-    Important:
-      If the preferred column exists but contains no TRUE rows, fall back instead of
-      returning an empty table.
-    """
-    original_n = len(df)
-
-    if "Included_In_Quantitative_Benchmark" in df.columns:
-        tmp = df[df["Included_In_Quantitative_Benchmark"].map(parse_bool)].copy()
-        print(
-            f"Filter Included_In_Quantitative_Benchmark: "
-            f"{len(tmp)} / {original_n} rows retained"
-        )
-        if len(tmp) > 0:
-            return tmp
-
-    if "UsedInConfusion" in df.columns:
-        tmp = df[df["UsedInConfusion"].map(parse_bool)].copy()
-        print(f"Filter UsedInConfusion: {len(tmp)} / {original_n} rows retained")
-        if len(tmp) > 0:
-            return tmp
-
-    print(
-        "WARNING: No benchmark filter retained rows. "
-        "Proceeding with all rows instead."
-    )
-    return df.copy()
+def parse_prediction_records(df: pd.DataFrame) -> pd.DataFrame:
+    """Parse saved labels directly; Sanno cannot identify its components uniquely."""
+    records = []
+    for _, row in df.iterrows():
+        cfg = CONFIGS[row["Dataset"]]
+        if pd.isna(row["Ground_Truth"]) or not str(row["Ground_Truth"]).strip():
+            raise ValueError(f"Missing reference label for {row['Cluster_ID']}")
+        gt_major, gt_state = _expected_major_state_generic(row["Ground_Truth"], cfg)
+        for method, score_col in METHODS.items():
+            if score_col not in row or pd.isna(row[score_col]):
+                continue  # An unavailable comparator is not a failed prediction.
+            candidates = [
+                str(row[c]) for c in PREDICTION_COLUMNS[method]
+                if c in row and pd.notna(row[c]) and str(row[c]).strip()
+            ]
+            if not candidates:
+                raise ValueError(f"Missing {method} prediction for {row['Cluster_ID']}")
+            if len(set(candidates)) != 1:
+                raise ValueError(f"Conflicting {method} prediction fields for {row['Cluster_ID']}")
+            prediction = candidates[0]
+            # Use the same normalization as score_hierarchical().
+            normalized = prediction.lower().replace("*", "").replace("\n", " ").strip()
+            major = _parse_major_lineage_generic(normalized, cfg)
+            state = _parse_state_generic(normalized, cfg)
+            scoring_row = {"Ground_Truth": row["Ground_Truth"], "Prediction": prediction}
+            score = score_hierarchical(scoring_row, "Prediction", cfg)
+            recorded = float(row[score_col])
+            if not np.isclose(score, recorded, rtol=0, atol=1e-12):
+                raise ValueError(
+                    f"Sanno mismatch: {row['Dataset']} {row['Cluster_ID']} {method}: "
+                    f"recorded={recorded}, public={score}. Check the input and scorer version."
+                )
+            records.append({
+                "Dataset": row["Dataset"], "Cluster_ID": row["Cluster_ID"],
+                "Method": method, "Ground_Truth": row["Ground_Truth"],
+                "Raw_Prediction": prediction,
+                "GT_Major": gt_major, "GT_State": gt_state,
+                "Pred_Major": major, "Pred_State": state,
+                "Exact_State_Agreement": state == gt_state,
+                "Major_Lineage_Accuracy": major == gt_major,
+                "Exact_Match_Accuracy": state == gt_state and major == gt_major,
+                "Recorded_Sanno": recorded, "Public_Sanno": score,
+                "Ontology_Consistent_Accuracy_Sanno_ge_0.5": score >= 0.5,
+                "Low_Consistency_Rate_Sanno_lt_0.5": score < 0.5,
+            })
+    return pd.DataFrame(records)
 
 
-def infer_components_from_score(
-    score: float,
-    w_lineage: float,
-    w_state: float,
-) -> tuple[float, float]:
-    """
-    Infer discrete S_anno components from an existing S_anno score.
-
-    Candidate components:
-      s_lineage in {0, 0.5, 1}
-      s_state   in {0, 1}
-
-    Tie-break rule:
-      Prefer major-lineage agreement over isolated state agreement.
-      This matters mainly when w_lineage == w_state and score == 0.5.
-    """
-    if pd.isna(score):
-        return (np.nan, np.nan)
-
-    score = float(score)
-
-    candidates = []
-    for s_lineage in (0.0, 0.5, 1.0):
-        for s_state in (0.0, 1.0):
-            expected = w_lineage * s_lineage + w_state * s_state
-            error = abs(score - expected)
-
-            # Tie-break:
-            # 1. smallest error
-            # 2. prefer higher lineage agreement
-            # 3. prefer lower state agreement when ambiguous
-            candidates.append((error, -s_lineage, s_state, s_lineage, s_state))
-
-    candidates.sort()
-    _, _, _, best_lineage, best_state = candidates[0]
-
-    return (best_lineage, best_state)
+def validate_primary_design(df: pd.DataFrame) -> None:
+    if df.duplicated(["Dataset", "Cluster_ID"]).any():
+        raise ValueError("Duplicate benchmark cluster identifiers")
+    observed = df.groupby("Dataset").size().to_dict()
+    if observed != EXPECTED_CLUSTERS:
+        raise ValueError(f"Expected all 52 predefined clusters: {EXPECTED_CLUSTERS}; got {observed}")
+    if df[["Score_Standard", "Score_Curated"]].isna().any().any():
+        raise ValueError("Standard and Full pipeline scores must be present for all 52 clusters")
 
 
 def bootstrap_ci_paired_diff(
@@ -262,134 +234,62 @@ def same_direction(diff: float, default_diff: float, eps: float = 1e-12) -> bool
     return diff * default_diff >= -eps
 
 
-def build_l4_complementary_metrics(df: pd.DataFrame) -> pd.DataFrame:
+def build_l4_complementary_metrics(records: pd.DataFrame) -> pd.DataFrame:
     rows = []
-
-    for dataset, sub in df.groupby("Dataset", dropna=False):
-        w_lineage, w_state = get_default_weights(dataset)
-
-        for method, score_col in METHODS.items():
-            if score_col not in sub.columns:
-                continue
-
-            tmp = sub.copy()
-            tmp["_score"] = pd.to_numeric(tmp[score_col], errors="coerce")
-            tmp = tmp.dropna(subset=["_score"])
-
+    for dataset, sub in records.groupby("Dataset", sort=True):
+        for method in METHODS:
+            tmp = sub[sub["Method"] == method]
             if tmp.empty:
                 continue
-
-            components = tmp["_score"].apply(
-                lambda x: infer_components_from_score(x, w_lineage, w_state)
-            )
-
-            tmp["_s_lineage"] = [x[0] for x in components]
-            tmp["_s_state"] = [x[1] for x in components]
-
-            rows.append(
-                {
-                    "Dataset": dataset,
-                    "Method": method,
-                    "N": int(len(tmp)),
-                    "Mean_S_anno": float(tmp["_score"].mean()),
-                    "Exact_State_Agreement": float((tmp["_s_state"] == 1.0).mean()),
-                    "Major_Lineage_Accuracy": float((tmp["_s_lineage"] == 1.0).mean()),
-                    "Ontology_Consistent_Accuracy_Sanno_ge_0.5": float(
-                        (tmp["_score"] >= 0.5).mean()
-                    ),
-                    "Low_Consistency_Rate_Sanno_lt_0.5": float(
-                        (tmp["_score"] < 0.5).mean()
-                    ),
-                }
-            )
-
+            result = {"Dataset": dataset, "Method": method, "N": len(tmp),
+                      "Mean_S_anno": float(tmp["Public_Sanno"].mean())}
+            for metric in ["Exact_State_Agreement", "Exact_Match_Accuracy",
+                           "Major_Lineage_Accuracy",
+                           "Ontology_Consistent_Accuracy_Sanno_ge_0.5",
+                           "Low_Consistency_Rate_Sanno_lt_0.5"]:
+                result[metric] = float(tmp[metric].mean())
+            rows.append(result)
     return pd.DataFrame(rows)
 
 
-def build_l5_weight_sensitivity(df: pd.DataFrame) -> pd.DataFrame:
-    required = {"Score_Standard", "Score_Curated"}
-    missing = required - set(df.columns)
-    if missing:
-        raise ValueError(f"Missing required columns for L5: {sorted(missing)}")
-
+def build_l5_weight_sensitivity(records: pd.DataFrame) -> pd.DataFrame:
     rows = []
-
-    for dataset, sub in df.groupby("Dataset", dropna=False):
-        default_w_lineage, default_w_state = get_default_weights(dataset)
-
-        tmp = sub.copy()
-        tmp["_score_standard"] = pd.to_numeric(tmp["Score_Standard"], errors="coerce")
-        tmp["_score_curated"] = pd.to_numeric(tmp["Score_Curated"], errors="coerce")
-        tmp = tmp.dropna(subset=["_score_standard", "_score_curated"])
-
-        if tmp.empty:
-            continue
-
-        std_components = tmp["_score_standard"].apply(
-            lambda x: infer_components_from_score(
-                x, default_w_lineage, default_w_state
-            )
-        )
-        cur_components = tmp["_score_curated"].apply(
-            lambda x: infer_components_from_score(
-                x, default_w_lineage, default_w_state
-            )
-        )
-
-        tmp["_std_s_lineage"] = [x[0] for x in std_components]
-        tmp["_std_s_state"] = [x[1] for x in std_components]
-        tmp["_cur_s_lineage"] = [x[0] for x in cur_components]
-        tmp["_cur_s_state"] = [x[1] for x in cur_components]
-
+    for dataset, sub in records.groupby("Dataset", sort=True):
+        cfg = CONFIGS[dataset]
+        std = sub[sub["Method"] == "Standard"].set_index("Cluster_ID")
+        cur = sub[sub["Method"] == "Curated"].set_index("Cluster_ID")
+        if std.empty or set(std.index) != set(cur.index):
+            raise ValueError(f"Incomplete Standard/Full pipeline pairs for {dataset}")
+        cur = cur.loc[std.index]
         dataset_rows = []
-
         for scheme_name, w_lineage, w_state in WEIGHT_SCHEMES:
             if scheme_name == "Default_task_specific":
-                w_lineage, w_state = default_w_lineage, default_w_state
-
-            standard_alt = (
-                w_lineage * tmp["_std_s_lineage"] + w_state * tmp["_std_s_state"]
-            )
-            curated_alt = (
-                w_lineage * tmp["_cur_s_lineage"] + w_state * tmp["_cur_s_state"]
-            )
-
-            diff_values = curated_alt.to_numpy(dtype=float) - standard_alt.to_numpy(
-                dtype=float
-            )
-
-            mean_standard = float(np.nanmean(standard_alt))
-            mean_curated = float(np.nanmean(curated_alt))
-            mean_diff = float(np.nanmean(diff_values))
+                w_lineage, w_state = cfg.w_lineage, cfg.w_state
+            alternate_cfg = replace(cfg, w_lineage=w_lineage, w_state=w_state)
+            # Re-score labels with unchanged aliases, near-lineage rules and penalties.
+            standard_alt = std.apply(
+                lambda r: score_hierarchical(r, "Raw_Prediction", alternate_cfg), axis=1
+            ).to_numpy(dtype=float)
+            curated_alt = cur.apply(
+                lambda r: score_hierarchical(r, "Raw_Prediction", alternate_cfg), axis=1
+            ).to_numpy(dtype=float)
+            diff_values = curated_alt - standard_alt
             ci_low, ci_high = bootstrap_ci_paired_diff(diff_values)
-            p_value = paired_p_value(diff_values)
-
-            dataset_rows.append(
-                {
-                    "Dataset": dataset,
-                    "Weighting_Scheme": scheme_name,
-                    "w_lineage": float(w_lineage),
-                    "w_state": float(w_state),
-                    "N": int(len(tmp)),
-                    "Mean_Standard": mean_standard,
-                    "Mean_Curated": mean_curated,
-                    "Mean_Difference_Curated_minus_Standard": mean_diff,
-                    "Bootstrap_95CI_Lower": ci_low,
-                    "Bootstrap_95CI_Upper": ci_high,
-                    "Paired_P_Value": p_value,
-                }
-            )
-
+            dataset_rows.append({
+                "Dataset": dataset, "Weighting_Scheme": scheme_name,
+                "w_lineage": float(w_lineage), "w_state": float(w_state),
+                "N": len(std), "Mean_Standard": float(standard_alt.mean()),
+                "Mean_Curated": float(curated_alt.mean()),
+                "Mean_Difference_Curated_minus_Standard": float(diff_values.mean()),
+                "Bootstrap_95CI_Lower": ci_low, "Bootstrap_95CI_Upper": ci_high,
+                "Paired_P_Value": paired_p_value(diff_values),
+            })
         default_diff = dataset_rows[0]["Mean_Difference_Curated_minus_Standard"]
-
         for row in dataset_rows:
             row["Direction_Consistent_With_Default"] = same_direction(
-                row["Mean_Difference_Curated_minus_Standard"],
-                default_diff,
+                row["Mean_Difference_Curated_minus_Standard"], default_diff
             )
-
         rows.extend(dataset_rows)
-
     return pd.DataFrame(rows)
 
 
@@ -416,53 +316,55 @@ def write_tables_to_excel(
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(description="Recompute primary benchmark metrics from saved labels.")
     parser.add_argument("--in-xlsx", required=True)
     parser.add_argument("--audit-sheet", default="L2_per_cluster_audit")
-    parser.add_argument("--out-xlsx", required=True)
-    parser.add_argument("--csv-outdir", default=None)
-    parser.add_argument("--round", type=int, default=4)
-
+    parser.add_argument("--out-xlsx", help="Optional new workbook containing updated L4/L5 sheets")
+    parser.add_argument("--csv-outdir", help="Directory for full-precision CSV tables and evaluation records")
+    parser.add_argument("--round", type=int, default=4, help="Workbook precision; CSV files retain full precision")
     args = parser.parse_args()
-
+    if not args.out_xlsx and not args.csv_outdir:
+        parser.error("Supply --out-xlsx and/or --csv-outdir")
     in_xlsx = Path(args.in_xlsx)
-    out_xlsx = Path(args.out_xlsx)
-
-    df = pd.read_excel(in_xlsx, sheet_name=args.audit_sheet)
-    print(f"Loaded audit sheet: {args.audit_sheet}, shape={df.shape}")
-    print(f"Columns: {list(df.columns)}")
-
-    df = clean_audit_table(df)
-    print(f"After audit-table cleaning: shape={df.shape}")
-
-    # df = filter_quantitative_benchmark(df)
-    print(
-        "Benchmark filter: using all cleaned evaluable clusters. "
-        "UsedInConfusion is not used for L4/L5 because it is a confusion-matrix flag."
-    )
-    print(f"After benchmark filtering: shape={df.shape}")
-
-    l4 = build_l4_complementary_metrics(df)
-    l5 = build_l5_weight_sensitivity(df)
-
-    float_cols_l4 = l4.select_dtypes(include=["float"]).columns
-    float_cols_l5 = l5.select_dtypes(include=["float"]).columns
-
-    l4[float_cols_l4] = l4[float_cols_l4].round(args.round)
-    l5[float_cols_l5] = l5[float_cols_l5].round(args.round)
-
-    write_tables_to_excel(in_xlsx, out_xlsx, l4, l5)
-
+    if args.out_xlsx and Path(args.out_xlsx).resolve() == in_xlsx.resolve():
+        parser.error("--out-xlsx must differ from --in-xlsx")
+    df = clean_audit_table(pd.read_excel(in_xlsx, sheet_name=args.audit_sheet))
+    validate_primary_design(df)
+    print("Using all 52 predefined clusters; UsedInConfusion does not filter quantitative results.")
+    records = parse_prediction_records(df)
+    l4 = build_l4_complementary_metrics(records)
+    l5 = build_l5_weight_sensitivity(records)
+    if args.out_xlsx:
+        out_xlsx = Path(args.out_xlsx)
+        out_xlsx.parent.mkdir(parents=True, exist_ok=True)
+        write_tables_to_excel(in_xlsx, out_xlsx, l4.round(args.round), l5.round(args.round))
+        print(f"Wrote {out_xlsx}")
     if args.csv_outdir:
-        csv_outdir = Path(args.csv_outdir)
-        csv_outdir.mkdir(parents=True, exist_ok=True)
-        l4.to_csv(csv_outdir / "L4_complementary_metrics.csv", index=False)
-        l5.to_csv(csv_outdir / "L5_weight_sensitivity.csv", index=False)
-
-    print("Wrote:")
-    print(f"  {out_xlsx}")
-    print(f"  sheet: L4_complementary_metrics  shape={l4.shape}")
-    print(f"  sheet: L5_weight_sensitivity     shape={l5.shape}")
+        outdir = Path(args.csv_outdir)
+        outdir.mkdir(parents=True, exist_ok=True)
+        l4.to_csv(outdir / "L4_complementary_metrics.csv", index=False)
+        l5.to_csv(outdir / "L5_weight_sensitivity.csv", index=False)
+        records.to_csv(outdir / "L4_prediction_audit.csv", index=False)
+        sources = [Path(__file__), *[REPO_ROOT / "benchmarks" / f for f in
+                   ["cd8_config.py", "cd4_config.py", "caf_config.py",
+                    "mouse_b_config.py", "hierarchical_scoring.py"]]]
+        metadata = {
+            "evaluation_date_utc": datetime.now(timezone.utc).isoformat(),
+            "input_xlsx": str(in_xlsx.resolve()),
+            "input_sha256": hashlib.sha256(in_xlsx.read_bytes()).hexdigest(),
+            "audit_sheet": args.audit_sheet, "n_clusters": len(df),
+            "n_predictions_checked": len(records), "new_inference_calls": 0,
+            "recorded_sanno_reproduced": True,
+            "bootstrap_resamples": 10000, "bootstrap_seed": 42,
+            "source_sha256": {str(p.relative_to(REPO_ROOT)): hashlib.sha256(p.read_bytes()).hexdigest()
+                              for p in sources},
+        }
+        (outdir / "L4_L5_evaluation_metadata.json").write_text(json.dumps(metadata, indent=2) + "\n")
+        print(f"Wrote full-precision L4/L5 tables and {len(records)} prediction records to {outdir}")
+    for method in ["Standard", "Curated"]:
+        sub = l4[l4.Method == method]
+        mean = np.average(sub.Exact_State_Agreement, weights=sub.N)
+        print(f"{method}: exact state agreement = {mean:.6f}")
 
 
 if __name__ == "__main__":
