@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import argparse
 from pathlib import Path
 
 import numpy as np
@@ -9,7 +10,6 @@ import matplotlib.pyplot as plt
 
 IN_XLSX = Path("paper/revision/LetterTables.xlsx")
 OUT_DIR = Path("paper/revision_figures")
-OUT_DIR.mkdir(parents=True, exist_ok=True)
 
 COLORS = {
     "Standard": "#5DA5DA",
@@ -28,7 +28,7 @@ LINESTYLES = {
 
 METHOD_LABELS = {
     "Standard": "Standard",
-    "Curated": "LLM-scCurator",
+    "Curated": "Full pipeline",
 }
 
 
@@ -53,8 +53,8 @@ SCHEME_LABELS = {
     "Equal_0.5_0.5": "Equal\n0.5/0.5",
     "Lineage_heavy_0.8_0.2": "Lineage-heavy\n0.8/0.2",
     "State_heavy_0.3_0.7": "State-heavy\n0.3/0.7",
-    "Major_lineage_only": "Major-lineage\nonly",
-    "Exact_state_only": "Exact-state\nonly",
+    "Major_lineage_only": "Lineage component\nonly",
+    "Exact_state_only": "State component\nonly",
 }
 
 METRIC_LABELS = {
@@ -148,7 +148,7 @@ def figure_l4_overall(l4):
         ax.text(i - width / 2, a + 1.5, f"{a:.1f}", ha="center", va="bottom", fontsize=10)
         ax.text(i + width / 2, b + 1.5, f"{b:.1f}", ha="center", va="bottom", fontsize=10)
 
-    ax.set_ylabel("Clusters (%)")
+    ax.set_ylabel("Score or proportion (%)")
     ax.set_ylim(0, 108)
     ax.set_xticks(x)
     ax.set_xticklabels([METRIC_LABELS[m] for m in metrics])
@@ -157,7 +157,7 @@ def figure_l4_overall(l4):
     ax.spines["top"].set_visible(False)
     ax.spines["right"].set_visible(False)
 
-    savefig(fig, "ReviewerFig_L4_overall_complementary_metrics")
+    savefig(fig, "ReviewerFig_L1a_overall_complementary_metrics")
 
 
 def figure_l4_by_dataset(l4):
@@ -167,12 +167,13 @@ def figure_l4_by_dataset(l4):
 
     metrics = [
         ("Mean_S_anno", "Mean S$_{anno}$"),
-        ("Ontology_Consistent_Accuracy_Sanno_ge_0.5", "Hierarchy-consistent accuracy"),
+        ("Exact_State_Agreement", "Exact state agreement"),
         ("Major_Lineage_Accuracy", "Major-lineage accuracy"),
+        ("Ontology_Consistent_Accuracy_Sanno_ge_0.5", "Hierarchy-consistent accuracy"),
         ("Low_Consistency_Rate_Sanno_lt_0.5", "Low-consistency rate"),
     ]
 
-    fig, axes = plt.subplots(1, len(metrics), figsize=(16, 4.6), sharey=False)
+    fig, axes = plt.subplots(1, len(metrics), figsize=(19, 4.6), sharey=False)
 
     for ax, (metric, title) in zip(axes, metrics):
         x = np.arange(len(DATASET_ORDER))
@@ -220,12 +221,12 @@ def figure_l4_by_dataset(l4):
         ax.spines["right"].set_visible(False)
 
         if ax is axes[0]:
-            ax.set_ylabel("Clusters (%)")
+            ax.set_ylabel("Score or proportion (%)")
 
     axes[-1].legend(frameon=False, loc='upper left', bbox_to_anchor=(1.05, 1))
     fig.suptitle("Dataset-level complementary metrics", y=1.04, fontsize=16)
 
-    savefig(fig, "ReviewerFig_L4_by_dataset_standard_vs_curated")
+    savefig(fig, "ReviewerFig_L1b_by_dataset")
 
 
 def figure_l5_delta(l5):
@@ -279,13 +280,13 @@ def figure_l5_delta(l5):
     ax.axvline(0, color=ZERO_COLOR, linewidth=1.1, linestyle="--")
     ax.set_yticks(y_positions)
     ax.set_yticklabels([SCHEME_LABELS[s] for s in SCHEME_ORDER])
-    ax.set_xlabel("LLM-scCurator minus Standard, percentage points")
-    ax.set_title("Sensitivity of Standard-versus-Curated comparison to S$_{anno}$ weighting")
+    ax.set_xlabel("Full pipeline minus Standard, percentage points")
+    ax.set_title("Sensitivity of Full pipeline versus Standard to S$_{anno}$ weighting")
     ax.legend(frameon=False, ncol=1, loc='upper left', bbox_to_anchor=(1.05, 1))
     ax.spines["top"].set_visible(False)
     ax.spines["right"].set_visible(False)
 
-    savefig(fig, "ReviewerFig_L5_weight_sensitivity_delta_by_dataset")
+    savefig(fig, "ReviewerFig_L1c_weight_sensitivity_by_dataset")
 
 
 def figure_l5_overall(l5):
@@ -314,7 +315,7 @@ def figure_l5_overall(l5):
     for i in range(len(SCHEME_ORDER)):
         ax.plot([std[i], cur[i]], [y[i], y[i]], color="#B0B0B0", linewidth=2, zorder=1)
         ax.scatter(std[i], y[i], s=75, color=STANDARD_COLOR, edgecolor="black", linewidth=0.5, label="Standard" if i == 0 else None, zorder=2)
-        ax.scatter(cur[i], y[i], s=75, color=CURATED_COLOR, edgecolor="black", linewidth=0.5, label="LLM-scCurator" if i == 0 else None, zorder=3)
+        ax.scatter(cur[i], y[i], s=75, color=CURATED_COLOR, edgecolor="black", linewidth=0.5, label=METHOD_LABELS["Curated"] if i == 0 else None, zorder=3)
 
         delta = cur[i] - std[i]
         ax.text(
@@ -335,14 +336,37 @@ def figure_l5_overall(l5):
     ax.spines["top"].set_visible(False)
     ax.spines["right"].set_visible(False)
 
-    savefig(fig, "ReviewerFig_L5_overall_standard_vs_curated")
+    savefig(fig, "ReviewerFig_L1d_overall_weight_sensitivity")
 
 
 def main():
+    global OUT_DIR
+    parser = argparse.ArgumentParser(description="Generate Figure L1 panels from Tables L4/L5.")
+    source = parser.add_mutually_exclusive_group()
+    source.add_argument("--in-xlsx", type=Path, help="Workbook containing updated L4/L5 sheets")
+    source.add_argument("--csv-dir", type=Path, help="Directory containing full-precision L4/L5 CSV tables")
+    parser.add_argument("--outdir", type=Path, default=OUT_DIR)
+    args = parser.parse_args()
+    OUT_DIR = args.outdir
+    OUT_DIR.mkdir(parents=True, exist_ok=True)
     set_style()
-
-    l4 = pd.read_excel(IN_XLSX, sheet_name="L4_complementary_metrics")
-    l5 = pd.read_excel(IN_XLSX, sheet_name="L5_weight_sensitivity")
+    if args.csv_dir:
+        l4 = pd.read_csv(args.csv_dir / "L4_complementary_metrics.csv")
+        l5 = pd.read_csv(args.csv_dir / "L5_weight_sensitivity.csv")
+    else:
+        workbook = args.in_xlsx or IN_XLSX
+        l4 = pd.read_excel(workbook, sheet_name="L4_complementary_metrics")
+        l5 = pd.read_excel(workbook, sheet_name="L5_weight_sensitivity")
+    l4["Method"] = l4["Method"].replace({"Full pipeline": "Curated", "LLM-scCurator": "Curated"})
+    expected = {"CD8 T": 17, "CD4 T": 22, "MSC": 8, "Mouse B": 5}
+    for method in ["Standard", "Curated"]:
+        sub = l4[l4.Method.eq(method)]
+        if sub.Dataset.duplicated().any() or dict(zip(sub.Dataset, sub.N)) != expected:
+            raise ValueError(f"Incomplete 52-cluster metric summary for {method}")
+    for scheme in SCHEME_ORDER:
+        sub = l5[l5.Weighting_Scheme.eq(scheme)]
+        if sub.Dataset.duplicated().any() or dict(zip(sub.Dataset, sub.N)) != expected:
+            raise ValueError(f"Incomplete weighting summary for {scheme}")
 
     figure_l4_overall(l4)
     figure_l4_by_dataset(l4)
