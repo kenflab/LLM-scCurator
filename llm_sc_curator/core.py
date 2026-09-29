@@ -585,6 +585,8 @@ class LLMscCurator:
         min_logfc: float = 0.2,
         min_target_pct: float = 0.02,
         min_delta_pct: float = 0.02,
+        *,
+        disabled_components=(),
     ):
         """
         Perform 4-stage feature distillation for LLM prompting.
@@ -633,6 +635,14 @@ class LLMscCurator:
         min_delta_pct : float, default=0.02
             Minimum detection fraction difference (target - reference).
 
+        disabled_components : iterable[str], default=()
+            Optional matched-ablation switches: curated_noise_mask,
+            low_gini_suppression, high_gini_rescue, sentinel_retention,
+            cross_lineage_filter. Sentinel retention includes predefined lineage
+            candidate augmentation, built-in whitelist protection, cell-cycle
+            sentinel exemptions, and module rescue.
+            No reference labels are used. An empty iterable preserves all operations.
+
         Returns
         -------
         list[str]
@@ -645,6 +655,15 @@ class LLMscCurator:
         For rigorous benchmarking and lineage leakage checks, call `set_global_context()`
         on a broad atlas before per-cluster distillation.
         """
+
+        # Defaults preserve the production workflow; switches support matched ablations.
+        allowed_components = {
+            "curated_noise_mask", "low_gini_suppression", "high_gini_rescue",
+            "sentinel_retention", "cross_lineage_filter",
+        }
+        disabled_components = set(disabled_components)
+        if disabled_components - allowed_components:
+            raise ValueError(f"Unknown ablation components: {disabled_components - allowed_components}")
 
         # 0. Ensure log1p-normalized data
         target_adata = self._check_normalization(target_adata)
@@ -706,16 +725,19 @@ class LLMscCurator:
                     hvgs = set(target_adata.var_names)
 
             # High-Gini rescue (requires global masker)
-            high_gini = self._get_high_gini_genes(
-                gini_q=0.9, mean_upper_q=0.5, mean_lower_abs=0.1
-            )
+            high_gini = set()
+            if "high_gini_rescue" not in disabled_components:
+                high_gini = self._get_high_gini_genes(
+                    gini_q=0.9, mean_upper_q=0.5, mean_lower_abs=0.1
+                )
 
             # Lineage Marker rescue
             lineage_genes = set()
-            for markers in LINEAGE_MARKERS.values():
-                for g in markers:
-                    if g in target_adata.var_names:
-                        lineage_genes.add(g)
+            if "sentinel_retention" not in disabled_components:
+                for markers in LINEAGE_MARKERS.values():
+                    for g in markers:
+                        if g in target_adata.var_names:
+                            lineage_genes.add(g)
 
             keep_genes = sorted(
                 hvgs.union(high_gini).union(lineage_genes).intersection(target_adata.var_names)
@@ -830,7 +852,8 @@ class LLMscCurator:
         mask_reasons = {}
         if use_statistics:
             combined_whitelist = set(whitelist or [])
-            combined_whitelist |= PROLIFERATION_SENTINELS
+            if "sentinel_retention" not in disabled_components:
+                combined_whitelist |= PROLIFERATION_SENTINELS
 
             lineage_genes_all = set()
             for markers in LINEAGE_MARKERS.values():
@@ -851,7 +874,8 @@ class LLMscCurator:
                 return False
             
             lineage_whitelist = {g for g in lineage_genes_all if not _is_confounded_gene(g)}
-            combined_whitelist |= lineage_whitelist
+            if "sentinel_retention" not in disabled_components:
+                combined_whitelist |= lineage_whitelist
 
             mask_reasons = self.masker.detect_biological_noise(
                 gini_threshold=None,
@@ -859,11 +883,15 @@ class LLMscCurator:
                 mean_floor=0.01,
                 whitelist=list(combined_whitelist),
                 rescue_mean_floor=0.05,
-                low_gini_cap=0.15
+                low_gini_cap=0.15,
+                mask_curated_lists="curated_noise_mask" not in disabled_components,
+                suppress_low_gini="low_gini_suppression" not in disabled_components,
+                retain_proliferation_sentinels="sentinel_retention" not in disabled_components,
+                rescue_modules=() if "sentinel_retention" in disabled_components else None,
             )
             
         # Stage 3: Cross-lineage leak check
-        if coarse_col:
+        if coarse_col and "cross_lineage_filter" not in disabled_components:
             candidates = de_df["names"].head(n_candidates).tolist()
             lineage_mask = self.masker.calculate_lineage_specificity(
                 target_genes=candidates,

@@ -4,7 +4,7 @@ import pandas as pd
 from scipy.sparse import issparse
 import re
 import logging
-from .noise_lists import NOISE_PATTERNS, NOISE_LISTS
+from .noise_lists import NOISE_PATTERNS, NOISE_LISTS, PROLIFERATION_SENTINELS
 
 # Configure logging
 logger = logging.getLogger(__name__)
@@ -154,6 +154,10 @@ class FeatureDistiller:
         rescue_mean_floor: float = 0.1,
         low_gini_cap: float | None = 0.15,
         rescue_modules=None,
+        *,
+        mask_curated_lists=True,
+        suppress_low_gini=True,
+        retain_proliferation_sentinels=True,
     ):
         """
         Stage 2: Detect globally low-specificity genes and module-defined noise programs.
@@ -188,6 +192,13 @@ class FeatureDistiller:
         rescue_modules : tuple[str, ...] or None, default=None
             Module names for which a top-expressed sentinel is rescued while masking the
             remaining matched genes. If None, uses `RESCUE_MODULES_DEFAULT`.
+
+        mask_curated_lists : bool, default=True
+            Apply curated list-based masks. Regex modules remain enabled when False.
+        suppress_low_gini : bool, default=True
+            Apply the low-Gini mask. Global expression statistics are unchanged.
+        retain_proliferation_sentinels : bool, default=True
+            Keep the predefined proliferation exemptions in the cell-cycle list.
 
         Returns
         -------
@@ -236,7 +247,7 @@ class FeatureDistiller:
         mask_reasons: dict[str, str] = {}
 
         # --- 2. Global Statistics (Low Gini) ---
-        if low_gini_cut > 0:
+        if suppress_low_gini and low_gini_cut > 0:
             low_gini_genes = gs[
                 mask_for_cut & (gs["gini"] < low_gini_cut)
             ].index
@@ -284,7 +295,9 @@ class FeatureDistiller:
                     mask_reasons[g] = f"Module_{module_name}"
 
         # --- 4. Explicit Gene Lists (Cell Cycle etc.) ---
-        for module_name, gene_set in NOISE_LISTS.items():
+        for module_name, gene_set in (NOISE_LISTS.items() if mask_curated_lists else ()):
+            if module_name == "CellCycle_State" and not retain_proliferation_sentinels:
+                gene_set = gene_set | PROLIFERATION_SENTINELS
             matched = [g for g in self.adata.var_names if g in gene_set]
             for g in matched:
                 mask_reasons[g] = f"Module_{module_name}"
