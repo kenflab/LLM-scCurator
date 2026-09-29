@@ -56,3 +56,12 @@ Verification with `LetterTables_R1_HLCA.xlsx` reproduced all 250 available defau
 Sanno values, including the 104 Standard/Full pipeline scores. Standard exact
 state agreement changed from 34/52 (65.4%) to 35/52 (67.3%); Full pipeline remained
 32/52 (61.5%). Existing Table L5 values were unchanged within numerical tolerance.
+
+## Figure 3a–c
+
+Use `paper/scripts/make_figure3.py` with the full-precision
+`L4_complementary_metrics.csv` and `L4_prediction_audit.csv` from the same run.
+See [the paper README](../README.md#current-figure-3abc) for the command and outputs.
+`06_Fig3_minimal.ipynb` is a wrapper for the script, not a separate evaluator.
+Figure 3a uses 20,000 bootstrap resamples (seed 42); Table L5 retains its
+separately documented 10,000 resamples. Missing comparators are NA.

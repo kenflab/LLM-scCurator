@@ -77,3 +77,41 @@ If you want to re-run scripts locally, follow the main README for setup:
   - EDFig2b_confusion.png
   - EDFig2c_confusion.pdf
   - EDFig2c_confusion.png
+
+## Current Figure 3abc
+
+Run from the repository root after generating the full-precision L4 CSV and
+`L4_prediction_audit.csv` with `paper/revision_metrics/make_l4_l5_letter_tables.py`.
+Both inputs must come from the same evaluation run. No LLM calls are made.
+Validated input snapshots are also versioned in
+`paper/source_data/figure_data/Fig3/inputs/`; use these paths to reproduce the
+committed Source Data without the original workbook.
+
+```bash
+python paper/scripts/make_figure3.py \
+  --metrics-csv paper/revision_tables/L4_complementary_metrics.csv \
+  --audit-csv paper/revision_tables/L4_prediction_audit.csv \
+  --outdir paper/revision_figures/Fig3 \
+  --source-data-dir paper/source_data/figure_data/Fig3 \
+  --n-bootstrap 20000 --seed 42
+```
+
+The script checks all 250 available prediction records against L4 before writing
+`Fig3a_c.pdf` and `.png`. It retains all 52 predefined clusters. Panel a shows mean
+Sanno and percentile 95% bootstrap confidence intervals (20,000 cluster resamples
+within each dataset/method, seed 42). These intervals describe each method's mean;
+they are distinct from confidence intervals for paired method differences.
+Panels b and c show hierarchy-consistent and strict major-lineage accuracy.
+Unassessed mouse B CellTypist/Azimuth entries are NA, not zero.
+
+`Fig3abc_data.csv` and `Fig3a_data.csv` through `Fig3c_data.csv` contain the plotted
+values in fractions (0–1); the plot displays percentages. `Fig3_metadata.json`
+records input/script hashes, software versions, and bootstrap settings.
+The notebook `paper/notebooks/06_Fig3_minimal.ipynb` calls this same script.
+HLCA panels 3d–e use the separate HLCA pipeline. Figure L1 uses
+`make_l4_l5_review_figures.py`. The legacy `make_figures.py` renderer does not
+regenerate the current Figure 3.
+
+Changing from 5,000 to 20,000 bootstrap resamples may change the interval endpoints;
+it does not change the means or complementary metrics. The Table L5 weight-sensitivity
+analysis keeps its separately documented 10,000-resample setting.
