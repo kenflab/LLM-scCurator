@@ -1,0 +1,21 @@
+Dataset,Method,Display_Method,Evaluated,N,Major_Lineage_Accuracy
+CD8 T,Standard,Standard,True,17,0.8235294117647058
+CD8 T,Curated,Full pipeline,True,17,0.9411764705882352
+CD8 T,CellTypist,CellTypist,True,17,1.0
+CD8 T,SingleR,SingleR,True,17,1.0
+CD8 T,Azimuth,Azimuth,True,17,0.9411764705882352
+CD4 T,Standard,Standard,True,22,0.8181818181818182
+CD4 T,Curated,Full pipeline,True,22,1.0
+CD4 T,CellTypist,CellTypist,True,22,1.0
+CD4 T,SingleR,SingleR,True,22,0.7272727272727273
+CD4 T,Azimuth,Azimuth,True,22,1.0
+MSC,Standard,Standard,True,8,0.875
+MSC,Curated,Full pipeline,True,8,0.875
+MSC,CellTypist,CellTypist,True,8,1.0
+MSC,SingleR,SingleR,True,8,0.625
+MSC,Azimuth,Azimuth,True,8,1.0
+Mouse B,Standard,Standard,True,5,1.0
+Mouse B,Curated,Full pipeline,True,5,1.0
+Mouse B,CellTypist,CellTypist,False,NA,NA
+Mouse B,SingleR,SingleR,True,5,0.8
+Mouse B,Azimuth,Azimuth,False,NA,NA

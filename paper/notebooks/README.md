@@ -38,7 +38,7 @@ Note on LLM calls: we fix local random seeds for deterministic preprocessing; ho
 - [`05_Fig2e_f_StepwiseAnalyses.ipynb`](05_Fig2e_f_StepwiseAnalyses.ipynb): exports task-level Sanno summaries and cluster-by-variant scoring tables for Fig. 2e–f.
 
 ### 06 — Fig. 3 cross-benchmark comparison
-- [`06_Fig3_minimal.ipynb`](06_Fig3_minimal.ipynb): generates cross-benchmark summary tables for Standard, LLM-scCurator, and reference-based comparators used in Fig. 3.
+- [`06_Fig3_minimal.ipynb`](06_Fig3_minimal.ipynb): calls `paper/scripts/make_figure3.py` to regenerate Fig. 3a–c and Source Data from the validated L4 metrics and prediction audit.
 
 ### 07 — Fig. 4 robustness / ambiguity analyses
 - [`07_Fig4_minimal.ipynb`](07_Fig4_minimal.ipynb): exports top-N stress-test summaries, low-consistency rates, in-silico biological-noise injection results, and ambiguity-prone state comparisons for Fig. 4.
@@ -54,3 +54,12 @@ Note on LLM calls: we fix local random seeds for deterministic preprocessing; ho
 
 ### 11 — Marker effects (spatial validation)
 - [`11_marker_effects.ipynb`](11_marker_effects.ipynb): computes one-vs-rest marker effect sizes (AUROC, log2FC, Δdet) and exports `*_marker_effects.csv` files used in Source Data for Fig. 5b and Fig. S5c.
+
+## Figure 3a–c
+
+Use `paper/scripts/make_figure3.py` with the full-precision
+`L4_complementary_metrics.csv` and `L4_prediction_audit.csv` from the same run.
+See [the paper README](../README.md#current-figure-3abc) for the command and outputs.
+`06_Fig3_minimal.ipynb` is a wrapper for the script, not a separate evaluator.
+Figure 3a uses 20,000 bootstrap resamples (seed 42); Table L5 retains its
+separately documented 10,000 resamples. Missing comparators are NA.

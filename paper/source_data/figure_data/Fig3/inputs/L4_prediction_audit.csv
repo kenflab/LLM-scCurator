@@ -1,0 +1,251 @@
+Dataset,Cluster_ID,Method,Ground_Truth,Raw_Prediction,GT_Major,GT_State,Pred_Major,Pred_State,Exact_State_Agreement,Major_Lineage_Accuracy,Exact_Match_Accuracy,Recorded_Sanno,Public_Sanno,Ontology_Consistent_Accuracy_Sanno_ge_0.5,Low_Consistency_Rate_Sanno_lt_0.5
+CD8 T,CD8.c01.Tn.MAL,Standard,CD8_Naive,Naive T cell,T,Naive,T,Naive,True,True,True,1.0,1.0,True,False
+CD8 T,CD8.c01.Tn.MAL,Curated,CD8_Naive,Naive T cell,T,Naive,T,Naive,True,True,True,1.0,1.0,True,False
+CD8 T,CD8.c01.Tn.MAL,CellTypist,CD8_Naive,Tem/Trm cytotoxic T cells,T,Naive,T,Resident,False,True,False,0.7,0.7,True,False
+CD8 T,CD8.c01.Tn.MAL,SingleR,CD8_Naive,Central memory CD8 T cells,T,Naive,T,EffMem,False,True,False,0.7,0.7,True,False
+CD8 T,CD8.c01.Tn.MAL,Azimuth,CD8_Naive,CD8 TCM,T,Naive,T,Other,False,True,False,0.7,0.7,True,False
+CD8 T,CD8.c02.Tm.IL7R,Standard,CD8_EffectorMemory,Early activated T cell,T,EffMem,T,EffMem,True,True,True,1.0,1.0,True,False
+CD8 T,CD8.c02.Tm.IL7R,Curated,CD8_EffectorMemory,CD8+ Tissue-Resident Memory T cell (Activated),T,EffMem,T,Resident,False,True,False,0.7,0.7,True,False
+CD8 T,CD8.c02.Tm.IL7R,CellTypist,CD8_EffectorMemory,Tem/Trm cytotoxic T cells,T,EffMem,T,Resident,False,True,False,0.7,0.7,True,False
+CD8 T,CD8.c02.Tm.IL7R,SingleR,CD8_EffectorMemory,Effector memory CD8 T cells,T,EffMem,T,EffMem,True,True,True,1.0,1.0,True,False
+CD8 T,CD8.c02.Tm.IL7R,Azimuth,CD8_EffectorMemory,CD8 TEM,T,EffMem,T,EffMem,True,True,True,1.0,1.0,True,False
+CD8 T,CD8.c03.Tm.RPS12,Standard,CD8_EffectorMemory,GZMK+ CD8+ T cell,T,EffMem,T,Other,False,True,False,0.7,0.7,True,False
+CD8 T,CD8.c03.Tm.RPS12,Curated,CD8_EffectorMemory,GZMK+ CD8+ T cell,T,EffMem,T,Other,False,True,False,0.7,0.7,True,False
+CD8 T,CD8.c03.Tm.RPS12,CellTypist,CD8_EffectorMemory,Tem/Trm cytotoxic T cells,T,EffMem,T,Resident,False,True,False,0.7,0.7,True,False
+CD8 T,CD8.c03.Tm.RPS12,SingleR,CD8_EffectorMemory,Effector memory CD8 T cells,T,EffMem,T,EffMem,True,True,True,1.0,1.0,True,False
+CD8 T,CD8.c03.Tm.RPS12,Azimuth,CD8_EffectorMemory,CD8 TEM,T,EffMem,T,EffMem,True,True,True,1.0,1.0,True,False
+CD8 T,CD8.c04.Tm.CD52,Standard,CD8_EffectorMemory,CD8+ Effector T cell,T,EffMem,T,EffMem,True,True,True,1.0,1.0,True,False
+CD8 T,CD8.c04.Tm.CD52,Curated,CD8_EffectorMemory,CD8+ Tissue-Resident Memory T cell,T,EffMem,T,Resident,False,True,False,0.7,0.7,True,False
+CD8 T,CD8.c04.Tm.CD52,CellTypist,CD8_EffectorMemory,Tem/Trm cytotoxic T cells,T,EffMem,T,Resident,False,True,False,0.7,0.7,True,False
+CD8 T,CD8.c04.Tm.CD52,SingleR,CD8_EffectorMemory,Effector memory CD8 T cells,T,EffMem,T,EffMem,True,True,True,1.0,1.0,True,False
+CD8 T,CD8.c04.Tm.CD52,Azimuth,CD8_EffectorMemory,CD8 TEM,T,EffMem,T,EffMem,True,True,True,1.0,1.0,True,False
+CD8 T,CD8.c05.Tem.CXCR5,Standard,CD8_EffectorMemory,GZMK+ Effector Memory T cell,T,EffMem,T,EffMem,True,True,True,1.0,1.0,True,False
+CD8 T,CD8.c05.Tem.CXCR5,Curated,CD8_EffectorMemory,GZMK+ CD8+ Effector T cell,T,EffMem,T,EffMem,True,True,True,1.0,1.0,True,False
+CD8 T,CD8.c05.Tem.CXCR5,CellTypist,CD8_EffectorMemory,Tem/Trm cytotoxic T cells,T,EffMem,T,Resident,False,True,False,0.7,0.7,True,False
+CD8 T,CD8.c05.Tem.CXCR5,SingleR,CD8_EffectorMemory,Effector memory CD8 T cells,T,EffMem,T,EffMem,True,True,True,1.0,1.0,True,False
+CD8 T,CD8.c05.Tem.CXCR5,Azimuth,CD8_EffectorMemory,CD8 TEM,T,EffMem,T,EffMem,True,True,True,1.0,1.0,True,False
+CD8 T,CD8.c06.Tem.GZMK,Standard,CD8_EffectorMemory,CD8+ Exhausted T cell,T,EffMem,T,Exhausted,False,True,False,0.7,0.7,True,False
+CD8 T,CD8.c06.Tem.GZMK,Curated,CD8_EffectorMemory,Activated CD8+ Cytotoxic T cell,T,EffMem,T,EffMem,True,True,True,1.0,1.0,True,False
+CD8 T,CD8.c06.Tem.GZMK,CellTypist,CD8_EffectorMemory,Tem/Trm cytotoxic T cells,T,EffMem,T,Resident,False,True,False,0.7,0.7,True,False
+CD8 T,CD8.c06.Tem.GZMK,SingleR,CD8_EffectorMemory,Effector memory CD8 T cells,T,EffMem,T,EffMem,True,True,True,1.0,1.0,True,False
+CD8 T,CD8.c06.Tem.GZMK,Azimuth,CD8_EffectorMemory,CD8 TEM,T,EffMem,T,EffMem,True,True,True,1.0,1.0,True,False
+CD8 T,CD8.c07.Temra.CX3CR1,Standard,CD8_Effector,Mature NK cell,T,EffMem,NK,Other,False,False,False,0.0,0.0,False,True
+CD8 T,CD8.c07.Temra.CX3CR1,Curated,CD8_Effector,CD8+ Temra T cell,T,EffMem,T,EffMem,True,True,True,1.0,1.0,True,False
+CD8 T,CD8.c07.Temra.CX3CR1,CellTypist,CD8_Effector,Tem/Temra cytotoxic T cells,T,EffMem,T,EffMem,True,True,True,1.0,1.0,True,False
+CD8 T,CD8.c07.Temra.CX3CR1,SingleR,CD8_Effector,Terminal effector CD8 T cells,T,EffMem,T,EffMem,True,True,True,1.0,1.0,True,False
+CD8 T,CD8.c07.Temra.CX3CR1,Azimuth,CD8_Effector,CD8 TEM,T,EffMem,T,EffMem,True,True,True,1.0,1.0,True,False
+CD8 T,CD8.c08.Tk.TYROBP,Standard,CD8_Effector,Vdelta1 gamma-delta T cell,T,EffMem,T,Other,False,True,False,0.7,0.7,True,False
+CD8 T,CD8.c08.Tk.TYROBP,Curated,CD8_Effector,NK-like T cell,T,EffMem,T,Other,False,True,False,0.7,0.7,True,False
+CD8 T,CD8.c08.Tk.TYROBP,CellTypist,CD8_Effector,CRTAM+ gamma-delta T cells,T,EffMem,T,Other,False,True,False,0.7,0.7,True,False
+CD8 T,CD8.c08.Tk.TYROBP,SingleR,CD8_Effector,Non-Vd2 gd T cells,T,EffMem,T,Other,False,True,False,0.7,0.7,True,False
+CD8 T,CD8.c08.Tk.TYROBP,Azimuth,CD8_Effector,CD8 TEM,T,EffMem,T,EffMem,True,True,True,1.0,1.0,True,False
+CD8 T,CD8.c09.Tk.KIR2DL4,Standard,CD8_Effector,Cytotoxic NK cell,T,EffMem,NK,EffMem,True,False,False,0.0,0.0,False,True
+CD8 T,CD8.c09.Tk.KIR2DL4,Curated,CD8_Effector,NK-like T cell,T,EffMem,T,Other,False,True,False,0.7,0.7,True,False
+CD8 T,CD8.c09.Tk.KIR2DL4,CellTypist,CD8_Effector,CRTAM+ gamma-delta T cells,T,EffMem,T,Other,False,True,False,0.7,0.7,True,False
+CD8 T,CD8.c09.Tk.KIR2DL4,SingleR,CD8_Effector,Non-Vd2 gd T cells,T,EffMem,T,Other,False,True,False,0.7,0.7,True,False
+CD8 T,CD8.c09.Tk.KIR2DL4,Azimuth,CD8_Effector,CD8 TEM,T,EffMem,T,EffMem,True,True,True,1.0,1.0,True,False
+CD8 T,CD8.c10.Trm.ZNF683,Standard,CD8_EffectorMemory,Tissue-Resident Memory T cell,T,EffMem,T,Resident,False,True,False,0.7,0.7,True,False
+CD8 T,CD8.c10.Trm.ZNF683,Curated,CD8_EffectorMemory,CD8+ Tissue-Resident Memory T cell,T,EffMem,T,Resident,False,True,False,0.7,0.7,True,False
+CD8 T,CD8.c10.Trm.ZNF683,CellTypist,CD8_EffectorMemory,Trm cytotoxic T cells,T,EffMem,T,Resident,False,True,False,0.7,0.7,True,False
+CD8 T,CD8.c10.Trm.ZNF683,SingleR,CD8_EffectorMemory,Effector memory CD8 T cells,T,EffMem,T,EffMem,True,True,True,1.0,1.0,True,False
+CD8 T,CD8.c10.Trm.ZNF683,Azimuth,CD8_EffectorMemory,CD8 TEM,T,EffMem,T,EffMem,True,True,True,1.0,1.0,True,False
+CD8 T,CD8.c11.Tex.PDCD1,Standard,CD8_Exhausted,CD8+ exhausted T cell,T,Exhausted,T,Exhausted,True,True,True,1.0,1.0,True,False
+CD8 T,CD8.c11.Tex.PDCD1,Curated,CD8_Exhausted,CD8+ exhausted T cell,T,Exhausted,T,Exhausted,True,True,True,1.0,1.0,True,False
+CD8 T,CD8.c11.Tex.PDCD1,CellTypist,CD8_Exhausted,Tem/Trm cytotoxic T cells,T,Exhausted,T,Resident,False,True,False,0.7,0.7,True,False
+CD8 T,CD8.c11.Tex.PDCD1,SingleR,CD8_Exhausted,Effector memory CD8 T cells,T,Exhausted,T,EffMem,False,True,False,0.7,0.7,True,False
+CD8 T,CD8.c11.Tex.PDCD1,Azimuth,CD8_Exhausted,CD8 TEM,T,Exhausted,T,EffMem,False,True,False,0.7,0.7,True,False
+CD8 T,CD8.c12.Tex.CXCL13,Standard,CD8_Exhausted,CD8+ Exhausted T cell,T,Exhausted,T,Exhausted,True,True,True,1.0,1.0,True,False
+CD8 T,CD8.c12.Tex.CXCL13,Curated,CD8_Exhausted,CD8+ Exhausted T cell,T,Exhausted,T,Exhausted,True,True,True,1.0,1.0,True,False
+CD8 T,CD8.c12.Tex.CXCL13,CellTypist,CD8_Exhausted,Tem/Trm cytotoxic T cells,T,Exhausted,T,Resident,False,True,False,0.7,0.7,True,False
+CD8 T,CD8.c12.Tex.CXCL13,SingleR,CD8_Exhausted,Effector memory CD8 T cells,T,Exhausted,T,EffMem,False,True,False,0.7,0.7,True,False
+CD8 T,CD8.c12.Tex.CXCL13,Azimuth,CD8_Exhausted,CD8 TEM,T,Exhausted,T,EffMem,False,True,False,0.7,0.7,True,False
+CD8 T,CD8.c13.Tex.myl12a,Standard,CD8_Exhausted,CD8+ exhausted T cell,T,Exhausted,T,Exhausted,True,True,True,1.0,1.0,True,False
+CD8 T,CD8.c13.Tex.myl12a,Curated,CD8_Exhausted,CD8+ Exhausted T cell,T,Exhausted,T,Exhausted,True,True,True,1.0,1.0,True,False
+CD8 T,CD8.c13.Tex.myl12a,CellTypist,CD8_Exhausted,Tem/Trm cytotoxic T cells,T,Exhausted,T,Resident,False,True,False,0.7,0.7,True,False
+CD8 T,CD8.c13.Tex.myl12a,SingleR,CD8_Exhausted,Effector memory CD8 T cells,T,Exhausted,T,EffMem,False,True,False,0.7,0.7,True,False
+CD8 T,CD8.c13.Tex.myl12a,Azimuth,CD8_Exhausted,CD8 TEM,T,Exhausted,T,EffMem,False,True,False,0.7,0.7,True,False
+CD8 T,CD8.c14.Tex.TCF7,Standard,CD8_Exhausted,CXCL13+ Exhausted T cell,T,Exhausted,T,Exhausted,True,True,True,1.0,1.0,True,False
+CD8 T,CD8.c14.Tex.TCF7,Curated,CD8_Exhausted,T follicular regulatory (Tfr) cell,T,Exhausted,Other,Other,False,False,False,0.0,0.0,False,True
+CD8 T,CD8.c14.Tex.TCF7,CellTypist,CD8_Exhausted,Regulatory T cells,T,Exhausted,T,Other,False,True,False,0.7,0.7,True,False
+CD8 T,CD8.c14.Tex.TCF7,SingleR,CD8_Exhausted,Effector memory CD8 T cells,T,Exhausted,T,EffMem,False,True,False,0.7,0.7,True,False
+CD8 T,CD8.c14.Tex.TCF7,Azimuth,CD8_Exhausted,CD4 TCM,T,Exhausted,T,Other,False,True,False,0.7,0.7,True,False
+CD8 T,CD8.c15.ISG.IFIT1,Standard,CD8_ISG,CD8+ T cell (ISG-high),T,ISG,T,ISG,True,True,True,1.0,1.0,True,False
+CD8 T,CD8.c15.ISG.IFIT1,Curated,CD8_ISG,CD8+ exhausted T cell (ISG-high),T,ISG,T,ISG,True,True,True,1.0,1.0,True,False
+CD8 T,CD8.c15.ISG.IFIT1,CellTypist,CD8_ISG,Tem/Trm cytotoxic T cells,T,ISG,T,Resident,False,True,False,0.7,0.7,True,False
+CD8 T,CD8.c15.ISG.IFIT1,SingleR,CD8_ISG,Effector memory CD8 T cells,T,ISG,T,EffMem,False,True,False,0.7,0.7,True,False
+CD8 T,CD8.c15.ISG.IFIT1,Azimuth,CD8_ISG,CD8 TEM,T,ISG,T,EffMem,False,True,False,0.7,0.7,True,False
+CD8 T,CD8.c16.MAIT.SLC4A10,Standard,CD8_MAIT,MAIT cell,T,MAIT,T,MAIT,True,True,True,1.0,1.0,True,False
+CD8 T,CD8.c16.MAIT.SLC4A10,Curated,CD8_MAIT,MAIT cell,T,MAIT,T,MAIT,True,True,True,1.0,1.0,True,False
+CD8 T,CD8.c16.MAIT.SLC4A10,CellTypist,CD8_MAIT,MAIT cells,T,MAIT,T,MAIT,True,True,True,1.0,1.0,True,False
+CD8 T,CD8.c16.MAIT.SLC4A10,SingleR,CD8_MAIT,MAIT cells,T,MAIT,T,MAIT,True,True,True,1.0,1.0,True,False
+CD8 T,CD8.c16.MAIT.SLC4A10,Azimuth,CD8_MAIT,MAIT,T,MAIT,T,MAIT,True,True,True,1.0,1.0,True,False
+CD8 T,CD8.c17.Tm.NME1,Standard,CD8_EffectorMemory,Proliferating cell,T,EffMem,Other,Cycling,False,False,False,0.0,0.0,False,True
+CD8 T,CD8.c17.Tm.NME1,Curated,CD8_EffectorMemory,Naive T cell,T,EffMem,T,Naive,False,True,False,0.7,0.7,True,False
+CD8 T,CD8.c17.Tm.NME1,CellTypist,CD8_EffectorMemory,Tem/Trm cytotoxic T cells,T,EffMem,T,Resident,False,True,False,0.7,0.7,True,False
+CD8 T,CD8.c17.Tm.NME1,SingleR,CD8_EffectorMemory,Effector memory CD8 T cells,T,EffMem,T,EffMem,True,True,True,1.0,1.0,True,False
+CD8 T,CD8.c17.Tm.NME1,Azimuth,CD8_EffectorMemory,NK Proliferating,T,EffMem,Other,Cycling,False,False,False,0.0,0.0,False,True
+CD4 T,CD4.c01.Tn.TCF7,Standard,CD4_Tn.Naive,Low-quality cell,T,Naive,Other,Other,False,False,False,0.0,0.0,False,True
+CD4 T,CD4.c01.Tn.TCF7,Curated,CD4_Tn.Naive,Naive T cell,T,Naive,T,Naive,True,True,True,1.0,1.0,True,False
+CD4 T,CD4.c01.Tn.TCF7,CellTypist,CD4_Tn.Naive,Tem/Effector helper T cells,T,Naive,T,EffMem,False,True,False,0.7,0.7,True,False
+CD4 T,CD4.c01.Tn.TCF7,SingleR,CD4_Tn.Naive,Th1/Th17 cells,T,Naive,T,Th17,False,True,False,0.7,0.7,True,False
+CD4 T,CD4.c01.Tn.TCF7,Azimuth,CD4_Tn.Naive,CD4 TCM,T,Naive,T,EffMem,False,True,False,0.7,0.7,True,False
+CD4 T,CD4.c02.Tn.PASK,Standard,CD4_Tn.Naive,Early Activated T cell,T,Naive,T,EffMem,False,True,False,0.7,0.7,True,False
+CD4 T,CD4.c02.Tn.PASK,Curated,CD4_Tn.Naive,T follicular helper cell,T,Naive,T,Tfh,False,True,False,0.7,0.7,True,False
+CD4 T,CD4.c02.Tn.PASK,CellTypist,CD4_Tn.Naive,Regulatory T cells,T,Naive,T,Treg,False,True,False,0.7,0.7,True,False
+CD4 T,CD4.c02.Tn.PASK,SingleR,CD4_Tn.Naive,Follicular helper T cells,T,Naive,T,Other,False,True,False,0.7,0.7,True,False
+CD4 T,CD4.c02.Tn.PASK,Azimuth,CD4_Tn.Naive,CD4 TCM,T,Naive,T,EffMem,False,True,False,0.7,0.7,True,False
+CD4 T,CD4.c03.Tn.ADSL,Standard,CD4_Tn.Naive,Naive T cell,T,Naive,T,Naive,True,True,True,1.0,1.0,True,False
+CD4 T,CD4.c03.Tn.ADSL,Curated,CD4_Tn.Naive,Naive T cell,T,Naive,T,Naive,True,True,True,1.0,1.0,True,False
+CD4 T,CD4.c03.Tn.ADSL,CellTypist,CD4_Tn.Naive,Tem/Effector helper T cells,T,Naive,T,EffMem,False,True,False,0.7,0.7,True,False
+CD4 T,CD4.c03.Tn.ADSL,SingleR,CD4_Tn.Naive,Th1/Th17 cells,T,Naive,T,Th17,False,True,False,0.7,0.7,True,False
+CD4 T,CD4.c03.Tn.ADSL,Azimuth,CD4_Tn.Naive,CD4 TCM,T,Naive,T,EffMem,False,True,False,0.7,0.7,True,False
+CD4 T,CD4.c04.Tn.il7r,Standard,CD4_Tn.Naive,Unidentified cell (Proliferating),T,Naive,Other,Cycling,False,False,False,0.0,0.0,False,True
+CD4 T,CD4.c04.Tn.il7r,Curated,CD4_Tn.Naive,T cell (proliferating),T,Naive,T,Cycling,False,True,False,0.7,0.7,True,False
+CD4 T,CD4.c04.Tn.il7r,CellTypist,CD4_Tn.Naive,Tem/Effector helper T cells,T,Naive,T,EffMem,False,True,False,0.7,0.7,True,False
+CD4 T,CD4.c04.Tn.il7r,SingleR,CD4_Tn.Naive,T regulatory cells,T,Naive,Other,Treg,False,False,False,0.0,0.0,False,True
+CD4 T,CD4.c04.Tn.il7r,Azimuth,CD4_Tn.Naive,CD4 Proliferating,T,Naive,T,Cycling,False,True,False,0.7,0.7,True,False
+CD4 T,CD4.c05.Tm.TNF,Standard,CD4_Tm.EffMem,Effector T cell (High-Mito),T,EffMem,T,EffMem,True,True,True,1.0,1.0,True,False
+CD4 T,CD4.c05.Tm.TNF,Curated,CD4_Tm.EffMem,CD8+ Temra T cell,T,EffMem,T,EffMem,True,True,True,1.0,1.0,True,False
+CD4 T,CD4.c05.Tm.TNF,CellTypist,CD4_Tm.EffMem,Tem/Effector helper T cells,T,EffMem,T,EffMem,True,True,True,1.0,1.0,True,False
+CD4 T,CD4.c05.Tm.TNF,SingleR,CD4_Tm.EffMem,Th1/Th17 cells,T,EffMem,T,Th17,False,True,False,0.7,0.7,True,False
+CD4 T,CD4.c05.Tm.TNF,Azimuth,CD4_Tm.EffMem,CD4 TCM,T,EffMem,T,EffMem,True,True,True,1.0,1.0,True,False
+CD4 T,CD4.c06.Tm.ANXA1,Standard,CD4_Tm.EffMem,Naive T cell,T,EffMem,T,Naive,False,True,False,0.7,0.7,True,False
+CD4 T,CD4.c06.Tm.ANXA1,Curated,CD4_Tm.EffMem,Early Activated T cell,T,EffMem,T,EffMem,True,True,True,1.0,1.0,True,False
+CD4 T,CD4.c06.Tm.ANXA1,CellTypist,CD4_Tm.EffMem,Tem/Effector helper T cells,T,EffMem,T,EffMem,True,True,True,1.0,1.0,True,False
+CD4 T,CD4.c06.Tm.ANXA1,SingleR,CD4_Tm.EffMem,Th1/Th17 cells,T,EffMem,T,Th17,False,True,False,0.7,0.7,True,False
+CD4 T,CD4.c06.Tm.ANXA1,Azimuth,CD4_Tm.EffMem,CD4 TCM,T,EffMem,T,EffMem,True,True,True,1.0,1.0,True,False
+CD4 T,CD4.c07.Tm.ANXA2,Standard,CD4_Tm.EffMem,Dendritic cell (ISG-high),T,EffMem,Myeloid,ISG,False,False,False,0.0,0.0,False,True
+CD4 T,CD4.c07.Tm.ANXA2,Curated,CD4_Tm.EffMem,Central Memory T cell,T,EffMem,T,EffMem,True,True,True,1.0,1.0,True,False
+CD4 T,CD4.c07.Tm.ANXA2,CellTypist,CD4_Tm.EffMem,Tem/Effector helper T cells,T,EffMem,T,EffMem,True,True,True,1.0,1.0,True,False
+CD4 T,CD4.c07.Tm.ANXA2,SingleR,CD4_Tm.EffMem,Th1/Th17 cells,T,EffMem,T,Th17,False,True,False,0.7,0.7,True,False
+CD4 T,CD4.c07.Tm.ANXA2,Azimuth,CD4_Tm.EffMem,CD4 TCM,T,EffMem,T,EffMem,True,True,True,1.0,1.0,True,False
+CD4 T,CD4.c08.Tm.CREM,Standard,CD4_Tm.EffMem,CD8+ exhausted T cell,T,EffMem,T,Exhausted,False,True,False,0.7,0.7,True,False
+CD4 T,CD4.c08.Tm.CREM,Curated,CD4_Tm.EffMem,CD8+ exhausted T cell,T,EffMem,T,Exhausted,False,True,False,0.7,0.7,True,False
+CD4 T,CD4.c08.Tm.CREM,CellTypist,CD4_Tm.EffMem,Tem/Effector helper T cells,T,EffMem,T,EffMem,True,True,True,1.0,1.0,True,False
+CD4 T,CD4.c08.Tm.CREM,SingleR,CD4_Tm.EffMem,Th1/Th17 cells,T,EffMem,T,Th17,False,True,False,0.7,0.7,True,False
+CD4 T,CD4.c08.Tm.CREM,Azimuth,CD4_Tm.EffMem,CD4 TEM,T,EffMem,T,EffMem,True,True,True,1.0,1.0,True,False
+CD4 T,CD4.c09.Tm.CCL5,Standard,CD4_Tm.EffMem,Activated CD8+ T cell,T,EffMem,T,EffMem,True,True,True,1.0,1.0,True,False
+CD4 T,CD4.c09.Tm.CCL5,Curated,CD4_Tm.EffMem,CD8+ exhausted T cell,T,EffMem,T,Exhausted,False,True,False,0.7,0.7,True,False
+CD4 T,CD4.c09.Tm.CCL5,CellTypist,CD4_Tm.EffMem,Type 1 helper T cells,T,EffMem,T,Other,False,True,False,0.7,0.7,True,False
+CD4 T,CD4.c09.Tm.CCL5,SingleR,CD4_Tm.EffMem,Th1/Th17 cells,T,EffMem,T,Th17,False,True,False,0.7,0.7,True,False
+CD4 T,CD4.c09.Tm.CCL5,Azimuth,CD4_Tm.EffMem,CD4 TEM,T,EffMem,T,EffMem,True,True,True,1.0,1.0,True,False
+CD4 T,CD4.c10.Tm.CAPG,Standard,CD4_Tm.EffMem,Cytotoxic T cell,T,EffMem,T,EffMem,True,True,True,1.0,1.0,True,False
+CD4 T,CD4.c10.Tm.CAPG,Curated,CD4_Tm.EffMem,CD8+ Tissue-Resident Memory T cell,T,EffMem,T,EffMem,True,True,True,1.0,1.0,True,False
+CD4 T,CD4.c10.Tm.CAPG,CellTypist,CD4_Tm.EffMem,Tem/Effector helper T cells,T,EffMem,T,EffMem,True,True,True,1.0,1.0,True,False
+CD4 T,CD4.c10.Tm.CAPG,SingleR,CD4_Tm.EffMem,Th1/Th17 cells,T,EffMem,T,Th17,False,True,False,0.7,0.7,True,False
+CD4 T,CD4.c10.Tm.CAPG,Azimuth,CD4_Tm.EffMem,CD4 TCM,T,EffMem,T,EffMem,True,True,True,1.0,1.0,True,False
+CD4 T,CD4.c11.Tm.GZMA,Standard,CD4_Tm.EffMem,CD8+ exhausted T cell,T,EffMem,T,Exhausted,False,True,False,0.7,0.7,True,False
+CD4 T,CD4.c11.Tm.GZMA,Curated,CD4_Tm.EffMem,Exhausted CD4+ Cytotoxic T cell,T,EffMem,T,Exhausted,False,True,False,0.7,0.7,True,False
+CD4 T,CD4.c11.Tm.GZMA,CellTypist,CD4_Tm.EffMem,Tem/Effector helper T cells,T,EffMem,T,EffMem,True,True,True,1.0,1.0,True,False
+CD4 T,CD4.c11.Tm.GZMA,SingleR,CD4_Tm.EffMem,Th1/Th17 cells,T,EffMem,T,Th17,False,True,False,0.7,0.7,True,False
+CD4 T,CD4.c11.Tm.GZMA,Azimuth,CD4_Tm.EffMem,CD4 TCM,T,EffMem,T,EffMem,True,True,True,1.0,1.0,True,False
+CD4 T,CD4.c12.Tem.GZMK,Standard,CD4_Tem.EffMem,Cytotoxic CD4+ T cell,T,EffMem,T,EffMem,True,True,True,1.0,1.0,True,False
+CD4 T,CD4.c12.Tem.GZMK,Curated,CD4_Tem.EffMem,Exhausted CD4+ Cytotoxic T cell,T,EffMem,T,Exhausted,False,True,False,0.7,0.7,True,False
+CD4 T,CD4.c12.Tem.GZMK,CellTypist,CD4_Tem.EffMem,Tem/Trm cytotoxic T cells,T,EffMem,T,EffMem,True,True,True,1.0,1.0,True,False
+CD4 T,CD4.c12.Tem.GZMK,SingleR,CD4_Tem.EffMem,Effector memory CD8 T cells,T,EffMem,T,EffMem,True,True,True,1.0,1.0,True,False
+CD4 T,CD4.c12.Tem.GZMK,Azimuth,CD4_Tem.EffMem,CD8 TEM,T,EffMem,T,EffMem,True,True,True,1.0,1.0,True,False
+CD4 T,CD4.c13.Temra.CX3CR1,Standard,CD4_Temra.EffMem,CD8+ Effector Memory T cell,T,EffMem,T,EffMem,True,True,True,1.0,1.0,True,False
+CD4 T,CD4.c13.Temra.CX3CR1,Curated,CD4_Temra.EffMem,CD8+ Exhausted T cell,T,EffMem,T,Exhausted,False,True,False,0.7,0.7,True,False
+CD4 T,CD4.c13.Temra.CX3CR1,CellTypist,CD4_Temra.EffMem,Tem/Temra cytotoxic T cells,T,EffMem,T,EffMem,True,True,True,1.0,1.0,True,False
+CD4 T,CD4.c13.Temra.CX3CR1,SingleR,CD4_Temra.EffMem,Terminal effector CD4 T cells,T,EffMem,T,EffMem,True,True,True,1.0,1.0,True,False
+CD4 T,CD4.c13.Temra.CX3CR1,Azimuth,CD4_Temra.EffMem,CD8 TEM,T,EffMem,T,EffMem,True,True,True,1.0,1.0,True,False
+CD4 T,CD4.c14.Th17.SLC4A10,Standard,CD4_Th17,Th17 cell,T,Th17,T,Th17,True,True,True,1.0,1.0,True,False
+CD4 T,CD4.c14.Th17.SLC4A10,Curated,CD4_Th17,Exhausted T cell,T,Th17,T,Exhausted,False,True,False,0.7,0.7,True,False
+CD4 T,CD4.c14.Th17.SLC4A10,CellTypist,CD4_Th17,Tem/Effector helper T cells,T,Th17,T,EffMem,False,True,False,0.7,0.7,True,False
+CD4 T,CD4.c14.Th17.SLC4A10,SingleR,CD4_Th17,Th1/Th17 cells,T,Th17,T,Th17,True,True,True,1.0,1.0,True,False
+CD4 T,CD4.c14.Th17.SLC4A10,Azimuth,CD4_Th17,CD4 TCM,T,Th17,T,EffMem,False,True,False,0.7,0.7,True,False
+CD4 T,CD4.c15.Th17.IL23R,Standard,CD4_Th17,Th17 cell,T,Th17,T,Th17,True,True,True,1.0,1.0,True,False
+CD4 T,CD4.c15.Th17.IL23R,Curated,CD4_Th17,MAIT cell,T,Th17,T,Other,False,True,False,0.7,0.7,True,False
+CD4 T,CD4.c15.Th17.IL23R,CellTypist,CD4_Th17,Tem/Effector helper T cells,T,Th17,T,EffMem,False,True,False,0.7,0.7,True,False
+CD4 T,CD4.c15.Th17.IL23R,SingleR,CD4_Th17,MAIT cells,T,Th17,T,Other,False,True,False,0.7,0.7,True,False
+CD4 T,CD4.c15.Th17.IL23R,Azimuth,CD4_Th17,CD4 TCM,T,Th17,T,EffMem,False,True,False,0.7,0.7,True,False
+CD4 T,CD4.c16.Tfh.CXCR5,Standard,CD4_Tfh,CD8+ Exhausted T cell,T,Tfh,T,Exhausted,False,True,False,0.7,0.7,True,False
+CD4 T,CD4.c16.Tfh.CXCR5,Curated,CD4_Tfh,Progenitor Exhausted T cell,T,Tfh,T,Exhausted,False,True,False,0.7,0.7,True,False
+CD4 T,CD4.c16.Tfh.CXCR5,CellTypist,CD4_Tfh,Regulatory T cells,T,Tfh,T,Treg,False,True,False,0.7,0.7,True,False
+CD4 T,CD4.c16.Tfh.CXCR5,SingleR,CD4_Tfh,T regulatory cells,T,Tfh,Other,Treg,False,False,False,0.0,0.0,False,True
+CD4 T,CD4.c16.Tfh.CXCR5,Azimuth,CD4_Tfh,CD4 TCM,T,Tfh,T,EffMem,False,True,False,0.7,0.7,True,False
+CD4 T,CD4.c17.TfhTh1.CXCL13,Standard,CD4_Tfh,CD8+ exhausted T cell (ISG-high),T,Tfh,T,ISG,False,True,False,0.7,0.7,True,False
+CD4 T,CD4.c17.TfhTh1.CXCL13,Curated,CD4_Tfh,CD8+ Exhausted T cell,T,Tfh,T,Exhausted,False,True,False,0.7,0.7,True,False
+CD4 T,CD4.c17.TfhTh1.CXCL13,CellTypist,CD4_Tfh,Regulatory T cells,T,Tfh,T,Treg,False,True,False,0.7,0.7,True,False
+CD4 T,CD4.c17.TfhTh1.CXCL13,SingleR,CD4_Tfh,Th1/Th17 cells,T,Tfh,T,Th17,False,True,False,0.7,0.7,True,False
+CD4 T,CD4.c17.TfhTh1.CXCL13,Azimuth,CD4_Tfh,CD4 TCM,T,Tfh,T,EffMem,False,True,False,0.7,0.7,True,False
+CD4 T,CD4.c18.Treg.RTKN2,Standard,CD4_Treg,Regulatory T cell,T,Treg,T,Treg,True,True,True,1.0,1.0,True,False
+CD4 T,CD4.c18.Treg.RTKN2,Curated,CD4_Treg,Effector Regulatory T cell,T,Treg,T,Treg,True,True,True,1.0,1.0,True,False
+CD4 T,CD4.c18.Treg.RTKN2,CellTypist,CD4_Treg,Regulatory T cells,T,Treg,T,Treg,True,True,True,1.0,1.0,True,False
+CD4 T,CD4.c18.Treg.RTKN2,SingleR,CD4_Treg,T regulatory cells,T,Treg,Other,Treg,True,False,False,0.3,0.3,False,True
+CD4 T,CD4.c18.Treg.RTKN2,Azimuth,CD4_Treg,Treg,T,Treg,T,Treg,True,True,True,1.0,1.0,True,False
+CD4 T,CD4.c19.Treg.S1PR1,Standard,CD4_Treg,"Regulatory T cell (activated, ISG-high)",T,Treg,T,Treg,True,True,True,1.0,1.0,True,False
+CD4 T,CD4.c19.Treg.S1PR1,Curated,CD4_Treg,"Regulatory T cell (activated, ISG-high)",T,Treg,T,Treg,True,True,True,1.0,1.0,True,False
+CD4 T,CD4.c19.Treg.S1PR1,CellTypist,CD4_Treg,Regulatory T cells,T,Treg,T,Treg,True,True,True,1.0,1.0,True,False
+CD4 T,CD4.c19.Treg.S1PR1,SingleR,CD4_Treg,T regulatory cells,T,Treg,Other,Treg,True,False,False,0.3,0.3,False,True
+CD4 T,CD4.c19.Treg.S1PR1,Azimuth,CD4_Treg,Treg,T,Treg,T,Treg,True,True,True,1.0,1.0,True,False
+CD4 T,CD4.c20.Treg.TNFRSF9,Standard,CD4_Treg,Effector Regulatory T cell,T,Treg,T,Treg,True,True,True,1.0,1.0,True,False
+CD4 T,CD4.c20.Treg.TNFRSF9,Curated,CD4_Treg,Effector Regulatory T cell,T,Treg,T,Treg,True,True,True,1.0,1.0,True,False
+CD4 T,CD4.c20.Treg.TNFRSF9,CellTypist,CD4_Treg,Regulatory T cells,T,Treg,T,Treg,True,True,True,1.0,1.0,True,False
+CD4 T,CD4.c20.Treg.TNFRSF9,SingleR,CD4_Treg,T regulatory cells,T,Treg,Other,Treg,True,False,False,0.3,0.3,False,True
+CD4 T,CD4.c20.Treg.TNFRSF9,Azimuth,CD4_Treg,Treg,T,Treg,T,Treg,True,True,True,1.0,1.0,True,False
+CD4 T,CD4.c21.Treg.OAS1,Standard,CD4_Treg,Regulatory T cell (ISG-high),T,Treg,T,Treg,True,True,True,1.0,1.0,True,False
+CD4 T,CD4.c21.Treg.OAS1,Curated,CD4_Treg,Regulatory T cell (ISG-high),T,Treg,T,Treg,True,True,True,1.0,1.0,True,False
+CD4 T,CD4.c21.Treg.OAS1,CellTypist,CD4_Treg,Regulatory T cells,T,Treg,T,Treg,True,True,True,1.0,1.0,True,False
+CD4 T,CD4.c21.Treg.OAS1,SingleR,CD4_Treg,T regulatory cells,T,Treg,Other,Treg,True,False,False,0.3,0.3,False,True
+CD4 T,CD4.c21.Treg.OAS1,Azimuth,CD4_Treg,CD4 TCM,T,Treg,T,EffMem,False,True,False,0.7,0.7,True,False
+CD4 T,CD4.c22.ISG.IFIT1,Standard,CD4_ISG,Immune cell (ISG-high),T,ISG,Other,ISG,True,False,False,0.3,0.3,False,True
+CD4 T,CD4.c22.ISG.IFIT1,Curated,CD4_ISG,Exhausted T cell (ISG-high),T,ISG,T,ISG,True,True,True,1.0,1.0,True,False
+CD4 T,CD4.c22.ISG.IFIT1,CellTypist,CD4_ISG,Regulatory T cells,T,ISG,T,Treg,False,True,False,0.7,0.7,True,False
+CD4 T,CD4.c22.ISG.IFIT1,SingleR,CD4_ISG,Th1/Th17 cells,T,ISG,T,Th17,False,True,False,0.7,0.7,True,False
+CD4 T,CD4.c22.ISG.IFIT1,Azimuth,CD4_ISG,CD4 TCM,T,ISG,T,EffMem,False,True,False,0.7,0.7,True,False
+MSC,CAFs MSC iCAF-like,Standard,Fibro_iCAF,PDGFRA+ Fibroblast,Fibroblast,iCAF,Fibroblast,Other,False,True,False,0.3,0.3,False,True
+MSC,CAFs MSC iCAF-like,Curated,Fibro_iCAF,Lipofibroblast,Fibroblast,iCAF,Fibroblast,iCAF,True,True,True,1.0,1.0,True,False
+MSC,CAFs MSC iCAF-like,CellTypist,Fibro_iCAF,Peribronchial fibroblasts,Fibroblast,iCAF,Fibroblast,Other,False,True,False,0.3,0.3,False,True
+MSC,CAFs MSC iCAF-like,SingleR,Fibro_iCAF,Fibroblasts,Fibroblast,iCAF,Fibroblast,Other,False,True,False,0.3,0.3,False,True
+MSC,CAFs MSC iCAF-like,Azimuth,Fibro_iCAF,Fibroblast lineage,Fibroblast,iCAF,Fibroblast,Other,False,True,False,0.3,0.3,False,True
+MSC,CAFs myCAF-like,Standard,Fibro_myCAF,Activated fibroblast,Fibroblast,myCAF,Fibroblast,myCAF,True,True,True,1.0,1.0,True,False
+MSC,CAFs myCAF-like,Curated,Fibro_myCAF,Cancer-Associated Fibroblast,Fibroblast,myCAF,Fibroblast,Other,False,True,False,0.3,0.3,False,True
+MSC,CAFs myCAF-like,CellTypist,Fibro_myCAF,Peribronchial fibroblasts,Fibroblast,myCAF,Fibroblast,Other,False,True,False,0.3,0.3,False,True
+MSC,CAFs myCAF-like,SingleR,Fibro_myCAF,Fibroblasts,Fibroblast,myCAF,Fibroblast,Other,False,True,False,0.3,0.3,False,True
+MSC,CAFs myCAF-like,Azimuth,Fibro_myCAF,Fibroblast lineage,Fibroblast,myCAF,Fibroblast,Other,False,True,False,0.3,0.3,False,True
+MSC,Cycling PVL,Standard,Fibro_PVL,Myofibroblast (proliferating),Fibroblast,PVL,Fibroblast,myCAF,False,True,False,0.3,0.3,False,True
+MSC,Cycling PVL,Curated,Fibro_PVL,Pericyte (proliferating),Fibroblast,PVL,Fibroblast,PVL,True,True,True,1.0,1.0,True,False
+MSC,Cycling PVL,CellTypist,Fibro_PVL,Smooth muscle,Fibroblast,PVL,Fibroblast,PVL,True,True,True,1.0,1.0,True,False
+MSC,Cycling PVL,SingleR,Fibro_PVL,Fibroblasts,Fibroblast,PVL,Fibroblast,Other,False,True,False,0.3,0.3,False,True
+MSC,Cycling PVL,Azimuth,Fibro_PVL,Smooth muscle,Fibroblast,PVL,Fibroblast,PVL,True,True,True,1.0,1.0,True,False
+MSC,Endothelial ACKR1,Standard,Endothelial,Antigen-presenting endothelial cell,Endothelial,Endothelial,Endothelial,Endothelial,True,True,True,1.0,1.0,True,False
+MSC,Endothelial ACKR1,Curated,Endothelial,Post-capillary Venular Endothelial Cell (Antigen-Presenting),Endothelial,Endothelial,Endothelial,Endothelial,True,True,True,1.0,1.0,True,False
+MSC,Endothelial ACKR1,CellTypist,Endothelial,EC venous systemic,Endothelial,Endothelial,Endothelial,Endothelial,True,True,True,1.0,1.0,True,False
+MSC,Endothelial ACKR1,SingleR,Endothelial,Adipocytes,Endothelial,Endothelial,Fibroblast,Other,False,False,False,0.15,0.15,False,True
+MSC,Endothelial ACKR1,Azimuth,Endothelial,Blood vessels,Endothelial,Endothelial,Endothelial,Endothelial,True,True,True,1.0,1.0,True,False
+MSC,Endothelial CXCL12,Standard,Endothelial,Arterial endothelial cell,Endothelial,Endothelial,Endothelial,Endothelial,True,True,True,1.0,1.0,True,False
+MSC,Endothelial CXCL12,Curated,Endothelial,Arterial Endothelial Cell (ISG-high),Endothelial,Endothelial,Endothelial,Endothelial,True,True,True,1.0,1.0,True,False
+MSC,Endothelial CXCL12,CellTypist,Endothelial,EC arterial,Endothelial,Endothelial,Endothelial,Endothelial,True,True,True,1.0,1.0,True,False
+MSC,Endothelial CXCL12,SingleR,Endothelial,Adipocytes,Endothelial,Endothelial,Fibroblast,Other,False,False,False,0.15,0.15,False,True
+MSC,Endothelial CXCL12,Azimuth,Endothelial,Blood vessels,Endothelial,Endothelial,Endothelial,Endothelial,True,True,True,1.0,1.0,True,False
+MSC,Endothelial RGS5,Standard,Endothelial,Endothelial cell,Endothelial,Endothelial,Endothelial,Endothelial,True,True,True,1.0,1.0,True,False
+MSC,Endothelial RGS5,Curated,Endothelial,Activated Endothelial cell,Endothelial,Endothelial,Endothelial,Endothelial,True,True,True,1.0,1.0,True,False
+MSC,Endothelial RGS5,CellTypist,Endothelial,EC venous systemic,Endothelial,Endothelial,Endothelial,Endothelial,True,True,True,1.0,1.0,True,False
+MSC,Endothelial RGS5,SingleR,Endothelial,Adipocytes,Endothelial,Endothelial,Fibroblast,Other,False,False,False,0.15,0.15,False,True
+MSC,Endothelial RGS5,Azimuth,Endothelial,Blood vessels,Endothelial,Endothelial,Endothelial,Endothelial,True,True,True,1.0,1.0,True,False
+MSC,PVL Differentiated,Standard,Fibro_PVL,Vascular Smooth Muscle Cell,Fibroblast,PVL,Endothelial,PVL,True,False,False,0.85,0.85,True,False
+MSC,PVL Differentiated,Curated,Fibro_PVL,Vascular Smooth Muscle Cell,Fibroblast,PVL,Endothelial,PVL,True,False,False,0.85,0.85,True,False
+MSC,PVL Differentiated,CellTypist,Fibro_PVL,Smooth muscle,Fibroblast,PVL,Fibroblast,PVL,True,True,True,1.0,1.0,True,False
+MSC,PVL Differentiated,SingleR,Fibro_PVL,Fibroblasts,Fibroblast,PVL,Fibroblast,Other,False,True,False,0.3,0.3,False,True
+MSC,PVL Differentiated,Azimuth,Fibro_PVL,Smooth muscle,Fibroblast,PVL,Fibroblast,PVL,True,True,True,1.0,1.0,True,False
+MSC,PVL Immature,Standard,Fibro_PVL,Pericyte,Fibroblast,PVL,Fibroblast,PVL,True,True,True,1.0,1.0,True,False
+MSC,PVL Immature,Curated,Fibro_PVL,Pericyte,Fibroblast,PVL,Fibroblast,PVL,True,True,True,1.0,1.0,True,False
+MSC,PVL Immature,CellTypist,Fibro_PVL,Smooth muscle,Fibroblast,PVL,Fibroblast,PVL,True,True,True,1.0,1.0,True,False
+MSC,PVL Immature,SingleR,Fibro_PVL,Fibroblasts,Fibroblast,PVL,Fibroblast,Other,False,True,False,0.3,0.3,False,True
+MSC,PVL Immature,Azimuth,Fibro_PVL,Smooth muscle,Fibroblast,PVL,Fibroblast,PVL,True,True,True,1.0,1.0,True,False
+Mouse B,B cell,Standard,Mature_B,B cell,BLineage,Mature_B,BLineage,Mature_B,True,True,True,1.0,1.0,True,False
+Mouse B,B cell,Curated,Mature_B,Follicular B cell,BLineage,Mature_B,BLineage,Mature_B,True,True,True,1.0,1.0,True,False
+Mouse B,B cell,SingleR,Mature_B,B cells (B.Fo),BLineage,Mature_B,BLineage,Mature_B,True,True,True,1.0,1.0,True,False
+Mouse B,immature B cell,Standard,Erythrocyte_like,Neutrophil-Erythroid Doublet (ISG-high),Erythroid,Erythrocyte_like,Erythroid,Erythrocyte_like,True,True,True,1.0,1.0,True,False
+Mouse B,immature B cell,Curated,Erythrocyte_like,Neutrophil-Erythroid doublet (ISG-high),Erythroid,Erythrocyte_like,Erythroid,Erythrocyte_like,True,True,True,1.0,1.0,True,False
+Mouse B,immature B cell,SingleR,Erythrocyte_like,Neutrophils (GN.ARTH),Erythroid,Erythrocyte_like,BLineage,Other,False,False,False,0.0,0.0,False,True
+Mouse B,late pro-B cell,Standard,B_Other,Plasma cell,BLineage,Other,BLineage,Other,True,True,True,1.0,1.0,True,False
+Mouse B,late pro-B cell,Curated,B_Other,Plasma cell,BLineage,Other,BLineage,Other,True,True,True,1.0,1.0,True,False
+Mouse B,late pro-B cell,SingleR,B_Other,B cells (B.FrF),BLineage,Other,BLineage,Mature_B,False,True,False,0.5,0.5,True,False
+Mouse B,naive B cell,Standard,Mast_like,Mast cell,Myeloid,Mast_like,Myeloid,Mast_like,True,True,True,1.0,1.0,True,False
+Mouse B,naive B cell,Curated,Mast_like,Mast cell,Myeloid,Mast_like,Myeloid,Mast_like,True,True,True,1.0,1.0,True,False
+Mouse B,naive B cell,SingleR,Mast_like,Basophils (BA),Myeloid,Mast_like,Myeloid,Mast_like,True,True,True,1.0,1.0,True,False
+Mouse B,precursor B cell,Standard,pDC_Myeloid_like,Plasmacytoid dendritic cell (pDC),Myeloid,pDC_Myeloid_like,Myeloid,pDC_Myeloid_like,True,True,True,1.0,1.0,True,False
+Mouse B,precursor B cell,Curated,pDC_Myeloid_like,Plasmacytoid dendritic cell,Myeloid,pDC_Myeloid_like,Myeloid,pDC_Myeloid_like,True,True,True,1.0,1.0,True,False
+Mouse B,precursor B cell,SingleR,pDC_Myeloid_like,DC (DC.PDC.8-),Myeloid,pDC_Myeloid_like,Myeloid,pDC_Myeloid_like,True,True,True,1.0,1.0,True,False

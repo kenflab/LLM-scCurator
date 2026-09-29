@@ -1,0 +1,16 @@
+{
+  "inputs": {
+    "L4_complementary_metrics.csv": "a2212224ca01ca9f8025936d77a14575e9d5168b1bf8f66c9332a0f39ea3adac",
+    "L4_prediction_audit.csv": "fdd990fa7affb77e24ae63521c8cf40c18ae25ce5fc8aa9fe27a7341f5742c43"
+  },
+  "script_sha256": "a717dd76181769fc5d5edceea57a305ceb6111b90a72d04a953f50594ec02edc",
+  "bootstrap_resamples": 20000,
+  "seed": 42,
+  "ci_method": "percentile 95%; clusters resampled within each dataset and method",
+  "units": "Source Data fractions (0\u20131); plotted percentages (0\u2013100)",
+  "n_clusters": 52,
+  "n_predictions": 250,
+  "numpy_version": "2.4.6",
+  "pandas_version": "2.3.3",
+  "matplotlib_version": "3.11.1"
+}
