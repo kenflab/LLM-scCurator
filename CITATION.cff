@@ -1,8 +1,8 @@
 cff-version: 1.2.0
-message: "If you use LLM-scCurator in your research, please cite it."
-title: "LLM-scCurator: Dynamic feature distillation for robust zero-shot LLM annotation"
+message: "If you use LLM-scCurator in your research, please cite this software."
+title: "LLM-scCurator: Data-centric feature distillation for zero-shot cell-type annotation"
 type: software
-version: 0.1.0
+version: "0.1.4"
 authors:
   - family-names: "Furudate"
     given-names: "Ken"
@@ -19,19 +19,12 @@ keywords:
   - "zero-shot"
   - "bioinformatics"
 abstract: >
-  LLM-scCurator is a Python framework that standardizes noise-aware marker
-  distillation (clonotype/housekeeping/stress suppression with rescue and lineage
-  leakage filters) before prompting a large language model, enabling robust
-  hierarchical (coarse-to-fine) zero-shot annotation for single-cell and spatial
-  transcriptomic data.
-preferred-citation:
-  type: software
-  title: "LLM-scCurator: Dynamic feature distillation for robust zero-shot LLM annotation"
-  authors:
-    - family-names: "Furudate"
-      given-names: "Ken"
-  year: 2025
-  version: 0.1.0
-  doi: "10.5281/zenodo.17970494"
-  url: "https://github.com/kenflab/LLM-scCurator"
-  repository-code: "https://github.com/kenflab/LLM-scCurator"
+  LLM-scCurator is a Python framework for preparing marker gene lists
+  for zero-shot cell-type annotation with large language models.
+  It suppresses recurrent low-specificity signals and retains or
+  recovers informative markers before annotation. The framework
+  supports single-cell and spatial transcriptomic workflows.
+  The repository includes benchmark evaluation scripts, label mappings,
+  scoring configurations, and source data accompanying the revised
+  manuscript, including external validation using the Human Lung
+  Cell Atlas.
