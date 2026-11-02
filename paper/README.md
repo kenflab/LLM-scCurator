@@ -2,6 +2,10 @@
 
 This directory contains the minimal, manuscript-facing assets to **inspect and verify** the benchmarks, figures, and Source Data.
 
+Read [Evaluation scope](EVALUATION_SCOPE.md) before interpreting the comparisons. The primary CD8/CD4/MSC Standard-versus-Curated comparisons change both marker preparation and automatic lineage context. Mouse B uses the same explicit parent label in both conditions; HLCA varies marker preparation under fixed tissue context. These estimate different effects. Existing figure keys and archived results are retained for reproducibility.
+
+The R2 software archive is [v0.1.4](https://zenodo.org/records/23084504); the original archive is [v0.1.0](https://zenodo.org/records/17970494). These are separate releases, not interchangeable provenance for every analysis. The historical scorer remains available for reproduction, while [revision_scoring](revision_scoring/README.md) prepares a separate review of label-mapping validity. No corrected performance claim follows from preparation alone.
+
 ## What is versioned here
 - [`README.md`](README.md): this guide
 - [`FIGURE_MAP.csv`](FIGURE_MAP.csv): panel → Source Data file (and optional notebook provenance)
@@ -89,3 +93,10 @@ regenerate the current Figure 3.
 Changing from 5,000 to 20,000 bootstrap resamples may change the interval endpoints;
 it does not change the means or complementary metrics. The Table L5 weight-sensitivity
 analysis keeps its separately documented 10,000-resample setting.
+
+## Canonical marker recall
+
+[CD8 canonical marker recall](CANONICAL_RECALL_SCOPE.md) explains why retaining
+lineage markers can change a list without changing the state-marker recall.
+Run `python paper/scripts/audit_canonical_recall_scope.py` to check the shared
+reference dictionary and formula against the source without inference.

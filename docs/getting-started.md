@@ -1,7 +1,7 @@
 # Getting started
 
 This page provides a minimal, end-to-end run of **LLM-scCurator** on an AnnData object (Scanpy).
-For the conceptual model (masking, rescue, leakage-safe lineage filtering, hierarchical inference), see **[Concepts](concepts.md)**.
+For marker curation, lineage-context supplementation and coarse-to-fine inference, see **[Concepts](concepts.md)** and the **[integrated workflow guide](integrated-workflow.md)**.
 
 ---
 

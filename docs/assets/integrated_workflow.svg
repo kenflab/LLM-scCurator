@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="820" viewBox="0 0 1100 820" role="img" aria-labelledby="title desc">
+  <title id="title">LLM-scCurator: marker curation and lineage context</title>
+  <desc id="desc">A clustered expression matrix supplies two parallel inputs. Differential-expression ranking and marker curation produce a compact gene list. Mean expression of predefined lineage markers produces an inferred broad lineage label. Both are supplied to an LLM, which returns a candidate annotation, self-reported confidence and reasoning. A human then reviews the results against observed expression and optional external classifiers or reference atlases. Numerical expression summaries and reference-neighbor composition are not current automatic LLM inputs.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#315a7c"/>
+    </marker>
+    <style>
+      text { font-family: Arial, Helvetica, sans-serif; fill: #172b3b; }
+      .title { font-size: 30px; font-weight: 700; }
+      .subtitle { font-size: 19px; fill: #506578; }
+      .heading { font-size: 23px; font-weight: 700; }
+      .body { font-size: 20px; }
+      .small { font-size: 18px; fill: #506578; }
+      .box { stroke: #90a9bc; stroke-width: 1.7; }
+      .arrow { fill: none; stroke: #315a7c; stroke-width: 2.5; marker-end: url(#arrow); }
+    </style>
+  </defs>
+  <rect width="1100" height="820" fill="#ffffff"/>
+  <text x="550" y="47" text-anchor="middle" class="title">Marker curation + lineage context</text>
+  <text x="550" y="79" text-anchor="middle" class="subtitle">The implemented LLM-scCurator workflow</text>
+
+  <rect x="275" y="110" width="550" height="62" rx="10" fill="#f2f6f9" class="box"/>
+  <text x="550" y="148" text-anchor="middle" class="heading">Clustered expression matrix</text>
+
+  <path d="M 430 172 V 194 H 280 V 221" class="arrow"/>
+  <path d="M 670 172 V 194 H 820 V 221" class="arrow"/>
+
+  <rect x="45" y="225" width="470" height="132" rx="10" fill="#f0f6fb" class="box"/>
+  <text x="280" y="261" text-anchor="middle" class="heading">Marker-list curation</text>
+  <text x="280" y="292" text-anchor="middle" class="body">Rank DE candidates and apply filters</text>
+  <line x1="75" y1="309" x2="485" y2="309" stroke="#c8d6e2"/>
+  <text x="280" y="339" text-anchor="middle" class="heading">Compact gene list</text>
+
+  <rect x="585" y="225" width="470" height="132" rx="10" fill="#f0f6fb" class="box"/>
+  <text x="820" y="261" text-anchor="middle" class="heading">Lineage-context estimation</text>
+  <text x="820" y="292" text-anchor="middle" class="body">Predefined marker-panel mean expression</text>
+  <line x1="615" y1="309" x2="1025" y2="309" stroke="#c8d6e2"/>
+  <text x="820" y="339" text-anchor="middle" class="heading">Inferred broad lineage label</text>
+
+  <path d="M 280 357 V 387 H 470 V 414" class="arrow"/>
+  <path d="M 820 357 V 387 H 630 V 414" class="arrow"/>
+
+  <rect x="390" y="418" width="320" height="65" rx="10" fill="#245b84" stroke="#245b84" stroke-width="1.7"/>
+  <text x="550" y="458" text-anchor="middle" style="font-size:27px;font-weight:700;fill:#ffffff">LLM annotation</text>
+
+  <path d="M 550 483 V 522" class="arrow"/>
+  <rect x="175" y="526" width="750" height="80" rx="10" fill="#f2f6f9" class="box"/>
+  <text x="550" y="560" text-anchor="middle" class="heading">Candidate annotation</text>
+  <text x="550" y="590" text-anchor="middle" class="body">Self-reported confidence + reasoning</text>
+
+  <path d="M 550 606 V 645" class="arrow"/>
+  <rect x="115" y="649" width="870" height="91" rx="10" fill="#ffffff" stroke="#315a7c" stroke-width="1.8"/>
+  <text x="550" y="684" text-anchor="middle" class="heading">Human review</text>
+  <text x="550" y="716" text-anchor="middle" class="body">Observed expression + optional classifiers / reference atlases</text>
+
+  <text x="550" y="779" text-anchor="middle" class="small">Current automatic LLM inputs: gene symbols and an inferred lineage label.</text>
+  <text x="550" y="805" text-anchor="middle" class="small">Expression statistics and reference-neighbor composition are not passed automatically.</text>
+</svg>

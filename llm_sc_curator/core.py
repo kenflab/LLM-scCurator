@@ -11,6 +11,7 @@ import logging
 from .noise_lists import PROLIFERATION_SENTINELS, NOISE_PATTERNS
 from .masking import FeatureDistiller
 from .backends import BaseLLMBackend, GeminiBackend, OpenAIBackend, OllamaBackend, LocalLLMBackend
+from .recording import ResponseAuditError
 
 # Setup Logging
 logger = logging.getLogger(__name__)
@@ -1105,6 +1106,9 @@ class LLMscCurator:
                     "reasoning": reason_val,
                 }
 
+            except ResponseAuditError:
+                # Recording was explicitly requested; do not retry inference after a log failure.
+                raise
             except json.JSONDecodeError as e:
                 last_exception = e
                 logger.error(

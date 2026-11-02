@@ -4,30 +4,38 @@
   <img src="assets/LLM-scCurator_logo.png" style="max-width: 480px; width: 100%;" alt="LLM-scCurator logo">
 </p>
 
-LLM-scCurator is a Python framework for **noise-aware marker distillation** that improves the robustness of
-**zero-shot cell-type annotation with LLMs** across **single-cell and spatial transcriptomics**.
-
----
+LLM-scCurator is a Python workflow that combines **marker-list curation** with
+**expression-derived lineage context** for LLM-assisted cell annotation.
 
 ## What it does
 
-LLM-scCurator adds a **pre-prompt feature distillation layer**: it suppresses recurrent biological/technical
-programs (e.g., ribosomal/mitochondrial, stress, cell cycle, TCR/Ig) while **rescuing lineage- and state-defining
-markers**, then applies leakage-safe lineage filters before LLM prompting.
+A top-DEG list describes differences between clusters and may omit identity genes
+shared within a lineage. LLM-scCurator prepares two inputs: a curated list of ranked
+marker candidates and a broad lineage label estimated from predefined markers in
+the expression matrix. An LLM receives these inputs to propose a cell annotation.
 
-## Why it helps
+The package also offers a coarse-to-fine mode that reclusters coarse groups and
+uses their predicted labels as context for finer annotation. Marker curation and
+lineage context are separate interventions; neither guarantees improved accuracy
+for every dataset or LLM.
 
-- **Stabilizes inputs:** reduces “garbage-in” marker lists by masking clonotype and ubiquitous programs.
-- **Preserves biology:** specificity-aware rescue retains informative, lineage-restricted markers.
-- **Scales to discovery:** supports hierarchical, coarse-to-fine annotation for complex tissues, including spatial
-  modalities (Visium/Xenium).
+## Using it in an annotation workflow
+
+Review proposed labels using known-marker expression, dotplots and the underlying
+cell distributions. Pretrained classifiers and suitable reference atlases can add
+complementary evidence. Those checks are separate tools, not automatic inputs
+to the current package. Keep lineage/identity and state distinct, and report labels
+at the resolution supported by the evidence.
+
+See the **[Integrated workflow guide](integrated-workflow.md)** for exact inputs,
+context provenance, current limitations and proposed extensions.
 
 ---
 
 ## Quick start
 
 - Start here: **[Getting started](getting-started.md)**
-- Key ideas (masking, rescue, leakage filter, hierarchical inference): **[Concepts](concepts.md)**
+- Key ideas (marker curation, lineage context, cross-lineage filtering): **[Concepts](concepts.md)**
 - Practical workflows and recipes: **[User guide](user-guide.md)**
 - Tutorials: **[Tutorials](tutorials.md)**
 - Full API docs: **[API reference](api-reference.md)**
