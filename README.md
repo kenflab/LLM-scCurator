@@ -5,47 +5,53 @@
        width="90" alt="LLM-scCurator"
        style="vertical-align: middle; margin-right: 10px;">
   <span style="font-size: 28px; font-weight: 700; vertical-align: middle;">
-     Data-centric feature distillation for robust zero-shot cell-type annotation.
+     Marker curation and lineage context for LLM-assisted cell annotation.
   </span>
 </p>
      
 [![Docs](https://readthedocs.org/projects/llm-sccurator/badge/?version=latest)](https://llm-sccurator.readthedocs.io/)
 [![bioRxiv](https://img.shields.io/badge/bioRxiv-10.64898%2F2025.12.28.696778-B31B1B.svg)](https://doi.org/10.64898/2025.12.28.696778)
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17970494.svg)](https://doi.org/10.5281/zenodo.17970494)
+[![R2 code archive](https://zenodo.org/badge/DOI/10.5281/zenodo.23084504.svg)](https://doi.org/10.5281/zenodo.23084504)
 [![RRID](https://img.shields.io/badge/RRID-SCR_027945-blue)](https://scicrunch.org/resolver/SCR_027945)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 - **Docs:** https://llm-sccurator.readthedocs.io/  
-- **[Paper reproducibility](https://github.com/kenflab/LLM-scCurator?tab=readme-ov-file#-manuscript-reproduction):** Zenodo v0.1.0 (DOI: [10.5281/zenodo.17970494](https://zenodo.org/records/17970494)).
-- **Cite:** bioRxiv preprint (DOI: [10.64898/2025.12.28.696778](https://www.biorxiv.org/content/10.64898/2025.12.28.696778v1)). Newer tags (see [GitHub Releases](https://github.com/kenflab/LLM-scCurator/releases)) add usability features without changing paper benchmarks.
+- **[Paper reproducibility](https://github.com/kenflab/LLM-scCurator?tab=readme-ov-file#-manuscript-reproduction):** R2 software archive, v0.1.4: [10.5281/zenodo.23084504](https://zenodo.org/records/23084504). Original v0.1.0 archive: [10.5281/zenodo.17970494](https://zenodo.org/records/17970494).
+- **Cite:** bioRxiv preprint (DOI: [10.64898/2025.12.28.696778](https://www.biorxiv.org/content/10.64898/2025.12.28.696778v1)). For each analysis, record the exact code release or commit, marker lists, prompts, model version and saved responses; the current development branch is not a frozen paper release.
 
 ---
 
 ## 🚀 Overview
-**LLM-scCurator** is a Large Language Model–based curator for single-cell and spatial transcriptomics. It performs noise-aware marker distillation—suppressing technical programs (e.g., ribosomal/mitochondrial), clonotype signals (TCR/Ig), and stress signatures while rescuing lineage markers—and applies leakage-safe lineage filters before prompting an LLM. It supports hierarchical annotation (coarse-to-fine clustering and labeling) for single-cell and spatial transcriptomics data. 
+**LLM-scCurator** combines **marker-list curation** with **expression-derived lineage context** to support LLM-assisted annotation of single-cell and spatial transcriptomics data. Top differentially expressed genes distinguish clusters, but a short list may omit identity genes shared across related clusters. The workflow therefore prepares a curated marker list and separately estimates a broad lineage from predefined markers in the expression matrix, then supplies both to the LLM.
 
+The two components address different input limitations. Their contributions should be evaluated separately and together; performance depends on the dataset, annotation task and LLM. Predictions remain candidates for review against the observed expression data.
 
-### Key Features
-- **🛡️ Noise-aware filtering:** Automatically removes lineage-specific noise (TCR/Ig) and state-dependent noise (ribosomal/mitochondrial).
-- **🧠 Context-aware inference:** Automatically infers lineage context (e.g., "T cell") to guide LLM reasoning.
-- **🔬 Hierarchical discovery:** [One-line function](https://github.com/kenflab/LLM-scCurator?tab=readme-ov-file#-quick-start) to dissect complex tissues into major lineages and fine-grained subtypes.
-- **🌍 Spatial ready:** Validated on scRNA-seq (10x) and spatial transcriptomics (Xenium, Visium).
-- **🔒 Privacy-first, institutional-ready:** [Feature distillation runs locally](https://github.com/kenflab/LLM-scCurator?tab=readme-ov-file#-privacy); annotation works with **cloud or local LLM backends**, or **institution-approved chat UIs (no tool-side API calls)**.
+### Key features
+
+- **Marker-list curation:** Filters ranked candidates using expression statistics and predefined gene modules, with selected lineage and proliferation markers protected from masking.
+- **Lineage context:** Uses mean expression of predefined lineage-marker panels to infer a broad parent label, even when those genes are absent from the final top-DEG list. This is a heuristic label, not a calibrated probability.
+- **Coarse-to-fine annotation:** Optionally clusters and annotates coarse groups, then passes their predicted parent labels to annotation within each group.
+- **Flexible execution:** Feature preparation runs locally; annotation supports cloud or local LLM backends and exported marker tables for approved chat interfaces.
+
+See the [integrated workflow guide](docs/integrated-workflow.md) for the implemented evidence inputs, context provenance, practical review steps and proposed extensions. Reference-atlas label transfer and pretrained classifiers can provide complementary checks, but their outputs are not automatically fused by the current package.
+
+The [evaluation scope](paper/EVALUATION_SCOPE.md) identifies which saved comparisons test the integrated workflow and which test curated marker inputs under fixed context. It reports the historical lineage and exact-match outcomes separately, documents limitations of the original label parser, and retains the HLCA result without a clear curation benefit. Reproducing a saved score does not establish that its label mapping is biologically appropriate.
 
 <p align="center">
   <img
-    src="https://raw.githubusercontent.com/kenflab/LLM-scCurator/main/docs/assets/LLM-scCurator_Fig1a_bioRxiv_2025.png"
-    width="75%"
-    alt="LLM-scCurator overview: data-centric feature distillation"
+    src="docs/assets/integrated_workflow.svg"
+    width="90%"
+    alt="Implemented workflow combining marker curation with expression-derived lineage context, followed by human review"
   >
 </p>
 
 <p align="center">
   <em>
-    Fig. 1a. Overview of LLM-scCurator: data-centric, adaptive feature distillation recovers identity markers despite biological-noise programs (e.g., ribosomal, cell-cycle, stress).
-    (<a href="https://www.biorxiv.org/content/10.64898/2025.12.28.696778v1.full">bioRxiv preprint</a>)
+    Implemented automatic-context path. Marker curation produces a compact gene list, while predefined lineage-marker expression supplies a broad inferred label. Human review and optional classifier/reference checks are complementary steps; model confidence is self-reported, not calibrated.
   </em>
 </p>
+
+The original feature-distillation schematic remains available in the [archived preprint](https://www.biorxiv.org/content/10.64898/2025.12.28.696778v1.full) and [archived figure asset](docs/assets/LLM-scCurator_Fig1a_bioRxiv_2025.png).
 
 
 
@@ -54,7 +60,7 @@
 ---
 ## 📦 Installation
 [![PyPI version](https://img.shields.io/pypi/v/llm-sc-curator.svg)](https://pypi.org/project/llm-sc-curator/)
-[![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
+[![Python 3.11+](https://img.shields.io/badge/python-3.11+-blue.svg)](https://www.python.org/downloads/)
 ![R](https://img.shields.io/badge/R-276DC3?logo=r&logoColor=white)
 ![Docker](https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=white)
 ![Jupyter](https://img.shields.io/badge/Jupyter-F37626?logo=jupyter&logoColor=white)
@@ -171,7 +177,7 @@ Run Jupyter (either image):
   apptainer exec --cleanenv \
     --bind "$PWD":/work \
     llm-sc-curator.sif \
-    bash -lc 'jupyter lab --ip=0.0.0.0 --port=8888 --no-browser 
+    bash -lc 'jupyter lab --ip=0.0.0.0 --port=8888 --no-browser'
   ```
 ---
 ## 🔒 Privacy
@@ -278,7 +284,7 @@ Documentation (—**Getting started**, **Concepts**, **User guide**, and the ful
     )
     ```
   Notes:
-  > Manuscript results correspond to v0.1.0; later minor releases add user-facing utilities without changing core behavior.
+  > Use the code and saved outputs associated with each reported analysis. The archived v0.1.0 release and the current development branch should be cited separately.
 
 ### 📊 For R / Seurat Users
 You can use **LLM-scCurator** in two ways:
@@ -309,7 +315,7 @@ You can use **LLM-scCurator** in two ways:
   This is more sensitive to Python environment configuration, so we recommend Option A for most users.
   - Use the **[official Docker](https://github.com/kenflab/LLM-scCurator/blob/main/README.md#-docker-official-environment) (Python + R + Jupyter)** and follow the step-by-step tutorial notebook: 📓 [`examples/R/run_llm_sccurator_R_reticulate.ipynb`](https://github.com/kenflab/LLM-scCurator/blob/main/examples/R/run_llm_sccurator_R_reticulate.ipynb) <br> 
     The notebook includes:
-      - Use LLM-scCurator for robust marker distillation (no API key required)
+      - Use LLM-scCurator for marker-list curation (no API key required)
       - 🔑 [Optional](https://github.com/kenflab/LLM-scCurator/blob/main/README.md#-backends-llm-api-keys-setup): For annotation, use Gemini/OpenAI APIs (API key required) or Ollama (no API key) .
 
 
@@ -376,8 +382,9 @@ Notes:
 ---
 ## Citation
 - bioRxiv preprint: [10.64898/2025.12.28.696778](https://doi.org/10.64898/2025.12.28.696778)
-- Zenodo archive (v0.1.0): [10.5281/zenodo.17970494](https://doi.org/10.5281/zenodo.17970494)
-- GitHub release tag: [v0.1.0](https://github.com/kenflab/LLM-scCurator/releases/tag/v0.1.0)
+- R2 software archive (v0.1.4): [10.5281/zenodo.23084504](https://doi.org/10.5281/zenodo.23084504)
+- Original archive (v0.1.0): [10.5281/zenodo.17970494](https://doi.org/10.5281/zenodo.17970494)
+- R2 code tag: [v0.1.4](https://github.com/kenflab/LLM-scCurator/tree/v0.1.4); original tag: [v0.1.0](https://github.com/kenflab/LLM-scCurator/tree/v0.1.0)
 - Software RRID: [RRID:SCR_027945](https://scicrunch.org/resolver/SCR_027945)
 
 

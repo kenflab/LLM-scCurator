@@ -213,6 +213,7 @@ class GeminiBackend(BaseLLMBackend):
 
         genai.configure(api_key=api_key)
         self.model = genai.GenerativeModel(model_name)
+        self.model_name = model_name
         self.temperature = temperature
 
     @retry_with_backoff(retries=3)

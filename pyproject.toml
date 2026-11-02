@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "llm-sc-curator"
 dynamic = ["version"]
-description = "Dynamic feature distillation framework for robust zero-shot LLM annotation."
+description = "Integrated marker curation and lineage context for LLM-assisted cell annotation."
 readme = { file = "README.md", content-type = "text/markdown" }
 requires-python = ">=3.11"
 authors = [{ name = "Ken Furudate" }]

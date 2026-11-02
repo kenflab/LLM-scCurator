@@ -13,7 +13,9 @@ nav:
   - Home: index.md
   - Getting started: getting-started.md
   - Concepts: concepts.md
+  - Integrated workflow: integrated-workflow.md
   - User guide: user-guide.md
+  - Response recording: response-recording.md
   - Tutorials: tutorials.md
   - API reference: api-reference.md
 
